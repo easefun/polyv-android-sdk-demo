@@ -8,7 +8,6 @@ import com.easefun.polyvsdk.R;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
@@ -18,7 +17,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -97,7 +96,7 @@ class MyCameraSurfaceView extends SurfaceView implements SurfaceHolder.Callback 
 	}
 }
 
-public class RecordActivity extends ActionBarActivity {
+public class RecordActivity extends FragmentActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -119,17 +118,7 @@ public class RecordActivity extends ActionBarActivity {
 		return true;
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
+
 	@Override
 	public void onBackPressed() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);

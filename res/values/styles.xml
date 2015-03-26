@@ -4,7 +4,7 @@
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
-    <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
+    <style name="AppBaseTheme" parent="android:Theme.Light">
     
         <!--
             Theme customizations available in newer API levels can go in
@@ -13,9 +13,8 @@
         -->
     </style>
     
-    <style name="NoActionBar" parent="Theme.AppCompat.Light">
+    <style name="NoActionBar" parent="android:Theme.Light">
     <item name="android:windowNoTitle">true</item>
-    <item name="windowActionBar">false</item>
     <item name="android:windowFullscreen">true</item>
     <item name="android:windowContentOverlay">@null</item>
 	</style>
