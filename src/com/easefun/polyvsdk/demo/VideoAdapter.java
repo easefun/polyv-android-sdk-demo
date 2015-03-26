@@ -17,6 +17,7 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -88,7 +89,7 @@ public class VideoAdapter extends BaseAdapter {
 		holder.video_title.setText(videos.get(position).getTitle());
 		holder.video_duration.setText(videos.get(position).getDuration());
 		holder.btn_download.setOnClickListener(new DownloadListener(videos.get(position).getVid()));
-		holder.btn_play.setOnClickListener(new PlayListener());
+		holder.btn_play.setOnClickListener(new PlayListener(videos.get(position).getVid()));
 		ImageLoader imageloader = ImageLoader.getInstance();
 		imageloader.displayImage(videos.get(position).getFirst_image(),holder.image ,options, new AnimateFirstDisplayListener());
 		return convertView;
@@ -102,10 +103,16 @@ public class VideoAdapter extends BaseAdapter {
 	}
 	
 	class PlayListener implements View.OnClickListener{
-
+		private String vid;
+		public PlayListener(String vid){
+			this.vid = vid;
+		}
 		@Override
 		public void onClick(View arg0) {
 			// TODO Auto-generated method stub
+			Intent playUrlFull = new Intent(context,FullVideoDemoActivity.class);
+			playUrlFull.putExtra("vid", vid);
+			((Activity) context).startActivityForResult(playUrlFull, 1);
 			
 		}
 		
@@ -122,6 +129,8 @@ public class VideoAdapter extends BaseAdapter {
 		}
 		
 	}
+	
+	
 	
 	class VideoInfo extends AsyncTask<String,String,String>{
 		@Override

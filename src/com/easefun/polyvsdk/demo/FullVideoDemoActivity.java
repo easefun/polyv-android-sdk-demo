@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -66,7 +67,7 @@ public class FullVideoDemoActivity extends Activity implements OnTouchListener {
 				videoview.setMediaController(mediaController);
 				if(!isLocal){
 				   
-				   videoview.setVideoId("sl8da4jjbxed639c727dbe1b71e73d98_s");		    
+				   videoview.setVideoId(vid);		    
 				   videoview.setPlayMode(PolyvVideoView.MODE_AUTO);//自动播放
 				}else{
 					videoview.setLocalVideo(vid);
@@ -97,7 +98,9 @@ public class FullVideoDemoActivity extends Activity implements OnTouchListener {
 		Bundle e = getIntent().getExtras();
 		if (e != null) {
 			path = e.getString("path");
-			vid = e.getString("vid");
+			vid = e.getString("vid");	
+			Log.d("d", vid);
+		
 		}
 		if (path != null && path.length() > 0) {
 			isLocal = true;
