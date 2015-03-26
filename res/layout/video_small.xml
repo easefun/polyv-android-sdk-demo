@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:background="#FFFFFF"
+    android:orientation="vertical" >
+
+   <RelativeLayout
+        android:id="@+id/rl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#000000"
+        >
+        <com.easefun.polyvsdk.view.PolyvVideoView 
+             android:id="@+id/videoview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            ></com.easefun.polyvsdk.view.PolyvVideoView>
+      
+    </RelativeLayout>
+    <RelativeLayout 
+        android:id="@+id/botlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+       android:layout_below="@+id/rl"
+        >
+        <Button 
+            android:id="@+id/play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="播放视频"
+            />
+        <Button 
+            android:id="@+id/stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/play"
+            android:text="暂停"
+            />
+        <Button 
+            android:id="@+id/swtich"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/stop"
+            android:text="切换"
+            />
+        <Button 
+            android:id="@+id/download"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/swtich"
+            android:text="加入下载"
+            />
+    </RelativeLayout>
+  
+</RelativeLayout>
