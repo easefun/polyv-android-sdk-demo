@@ -49,8 +49,10 @@ startActivityForResult(playUrl, 1);
 ```
   
 如何全屏播放在线视频
-使用FullVideoDemoActivity类做演示，调用方法：
 --
+
+使用FullVideoDemoActivity类做演示，调用方法：
+
 ```objective-c
 Intent playUrlFull = new Intent(NewTestActivity.this,FullVideoDemoActivity.class);
 playUrlFull.putExtra("vid", videoId);
