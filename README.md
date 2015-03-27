@@ -36,5 +36,24 @@ polyv-android-sdk-demo
 
 
 
+如何用小窗口播放在线视频
+--
 
+使用SmallVideoDemoActivity类做演示，调用方法：
+
+```objective-c
+Intent playUrl = new Intent(NewTestActivity.this,SmallVideoDemoActivity.class);
+playUrl.putExtra("vid", videoId);
+startActivityForResult(playUrl, 1);
+
+```
   
+如何全屏播放在线视频
+使用FullVideoDemoActivity类做演示，调用方法：
+--
+```objective-c
+Intent playUrlFull = new Intent(NewTestActivity.this,FullVideoDemoActivity.class);
+playUrlFull.putExtra("vid", videoId);
+startActivityForResult(playUrlFull, 1);
+```
+
