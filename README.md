@@ -59,3 +59,22 @@ playUrlFull.putExtra("vid", videoId);
 startActivityForResult(playUrlFull, 1);
 ```
 
+使用PolyvVideoView构建播放器
+--
+
+```java
+import com.easefun.polyvsdk.view.PolyvOnPreparedListener;
+import com.easefun.polyvsdk.view.PolyvVideoView;
+import com.easefun.polyvsdk.view.PopupMediaController;
+
+...
+videoview=(PolyvVideoView) findViewById(R.id.videoview);
+mediaController = new PopupMediaController(SmallVideoDemoActivity.this,videoview);
+mediaController.setFullscreenListener(new FullscreenListener());
+videoview.setMediaController(mediaController);
+videoview.setViewSize(w, ah);
+videoview.setVideoId("");
+				
+				
+
+```
