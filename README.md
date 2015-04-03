@@ -33,7 +33,7 @@ polyv-android-sdk-demo
 		client.setDownloadDir(saveDir);
 		
 		
-
+其中downloadId,downloadSecretkey要向客服申请获取。
 
 
 如何用小窗口播放在线视频
