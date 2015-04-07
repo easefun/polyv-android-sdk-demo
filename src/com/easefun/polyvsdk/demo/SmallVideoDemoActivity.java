@@ -69,6 +69,8 @@ public class SmallVideoDemoActivity extends Activity implements OnTouchListener 
 			case VIDEO_PREPARE:
 //				videoview = new MyVideoView(SmallVideoDemoActivity.this);
 				videoview=(PolyvVideoView) findViewById(R.id.videoview);
+				//videoview.getVideoView().setZOrderMediaOverlay(true);
+				//videoview.getVideoView().setZOrderOnTop(true);
 				mediaController = new PopupMediaController(SmallVideoDemoActivity.this,videoview);
 				mediaController.setFullscreenListener(new FullscreenListener());
 				videoview.setMediaController(mediaController);

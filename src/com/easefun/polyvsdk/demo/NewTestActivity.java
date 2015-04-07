@@ -10,7 +10,7 @@ import com.easefun.polyvsdk.DownloadHelper;
 import com.easefun.polyvsdk.PolyvSDKClient;
 import com.easefun.polyvsdk.R;
 import com.easefun.polyvsdk.SDKUtil;
-import com.easefun.polyvsdk.demo.RecordActivity;
+//import com.easefun.polyvsdk.demo.RecordActivity;
 import com.easefun.polyvsdk.net.Progress;
 import com.easefun.polyvsdk.Video;
 
