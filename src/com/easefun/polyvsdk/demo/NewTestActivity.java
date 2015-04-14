@@ -36,8 +36,8 @@ public class NewTestActivity extends Activity {
 //    sl8da4jjbx2262724b8a5132bd6103b2_s
 //    sl8da4jjbxa3c15f99bc37545693f7f9_s
 //    sl8da4jjbx8c9303593b4fff33e2a8ee_s 加密
-    //	private static String videoId="sl8da4jjbx0bbe98bc3edfd2307fdbde_s"; //加密
-	private static String videoId="sl8da4jjbx8c9303593b4fff33e2a8ee_s";    //没加密
+    //	private static String videoId="sl8da4jjbx0bbe98bc3edfd2307fdbde_s"; //鍔犲瘑
+	private static String videoId="sl8da4jjbx8c9303593b4fff33e2a8ee_s";    //娌″姞瀵�
 	private ProgressDialog barProgressDialog;
 	private Button btn_down,btn_downloadlist,btn_stop,btn_playUrl,btn_playUrlFull,btn_playLocal,btn_playLocalFull,btn_record,btn_upload,btn_videolist;
 	private DownloadHelper downloadHelper;
@@ -91,7 +91,7 @@ public class NewTestActivity extends Activity {
 					barProgressDialog.setProgress((int)precent);
 					if(barProgressDialog.getProgress() == barProgressDialog.getMax()){
 						if(downloader!=null) downloader.stop();
-						Toast.makeText(getApplicationContext(), "下载成功", 1).show();
+						Toast.makeText(getApplicationContext(), "下载完成", 1).show();
 					}
 					break;
 				case UPLOAD:
@@ -101,7 +101,7 @@ public class NewTestActivity extends Activity {
 					long precent2 =offset*100/max;
 					barProgressDialog.setProgress((int)precent2);
 					if(barProgressDialog.getProgress() == barProgressDialog.getMax()){
-						Toast.makeText(getApplicationContext(), "上传成功", 1).show();
+						Toast.makeText(getApplicationContext(), "上传完成", 1).show();
 					}
 					break;
 				default:
@@ -110,7 +110,10 @@ public class NewTestActivity extends Activity {
 			}
 		};
 		 if( Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED) )   {                               
-	         saveDir = new File(Environment.getExternalStorageDirectory().getPath()+"/download");
+	         saveDir = new File(Environment.getExternalStorageDirectory().getPath()+"/polyvdownload");
+	         if(!saveDir.exists()){
+	        	 saveDir.mkdir();
+	         }
 	      }  
     	PolyvSDKClient client = PolyvSDKClient.getInstance();
 		client.setReadtoken("nsJ7ZgQMN0-QsVkscukWt-qLfodxoDFm");
@@ -262,8 +265,8 @@ public class NewTestActivity extends Activity {
 	        File path = new File(Environment.getExternalStorageDirectory(), "myRecording.mp4");
 	        
 	        try{
-//	        	Video video = PolyvSDKClient.getInstance().upload(path.toString(), "我的标题", "tag","desc", 0);
-	        	String videojson = PolyvSDKClient.getInstance().resumableUpload(path.toString(), "我的标题","desc", 0,new Progress() {
+//	        	Video video = PolyvSDKClient.getInstance().upload(path.toString(), "鎴戠殑鏍囬", "tag","desc", 0);
+	        	String videojson = PolyvSDKClient.getInstance().resumableUpload(path.toString(), "鎴戠殑鏍囬","desc", 0,new Progress() {
 					
 					@Override
 					public void run(long offset, long max) {

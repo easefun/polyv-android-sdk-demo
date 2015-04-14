@@ -5,5 +5,10 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="lib" path="F:/adt-bundle-windows-x86_64-20140624/sdk/platforms/android-20/android.jar">
+		<accessrules>
+			<accessrule kind="nonaccessible" pattern="com/android/internal/**"/>
+		</accessrules>
+	</classpathentry>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

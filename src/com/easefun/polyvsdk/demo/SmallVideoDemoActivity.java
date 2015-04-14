@@ -76,7 +76,7 @@ public class SmallVideoDemoActivity extends Activity implements OnTouchListener 
 				videoview.setMediaController(mediaController);
 				if(!isLocal){
 //				  videoview.setVideoIds(vids);
-					videoview.setVideoId("sl8da4jjbxed639c727dbe1b71e73d98_s");
+					videoview.setVideoId("sl8da4jjbx8c9303593b4fff33e2a8ee_s");
 					videoview.setPlayMode(PolyvVideoView.MODE_MANUAL);//手动播放
 				}else{
 					videoview.setLocalVideo(vid);
