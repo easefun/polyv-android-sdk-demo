@@ -16,6 +16,8 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnBufferingUpdateListener;
+import android.media.MediaPlayer.OnInfoListener;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -69,8 +71,6 @@ public class SmallVideoDemoActivity extends Activity implements OnTouchListener 
 			case VIDEO_PREPARE:
 //				videoview = new MyVideoView(SmallVideoDemoActivity.this);
 				videoview=(PolyvVideoView) findViewById(R.id.videoview);
-				//videoview.getVideoView().setZOrderMediaOverlay(true);
-				//videoview.getVideoView().setZOrderOnTop(true);
 				mediaController = new PopupMediaController(SmallVideoDemoActivity.this,videoview);
 				mediaController.setFullscreenListener(new FullscreenListener());
 				videoview.setMediaController(mediaController);
@@ -83,9 +83,18 @@ public class SmallVideoDemoActivity extends Activity implements OnTouchListener 
 				}
 				videoview.setViewSize(w, ah);
 				
-//				rl.addView(videoview);
 				preparedListener= new MyPreparededListener(path,vid);
 				videoview.setOnPreparedListener(preparedListener);
+				videoview.setOnInfoListener(new MyOnInfoListener());
+				videoview.setOnBufferingUpdateListener(new MyOnBufferingUpdateListener());
+				videoview.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+					
+					@Override
+					public void onCompletion(MediaPlayer arg0) {
+						// TODO Auto-generated method stub
+						Toast.makeText(SmallVideoDemoActivity.this, "video finish", 1).show();
+					}
+				});
 				videoview.setEnabled(false);
 			
 				break;
@@ -122,7 +131,6 @@ public class SmallVideoDemoActivity extends Activity implements OnTouchListener 
 		h = wm.getDefaultDisplay().getHeight();
 		ratio=(float)4/3;
 		 ah= (int)Math.ceil((float)w/ratio);
-//		Toast.makeText(this, "w:"+w+", h"+h+",ah "+ah , 1).show();
 		botlayout = (RelativeLayout) findViewById(R.id.botlayout);
 		play = (Button) findViewById(R.id.play);
 		play.setOnClickListener(new PlayListener());
@@ -157,6 +165,54 @@ public class SmallVideoDemoActivity extends Activity implements OnTouchListener 
 		}
 	}
 
+	class MyOnInfoListener implements OnInfoListener {
+	       //701-858-702-859
+			public MyOnInfoListener() {
+			// TODO Auto-generated constructor stub
+		}
+			@Override
+			public boolean onInfo(MediaPlayer mp, int what, int extra) {
+				// TODO Auto-generated method stub
+				Toast.makeText(SmallVideoDemoActivity.this, " ON INFO "+what+","+extra, Toast.LENGTH_SHORT).show();
+				switch (what) {
+				case MediaPlayer.MEDIA_INFO_BUFFERING_START: //缓冲开始 
+					Toast.makeText(SmallVideoDemoActivity.this, "MEDIA_INFO_BUFFERING_START  "+videoview.getBufferPercentage(), Toast.LENGTH_SHORT).show();
+					if (videoview.isPlaying()) {
+						 videoview.pause(); 
+					      videoview.setLoadingBarVisibility(View.VISIBLE);
+
+					      }
+					break;
+				 case MediaPlayer.MEDIA_INFO_BUFFERING_END: // 缓冲结束
+					 Toast.makeText(SmallVideoDemoActivity.this, "MEDIA_INFO_BUFFERING_END "+videoview.getBufferPercentage(), Toast.LENGTH_SHORT).show();
+					  videoview.start();
+					  videoview.setLoadingBarVisibility(View.GONE);
+				      break;
+				 case MediaPlayer.MEDIA_INFO_VIDEO_TRACK_LAGGING: 
+					//当设备无法播放视频时将出现该提示信息  
+			        //比如视频太复杂或者码率过高  
+					 break;
+				default:
+					break;
+				}
+				return true;
+			}
+			
+		}
+		
+		class MyOnBufferingUpdateListener implements OnBufferingUpdateListener{
+	        public MyOnBufferingUpdateListener(){
+	        	
+	        }
+			@Override
+			public void onBufferingUpdate(MediaPlayer mp, int precent) {
+				// TODO Auto-generated method stub
+				 Toast.makeText(SmallVideoDemoActivity.this, "OnBufferingUpdateListener->" +precent, Toast.LENGTH_SHORT).show();
+				
+			}
+			
+		}
+	
 	class PlayListener implements View.OnClickListener {
 
 		@Override

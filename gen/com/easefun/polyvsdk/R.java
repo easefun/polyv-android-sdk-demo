@@ -49,13 +49,6 @@ public final class R {
         public static final int loader_show_image_08=0x7f020014;
         public static final int media_pause=0x7f020015;
         public static final int media_play=0x7f020016;
-        public static final int slip_line_background=0x7f020017;
-        public static final int slip_line_progress=0x7f020018;
-        public static final int slip_line_secondaryprogress=0x7f020019;
-        public static final int thumb_2=0x7f02001a;
-        public static final int thumb_selector=0x7f02001b;
-        public static final int thumd_1=0x7f02001c;
-        public static final int video_seekbar=0x7f02001d;
     }
     public static final class id {
         public static final int background=0x7f09000e;
