@@ -57,6 +57,18 @@
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
+         <activity
+            android:name="com.easefun.polyvsdk.demo.IjkVideoActicity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="com.easefun.polyvsdk.demo.IjkFullVideoActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
         <activity
             android:name="com.easefun.polyvsdk.demo.DownloadListActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"

@@ -5,53 +5,53 @@
     android:orientation="vertical" >
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/download"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="下载" />
      <Button
-        android:id="@+id/button1_1"
+        android:id="@+id/download_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="下载列表" />
  <Button
-        android:id="@+id/button2"
+        android:id="@+id/stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="停止" />
  
   <Button
-        android:id="@+id/button3"
+        android:id="@+id/onlinevideo_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="在线播放(小窗口)" />
      <Button
-        android:id="@+id/button3_1"
+        android:id="@+id/onlinevideo_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="在线播放(横屏)" />
   <Button
-        android:id="@+id/button4"
+        android:id="@+id/localvideo_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="本地播放(小窗口)" />
     <Button
-        android:id="@+id/button4_1"
+        android:id="@+id/localvideo_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="本地播放(横屏)" />
       <Button
-        android:id="@+id/button5"
+        android:id="@+id/recordvideo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="录制视频" />
       <Button
-        android:id="@+id/button6"
+        android:id="@+id/upload"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="上传视频" />
       <Button
-        android:id="@+id/button7"
+        android:id="@+id/videolist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="获取视频列表" />
