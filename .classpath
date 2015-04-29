@@ -12,5 +12,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="libs/jikmediaplayer.jar"/>
 	<classpathentry kind="lib" path="libs/jikmediawidget.jar"/>
+	<classpathentry kind="lib" path="libs/polyvSDK.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
