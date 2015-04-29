@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">polyvSDK</string>
+    <string name="hello_world">Hello world!</string> 
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_record">RecordActivity</string>
+    <string name="tip">提示</string>
+    <string name="dismiss">取消</string>
+    <string name="warning_of_network">Not connected to the network</string>
+      <string name="vitamio_name">Vitamio</string>
+    <string name="vitamio_init_decoders">Initializing decoders…</string>
+    <string name="videoview_error_title">Cannot play video</string>
+    <string name="videoview_error_text_invalid_progressive_playback">Sorry, this video is not valid for streaming to
+		this device.</string>
+    <string name="videoview_error_text_unknown">Sorry, this video cannot be played.</string>
+    <string name="videoview_error_button">OK</string>
+    <string name="mediacontroller_play_pause">Play/Pause</string>
+</resources>
