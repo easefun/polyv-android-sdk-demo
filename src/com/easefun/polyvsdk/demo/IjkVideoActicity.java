@@ -30,7 +30,6 @@ public class IjkVideoActicity extends Activity {
    RelativeLayout rl,botlayout;
    private boolean isLandscape=false;
    private int stopPosition =0;
-   private View view =null;
    private String path;
    private String vid;
    boolean isLocal=false;

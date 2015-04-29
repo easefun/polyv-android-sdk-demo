@@ -77,7 +77,7 @@ public class IjkFullVideoActivity extends Activity{
     	             case IjkVideoView.VIDEO_LAYOUT_ZOOM:
     	            	 Toast.makeText(IjkFullVideoActivity.this, "VIDEO_LAYOUT_ZOOM", 1).show();
     		            break;
-    		            }
+    		        }
     			}
     		});
       }
