@@ -162,7 +162,7 @@ public class NewTestActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				Intent playUrl = new Intent(NewTestActivity.this,IjkVideoActicity.class);
+				Intent playUrl = new Intent(NewTestActivity.this,PreviewVideoActivity.class);
 				playUrl.putExtra("vid", videoId);
 				startActivityForResult(playUrl, 1);
 			} 
