@@ -40,7 +40,7 @@ public class IjkFullVideoActivity extends Activity{
     	}else{
     			videoview.setLocalVideo(vid);
     	}
-   
+    
     	videoview.setOnPreparedListener(new MyListener(path,vid));
     	//设置切屏事件- do nothing 
     	mediaController.setOnBoardChangeListener(new IjkMediaController.OnBoardChangeListener() {

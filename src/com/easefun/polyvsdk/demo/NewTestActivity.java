@@ -119,7 +119,6 @@ public class NewTestActivity extends Activity {
 		client.setWritetoken("Y07Q4yopIVXN83n-MPoIlirBKmrMPJu0");
 		client.setPrivatekey("DFZhoOnkQf");
 		client.setUserId("sl8da4jjbx");
-		
 		client.setDownloadId(downloadId);
 		client.setDownloadSecretKey(downloadSercetkey);
 		client.setSign(true);
