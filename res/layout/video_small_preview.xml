@@ -13,20 +13,13 @@
         android:layout_height="wrap_content"
         android:background="#000000"
         >
-        <com.easefun.polyvsdk.ijk.IjkVideoView 
-             android:id="@+id/videoview"
+        <com.easefun.polyvsdk.ijk.PreviewIjkVideoView 
+            android:id="@+id/videoview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            ></com.easefun.polyvsdk.ijk.IjkVideoView>
-      <ProgressBar 
-         android:id="@+id/loadingprogress"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_centerHorizontal="true"
-         android:layout_centerInParent="true"
-         android:visibility="visible"
-         />
+            ></com.easefun.polyvsdk.ijk.PreviewIjkVideoView>
+      
     </RelativeLayout>
  <RelativeLayout 
         android:id="@+id/botlayout"
