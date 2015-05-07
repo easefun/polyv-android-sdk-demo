@@ -180,7 +180,7 @@ public class NewTestActivity extends Activity {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Intent playLocal = new Intent(NewTestActivity.this, IjkVideoActicity.class);
-	    		playLocal.putExtra("path", SDKUtil.getDownloadFileByVid(videoId).toString());
+	    		playLocal.putExtra("path", SDKUtil.getDownloadFileByVid(videoId).getPath());
 	    		playLocal.putExtra("vid", videoId);
 	    		startActivityForResult(playLocal,1);
 			}
@@ -192,7 +192,7 @@ public class NewTestActivity extends Activity {
 				// TODO Auto-generated method stub
 				Intent playLocal = new Intent(NewTestActivity.this, IjkFullVideoActivity.class);
 	    		
-	    		playLocal.putExtra("path", SDKUtil.getDownloadFileByVid(videoId).toString());
+	    		playLocal.putExtra("path", SDKUtil.getDownloadFileByVid(videoId).getPath());
 	    		playLocal.putExtra("vid", videoId);
 	    		startActivityForResult(playLocal,1);
 			}
