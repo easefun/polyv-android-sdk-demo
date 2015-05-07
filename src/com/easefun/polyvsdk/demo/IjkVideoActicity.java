@@ -2,6 +2,10 @@ package com.easefun.polyvsdk.demo;
 
 
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
 import com.easefun.polyvsdk.ijk.IjkMediaController;
@@ -11,11 +15,13 @@ import com.easefun.polyvsdk.ijk.PolyvOnPreparedListener;
 
 
 import com.easefun.polyvsdk.R;
+import com.easefun.polyvsdk.SDKUtil;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -35,6 +41,7 @@ public class IjkVideoActicity extends Activity {
    private String path;
    private String vid;
    boolean isLocal=false;
+   private DBservice service;
 	@Override
     public void onCreate(Bundle savedInstanceState) {
     	// TODO Auto-generated method stub
@@ -49,6 +56,7 @@ public class IjkVideoActicity extends Activity {
 		if (path != null && path.length() > 0) {
 			isLocal = true;
 		}
+		service = new DBservice(this);
     	wm = this.getWindowManager();
 		w = wm.getDefaultDisplay().getWidth();
 		h = wm.getDefaultDisplay().getHeight();
@@ -127,6 +135,15 @@ public class IjkVideoActicity extends Activity {
 				videoview.setVideoId("sl8da4jjbxa3c15f99bc37545693f7f9_s");
 			}
 		});
+        findViewById(R.id.AddTodownload).setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				String currentvid= videoview.getCurrentVideoId();
+				new VideoInfo().execute(currentvid);
+			}
+		});
     }
 	
 
@@ -170,10 +187,46 @@ public class IjkVideoActicity extends Activity {
 	      		super.onPrepared(mp);
 	      	}
 	  }
+	  
 	 
 	 @Override
 		protected void onResume() {
 			// TODO Auto-generated method stub
 			super.onResume();
+		}
+	 class VideoInfo extends AsyncTask<String,String,String>{
+			@Override
+			protected String doInBackground(String... params) {
+				// TODO Auto-generated method stub
+				DownloadInfo downloadInfo=null;
+				JSONArray jsonArray = SDKUtil.loadVideoInfo(params[0]);
+				String vid = null;
+				String duration = null;
+				int filesize = 0;
+				try {
+					JSONObject jsonObject =jsonArray.getJSONObject(0);
+					vid = jsonObject.getString("vid");
+					duration = jsonObject.getString("duration");
+					filesize = jsonObject.getInt("filesize1");
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				 downloadInfo = new DownloadInfo(vid, duration, filesize);
+				 if(service!=null&&!service.isAdd(downloadInfo)){
+					 service.addDownloadFile(downloadInfo);
+				 }else{
+					 runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							// TODO Auto-generated method stub
+							 Toast.makeText(IjkVideoActicity.this, "this video has been added !!", 1).show();
+						}
+					});
+					
+				 }
+				return null;
+			}
 		}
 }
