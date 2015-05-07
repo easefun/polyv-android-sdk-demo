@@ -15,9 +15,11 @@ import com.easefun.polyvsdk.R;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -58,10 +60,13 @@ public class IjkVideoActicity extends Activity {
 		rl.setLayoutParams(new RelativeLayout.LayoutParams(w, adjusted_h));
 		videoview=(IjkVideoView)findViewById(R.id.videoview);
 		mediaController = new IjkMediaController(this,false);//
+		ProgressBar progressBar = (ProgressBar)findViewById(R.id.loadingprogress);
+		videoview.setMediaBufferingIndicator(progressBar); //在缓冲时出现的loading
 		videoview.setMediaController(mediaController);
 		if(!isLocal){
-		videoview.setVideoId("sl8da4jjbx2262724b8a5132bd6103b2_s");
+		    videoview.setVideoId("sl8da4jjbx0bbe98bc3edfd2307fdbde_s");
 		}else{
+			progressBar.setVisibility(View.GONE);
 			videoview.setLocalVideo(vid);
 		}
 		videoview.setOnPreparedListener(new MyListener(path, vid));
@@ -164,5 +169,11 @@ public class IjkVideoActicity extends Activity {
 	      		// TODO Auto-generated method stub
 	      		super.onPrepared(mp);
 	      	}
-	       }
+	  }
+	 
+	 @Override
+		protected void onResume() {
+			// TODO Auto-generated method stub
+			super.onResume();
+		}
 }

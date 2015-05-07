@@ -33,11 +33,7 @@ import android.widget.Toast;
 public class NewTestActivity extends Activity {
     private String downloadId="testdownload";
     private String downloadSercetkey="f24c67d9bc0940b69ad8c0ebd6341730";
-//    sl8da4jjbxad92ff6b34cf75bdf70722_s
-//    sl8da4jjbx2262724b8a5132bd6103b2_s
-//    sl8da4jjbxa3c15f99bc37545693f7f9_s
-//    sl8da4jjbx8c9303593b4fff33e2a8ee_s 加密
-    //	private static String videoId="sl8da4jjbx0bbe98bc3edfd2307fdbde_s"; //加密
+
 	private static String videoId="sl8da4jjbx0bbe98bc3edfd2307fdbde_s";    //没加密
 	private ProgressDialog barProgressDialog;
 	private Button btn_down,btn_downloadlist,btn_stop,btn_playUrl,btn_playUrlFull,btn_playLocal,btn_playLocalFull,btn_record,btn_upload,btn_videolist;
@@ -123,7 +119,7 @@ public class NewTestActivity extends Activity {
 		client.setDownloadSecretKey(downloadSercetkey);
 		client.setSign(true);
 		client.setDownloadDir(saveDir);
-		//
+
 		 
 		downloadHelper = new DownloadHelper(this, videoId, 1);
 		
@@ -162,7 +158,7 @@ public class NewTestActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				Intent playUrl = new Intent(NewTestActivity.this,PreviewVideoActivity.class);
+				Intent playUrl = new Intent(NewTestActivity.this,IjkVideoActicity.class);
 				playUrl.putExtra("vid", videoId);
 				startActivityForResult(playUrl, 1);
 			} 

@@ -157,9 +157,16 @@ public class PreviewVideoActivity extends Activity{
 		
 		// 配置文件设置congfigchange 切屏调用一次该方法，hide()之后再次show才会出现在正确位置
 		@Override
-			public void onConfigurationChanged(Configuration arg0) {
+		public void onConfigurationChanged(Configuration arg0) {
 				// TODO Auto-generated method stub
 				super.onConfigurationChanged(arg0);
 				mediaController.hide();
 			}
+		
+		 @Override
+			protected void onResume() {
+				// TODO Auto-generated method stub
+				super.onResume();
+		
+		 }
 }
