@@ -23,6 +23,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
@@ -72,7 +73,7 @@ public class IjkVideoActicity extends Activity {
 		videoview.setMediaBufferingIndicator(progressBar); //在缓冲时出现的loading
 		videoview.setMediaController(mediaController);
 		if(!isLocal){
-		    videoview.setVideoId("sl8da4jjbx0bbe98bc3edfd2307fdbde_s");
+		    videoview.setVideoId("0ab7c428a3b3d177025215a30aafb074_0");
 		}else{
 			progressBar.setVisibility(View.GONE);
 			videoview.setLocalVideo(vid);
@@ -92,6 +93,14 @@ public class IjkVideoActicity extends Activity {
 			public void onLandscape() {
 				// TODO Auto-generated method stub
 				changeToPortrait();
+			}
+		});
+		videoview.setOnVideoStatusListener(new IjkVideoView.OnVideoStatusListener() {
+			
+			@Override
+			public void onStatus(int status) {
+				// TODO Auto-generated method stub
+				Log.i("IjkVideoActivity", "video status ->"+status);
 			}
 		});
 		// 设置视频尺寸 ，在横屏下效果较明显
