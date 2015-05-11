@@ -73,7 +73,7 @@ public class IjkVideoActicity extends Activity {
 		videoview.setMediaBufferingIndicator(progressBar); //在缓冲时出现的loading
 		videoview.setMediaController(mediaController);
 		if(!isLocal){
-		    videoview.setVideoId("0ab7c428a3b3d177025215a30aafb074_0");
+		    videoview.setVideoId("sl8da4jjbx7a4057e7834f81caad02ea_s");
 		}else{
 			progressBar.setVisibility(View.GONE);
 			videoview.setLocalVideo(vid);

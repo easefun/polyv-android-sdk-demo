@@ -173,6 +173,12 @@ public class ListAdapter extends BaseAdapter {
 									msg.setData(bundle);
 									handler.sendMessage(msg);
 								}
+
+								@Override
+								public void onDownloadSuccess() {
+									// TODO Auto-generated method stub
+									//下载完成调用
+								}
 							});
 					return null;
 				}
@@ -257,6 +263,12 @@ public class ListAdapter extends BaseAdapter {
 					bundle.putLong("total", total);
 					msg.setData(bundle);
 					handler.sendMessage(msg);
+				}
+
+				@Override
+				public void onDownloadSuccess() {
+					// TODO Auto-generated method stub
+					
 				}
 			});
 			return null;

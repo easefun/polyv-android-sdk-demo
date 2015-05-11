@@ -33,8 +33,8 @@ import android.widget.Toast;
 public class NewTestActivity extends Activity {
     private String downloadId="testdownload";
     private String downloadSercetkey="f24c67d9bc0940b69ad8c0ebd6341730";
-
-	private static String videoId="sl8da4jjbx0bbe98bc3edfd2307fdbde_s";    //没加密
+//    sl8da4jjbx0bbe98bc3edfd2307fdbde_s
+	private static String videoId="e70c46436b6b2cbbce0569c0453f6bd3_e";    //没加密
 	private ProgressDialog barProgressDialog;
 	private Button btn_down,btn_downloadlist,btn_stop,btn_playUrl,btn_playUrlFull,btn_playLocal,btn_playLocalFull,btn_record,btn_upload,btn_videolist;
 	private DownloadHelper downloadHelper;
@@ -111,13 +111,21 @@ public class NewTestActivity extends Activity {
 	         if(!saveDir.exists()) saveDir.mkdir();
 	      }  
     	PolyvSDKClient client = PolyvSDKClient.getInstance();
-		client.setReadtoken("nsJ7ZgQMN0-QsVkscukWt-qLfodxoDFm");
-		client.setWritetoken("Y07Q4yopIVXN83n-MPoIlirBKmrMPJu0");
-		client.setPrivatekey("DFZhoOnkQf");
-		client.setUserId("sl8da4jjbx");
-		client.setDownloadId(downloadId);
-		client.setDownloadSecretKey(downloadSercetkey);
-		client.setSign(true);
+//		client.setReadtoken("nsJ7ZgQMN0-QsVkscukWt-qLfodxoDFm");
+//		client.setWritetoken("Y07Q4yopIVXN83n-MPoIlirBKmrMPJu0");
+//		client.setPrivatekey("DFZhoOnkQf");
+//		client.setUserId("sl8da4jjbx");
+//		client.setDownloadId(downloadId);
+//		client.setDownloadSecretKey(downloadSercetkey);
+    	client.setReadtoken("Iu3Heyingz-dsYhQDz3QR-Z1nBheoVRf");
+    	client.setWritetoken("LmfCID000WXj1eA-uOgiMGQIETHcI0ag");
+    	client.setPrivatekey("UMubZpdMWo");
+    	client.setUserId("e70c46436b");
+    	client.setDownloadId("whu");
+    	client.setDownloadSecretKey("ee2ae6888e754fae83c6da438dd26334");
+		
+    	
+    	client.setSign(true);
 		client.setDownloadDir(saveDir);
 
 		 
@@ -293,6 +301,12 @@ public class NewTestActivity extends Activity {
 					bundle.putLong("total", total);
 					msg.setData(bundle);
 					handler.sendMessage(msg);
+				}
+
+				@Override
+				public void onDownloadSuccess() {
+					// TODO Auto-generated method stub
+					
 				}
 			});
 			return null;
