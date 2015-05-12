@@ -64,7 +64,7 @@ public final class R {
         public static final int scrubber_track_holo_dark=0x7f020023;
     }
     public static final class id {
-        public static final int AddTodownload=0x7f090036;
+        public static final int AddTodownload=0x7f090037;
         public static final int background=0x7f09001d;
         public static final int bot=0x7f090012;
         public static final int botlayout=0x7f090032;
@@ -121,7 +121,7 @@ public final class R {
         public static final int startButton=0x7f09000d;
         public static final int stop=0x7f090023;
         public static final int swtich=0x7f090034;
-        public static final int swtichlevel=0x7f090037;
+        public static final int swtichlevel=0x7f090036;
         public static final int time=0x7f09002e;
         public static final int timeCountTextView=0x7f09000c;
         public static final int time_current=0x7f09002c;

@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             ></com.easefun.polyvsdk.ijk.IjkVideoView>
-      <ProgressBar 
+       <ProgressBar 
          android:id="@+id/loadingprogress"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
@@ -46,8 +46,16 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/play"
             android:text="下一个视频"
+            android:visibility="gone"
             />
-             <Button 
+          <Button 
+            android:id="@+id/swtichlevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/change"
+            android:text="切换码率"
+            />
+          <Button 
             android:id="@+id/AddTodownload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
