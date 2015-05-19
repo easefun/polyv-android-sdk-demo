@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+ <RelativeLayout 
+     android:id="@+id/rl"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_margin="5dp"
+     >
+
+     <TextView
+         android:id="@+id/tv_vid"
+         android:layout_width="350px"
+         android:layout_height="wrap_content" 
+         android:text="sasdasdasdasdasdasd_s.mp4" />
+
+     <TextView 
+         android:id="@+id/duration"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignLeft="@+id/tv_vid"
+         android:layout_below="@+id/tv_vid"
+         android:text="时长 :"
+         />
+     <TextView 
+         android:id="@+id/tv_duration"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_toRightOf="@+id/duration"
+         android:layout_below="@+id/tv_vid"
+         android:text="00:00:44"
+         />
+        <TextView 
+         android:id="@+id/filesize"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginLeft="15dp"
+         android:layout_toRightOf="@+id/tv_duration"
+         android:layout_below="@+id/tv_vid"
+         android:text="大小:"
+         />
+         <TextView 
+         android:id="@+id/tv_filesize"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_toRightOf="@+id/filesize"
+         android:layout_below="@+id/tv_vid"
+         android:text="100MB"
+         />
+ </RelativeLayout>
+<RelativeLayout 
+    android:layout_below="@+id/rl"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+    <ProgressBar
+     android:id="@+id/progressBar"
+     style="?android:attr/progressBarStyleHorizontal"
+     android:layout_margin="5dp"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content" />
+    <TextView 
+        android:id="@+id/rate"
+        android:layout_width="wrap_content"
+        android:layout_height="20dip"
+        android:layout_below="@+id/progressBar"
+        android:layout_toLeftOf="@+id/precent"
+        android:text="0"
+        />
+
+        <TextView
+            android:id="@+id/precent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/progressBar"
+            android:layout_below="@+id/progressBar"
+            android:text="%" />
+
+</RelativeLayout>
+
+<Button
+    android:id="@+id/download"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentRight="true"
+    android:layout_alignTop="@+id/rl"
+    android:text="开始" />
+
+
+
+</RelativeLayout>
