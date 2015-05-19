@@ -87,6 +87,9 @@
             android:label="@string/app_name"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
+         <service  
+            android:name="com.easefun.polyvsdk.server.AndroidService"
+        ></service>
     </application>
 
 </manifest>
