@@ -12,6 +12,7 @@ public class DBservice {
 	private static final String TAG = "DBservice";
 	private DBOpenHepler dbOpenHepler;
 
+	
 	public DBservice(Context context) {
 		// 1 -> database version
 		dbOpenHepler = new DBOpenHepler(context, 1);

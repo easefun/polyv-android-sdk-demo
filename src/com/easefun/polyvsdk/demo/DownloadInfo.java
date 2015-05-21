@@ -5,6 +5,7 @@ public class DownloadInfo {
     private String duration;
     private int filesize;
     
+    
     public DownloadInfo(){
     	
     }

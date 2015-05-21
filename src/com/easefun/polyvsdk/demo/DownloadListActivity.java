@@ -22,6 +22,7 @@ public class DownloadListActivity extends Activity {
 	private Button btn_downloadall;
 	private TextView emptyView;
 	private boolean isStop=false;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub

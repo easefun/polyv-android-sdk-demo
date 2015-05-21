@@ -6,7 +6,7 @@
     android:baselineAligned="false"
     android:background="#FFFFFF"
     android:orientation="vertical" >
-
+ 
    <RelativeLayout
         android:id="@+id/rl"
         android:layout_width="wrap_content"

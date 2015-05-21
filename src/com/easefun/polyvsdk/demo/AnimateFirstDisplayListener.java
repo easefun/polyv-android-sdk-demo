@@ -15,6 +15,7 @@ public class AnimateFirstDisplayListener extends SimpleImageLoadingListener{
 	boolean cacheFound;
 	public static List<String> displayedImages = Collections.synchronizedList(new LinkedList<String>());
 
+	
 	@Override
 	public void onLoadingStarted(String imageUri, View view){
 		

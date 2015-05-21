@@ -9,7 +9,7 @@
      android:layout_height="wrap_content"
      android:layout_margin="5dp"
      >
-
+ 
      <TextView
          android:id="@+id/tv_vid"
          android:layout_width="350px"

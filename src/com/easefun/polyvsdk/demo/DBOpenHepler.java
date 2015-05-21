@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBOpenHepler extends SQLiteOpenHelper{
     private static final String DATEBASENAME="downloadlist.db";
     
+    
     public DBOpenHepler(Context context,int version){
     	super(context,DATEBASENAME, null, version);
     }

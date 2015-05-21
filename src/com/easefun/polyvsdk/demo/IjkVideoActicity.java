@@ -64,7 +64,7 @@ public class IjkVideoActicity extends Activity {
 		w = wm.getDefaultDisplay().getWidth();
 		h = wm.getDefaultDisplay().getHeight();
 		//小窗口的比例
-		
+		 
 		ratio=(float)4/3;
 		adjusted_h= (int)Math.ceil((float)w/ratio);
 		rl = (RelativeLayout) findViewById(R.id.rl);
