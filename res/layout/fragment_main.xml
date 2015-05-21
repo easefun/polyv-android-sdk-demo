@@ -1,0 +1,57 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.easefun.polyvsdk.MainActivity$PlaceholderFragment" >
+
+    <Button
+        android:id="@+id/button_record"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="46dp"
+        android:layout_toLeftOf="@+id/button_upload"
+        android:text="录制视频" />
+
+    <Button
+        android:id="@+id/button_upload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/button_record"
+        android:layout_alignBottom="@+id/button_record"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="42dp"
+        android:text="上传视频" />
+
+    <Button
+        android:id="@+id/button_download"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button_record"
+        android:layout_marginTop="36dp"
+        android:layout_toLeftOf="@+id/button_upload"
+        android:text="下载视频" />
+
+    <Button
+        android:id="@+id/button_play_local"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/button_download"
+        android:layout_alignBottom="@+id/button_download"
+        android:layout_alignLeft="@+id/button_upload"
+        android:text="播放本地" />
+
+    <Button
+        android:id="@+id/button_play_url"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button_download"
+        android:layout_marginTop="26dp"
+        android:layout_toLeftOf="@+id/button_play_local"
+        android:text="在线播放" />
+
+</RelativeLayout>
