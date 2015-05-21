@@ -41,7 +41,7 @@ polyv-android-sdk-demo
 
 使用SmallVideoDemoActivity类做演示，调用方法：
 
-```objective-c
+```java
 Intent playUrl = new Intent(NewTestActivity.this,SmallVideoDemoActivity.class);
 playUrl.putExtra("vid", videoId);
 startActivityForResult(playUrl, 1);
