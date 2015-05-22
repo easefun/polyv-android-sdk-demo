@@ -6,11 +6,6 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="lib" path="libs/jikmediaplayer.jar"/>
 	<classpathentry kind="lib" path="libs/jikmediawidget.jar"/>
-	<classpathentry kind="lib" path="F:/adt-bundle-windows-x86_64-20140624/sdk/platforms/android-20/android.jar">
-		<accessrules>
-			<accessrule kind="nonaccessible" pattern="com/android/internal/**"/>
-		</accessrules>
-	</classpathentry>
 	<classpathentry kind="lib" path="libs/polyvSDK.jar"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="output" path="bin/classes"/>
