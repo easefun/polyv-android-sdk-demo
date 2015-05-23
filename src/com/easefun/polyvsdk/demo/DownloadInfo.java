@@ -1,5 +1,5 @@
 package com.easefun.polyvsdk.demo;
-
+ 
 public class DownloadInfo {
     private String vid;
     private String duration;
