@@ -14,7 +14,7 @@
         android:background="#000000"
         >
          <com.easefun.polyvsdk.ijk.IjkVideoView 
-             android:id="@+id/videoview"
+             android:id="@+id/full_videoview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"

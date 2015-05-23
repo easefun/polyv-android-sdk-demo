@@ -36,7 +36,7 @@ public class NewTestActivity extends Activity {
 	private PolyvDownloader downloader;
 	// sl8da4jjbx684cdae6bf17b1b70a8354_s 非加密
 	// sl8da4jjbx80cb8878980c1626c51923_s 加密
-	private static String videoId = "sl8da4jjbx80cb8878980c1626c51923_s";
+	private static String videoId = "sl8da4jjbx73267d709849ca8854adc0_s";
 	private ProgressDialog barProgressDialog;
 	private Button btn_down, btn_downloadlist, btn_del,btn_playUrl, btn_playUrlFull,
 			btn_playLocal, btn_playLocalFull, btn_record, btn_upload,
@@ -109,6 +109,7 @@ public class NewTestActivity extends Activity {
 					@Override
 					public void onCancel(DialogInterface arg0) {
 						// TODO Auto-generated method stub
+						downloader.stop();
 					}
 				});
 		// 加密视频下载m3u8到本地目录，ts目录为polyvclient.getDownloadDir/userid/

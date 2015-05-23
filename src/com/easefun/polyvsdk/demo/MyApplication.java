@@ -37,10 +37,6 @@ public class MyApplication extends Application {
 		// TODO Auto-generated method stub
 		super.onCreate();
 				File cacheDir = StorageUtils.getOwnCacheDirectory(getApplicationContext(), "polyvSDK/Cache");
-				// This configuration tuning is custom. You can tune every option, you may tune some of them, 
-				// or you can create default configuration by
-				//  ImageLoaderConfiguration.createDefault(this);
-				// method.
 				ImageLoaderConfiguration config = new ImageLoaderConfiguration  
 					    .Builder(getApplicationContext())  
 					    .memoryCacheExtraOptions(480, 800) 
@@ -59,9 +55,8 @@ public class MyApplication extends Application {
 					    .imageDownloader(new BaseImageDownloader(getApplicationContext(), 5 * 1000, 30 * 1000)) // connectTimeout (5 s), readTimeout (30 s)��ʱʱ��  
 					    .writeDebugLogs() // Remove for release app  
 					    .build();
-					    // Initialize ImageLoader with configuration.  
-				
-				//Initialize ImageLoader with configuration
+  
+
 				ImageLoader.getInstance().init(config);
 				initPolyvCilent();
 //				startAndroidService();
@@ -81,6 +76,7 @@ public class MyApplication extends Application {
 		client.setUserId("sl8da4jjbx");
 		client.setSign(true);
 		client.setDownloadDir(saveDir);
+		client.setPort(10655);
 		client.startService(getApplicationContext());
 		
 	}
