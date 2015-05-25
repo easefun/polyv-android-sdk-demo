@@ -180,6 +180,8 @@ startActivityForResult(playUrlFull, 1);
     }
 ```
   具体实现方式参考本案例中的MediaController.java
+
+
 2.视频播放代码调用
 ```java
 
