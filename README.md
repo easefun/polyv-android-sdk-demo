@@ -184,13 +184,13 @@ startActivityForResult(playUrlFull, 1);
 
 2.视频播放代码调用
 ```java
-                videoview=(IjkVideoView)findViewById(R.id.videoview);
-		progressBar =(ProgressBar)findViewById(R.id.loadingprogress);
-		videoview.setMediaBufferingIndicator(progressBar); //在缓冲时出现的loading
-		mediaController = new MediaController(this,false);//
-		mediaController.setAnchorView(videoview);
-		videoview.setMediaController(mediaController);
-		videoview.setVid(vid);//		
+        videoview=(IjkVideoView)findViewById(R.id.videoview);
+	progressBar =(ProgressBar)findViewById(R.id.loadingprogress);
+	videoview.setMediaBufferingIndicator(progressBar); //在缓冲时出现的loading
+	mediaController = new MediaController(this,false);//
+	mediaController.setAnchorView(videoview);
+	videoview.setMediaController(mediaController);
+	videoview.setVid(vid);//		
 				
 
 ```
