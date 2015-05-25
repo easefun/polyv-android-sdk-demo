@@ -36,11 +36,9 @@ public class NewTestActivity extends Activity {
 	private PolyvDownloader downloader;
 	// sl8da4jjbx684cdae6bf17b1b70a8354_s 非加密
 	// sl8da4jjbx80cb8878980c1626c51923_s 加密
-	private static String videoId = "sl8da4jjbx73267d709849ca8854adc0_s";
+	private static String videoId = "sl8da4jjbxc5feddbc7fcd1a765100a3_s";
 	private ProgressDialog barProgressDialog;
-	private Button btn_down, btn_downloadlist, btn_del,btn_playUrl, btn_playUrlFull,
-			btn_playLocal, btn_playLocalFull, btn_record, btn_upload,
-			btn_videolist;
+	private Button btn_down, btn_downloadlist, btn_del,btn_playUrl, btn_playUrlFull,btn_playLocal, btn_playLocalFull, btn_record, btn_upload,btn_videolist;
 	File saveDir;
 	private static final int DOWNLOAD = 1;
 	private static final int UPLOAD = 2;

@@ -141,24 +141,24 @@ public class MediaController extends IjkBaseMediaController {
     }
     @Override
     protected void initControllerView(View v) {
-//        mPauseButton = (ImageButton) v.findViewById(R.id.mediacontroller_play_pause);
-    	mPauseButton = (ImageButton) v.findViewById(getResourseIdByName("id", "mediacontroller_play_pause"));
+        mPauseButton = (ImageButton) v.findViewById(R.id.mediacontroller_play_pause);
+//    	mPauseButton = (ImageButton) v.findViewById(getResourseIdByName("id", "mediacontroller_play_pause"));
     	if (mPauseButton != null) {
             mPauseButton.requestFocus();
             mPauseButton.setOnClickListener(mPauseListener);
         }
-//        mFfwdButton =(ImageButton)v.findViewById(R.id.ffwd);
-        mFfwdButton =(ImageButton)v.findViewById(getResourseIdByName("id", "ffwd"));
+     mFfwdButton =(ImageButton)v.findViewById(R.id.ffwd);
+//        mFfwdButton =(ImageButton)v.findViewById(getResourseIdByName("id", "ffwd"));
         mFfwdButton.setOnClickListener(mFfwdListener);
         
-//        mRewButton=(ImageButton)v.findViewById(R.id.rew);
-        mRewButton=(ImageButton)v.findViewById(getResourseIdByName("id", "rew"));
+        mRewButton=(ImageButton)v.findViewById(R.id.rew);
+//        mRewButton=(ImageButton)v.findViewById(getResourseIdByName("id", "rew"));
         mRewButton.setOnClickListener(mRewListener);
-//       btn_boardChange=(ImageButton)v.findViewById(R.id.landscape);
-        btn_boardChange=(ImageButton)v.findViewById(getResourseIdByName("id", "landscape"));
+        btn_boardChange=(ImageButton)v.findViewById(R.id.landscape);
+//        btn_boardChange=(ImageButton)v.findViewById(getResourseIdByName("id", "landscape"));
         btn_boardChange.setOnClickListener(mBoardListener);
-//       btn_videoChange=(ImageButton)v.findViewById(R.id.videochange);
-        btn_videoChange=(ImageButton)v.findViewById(getResourseIdByName("id", "videochange"));
+        btn_videoChange=(ImageButton)v.findViewById(R.id.videochange);
+//     btn_videoChange=(ImageButton)v.findViewById(getResourseIdByName("id", "videochange"));
         btn_videoChange.setTag("0");
         btn_videoChange.setOnClickListener(mVideoListener);
        
