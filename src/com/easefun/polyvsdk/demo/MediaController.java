@@ -133,10 +133,9 @@ public class MediaController extends IjkBaseMediaController {
 
     @Override
     protected View makeControllerView() {
-       
+     
     	mRoot =((LayoutInflater) mContext
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(
-                getResourseIdByName("layout", "ijkmedia_controller"), null);
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.ijkmedia_controller, this);
        return mRoot;
     }
     @Override
