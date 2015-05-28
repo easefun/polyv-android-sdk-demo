@@ -77,7 +77,7 @@ public class IjkVideoActicity extends Activity {
 		mediaController.setAnchorView(videoview);
 		videoview.setMediaController(mediaController);
 		if(!encrypt){
-	        videoview.setVid(vid,1);
+	        videoview.setVid(vid);
 		}else{
 			progressBar.setVisibility(View.GONE);
 			videoview.setVideoURI(Uri.parse(path));
