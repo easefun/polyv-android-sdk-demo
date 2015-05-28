@@ -44,7 +44,7 @@ public class MediaController extends IjkBaseMediaController {
     private View mRoot;
     private ProgressBar mProgress;
     private TextView mEndTime, mCurrentTime;
-    
+     
  
     private String mTitle;
     private long mDuration;

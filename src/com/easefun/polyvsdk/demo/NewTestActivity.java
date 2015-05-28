@@ -30,7 +30,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class NewTestActivity extends Activity {
-	// 不再需要以下参数..
+	// 不再需要以下参数.. 
 	// private String downloadId="testdownload";
 	// private String downloadSercetkey="f24c67d9bc0940b69ad8c0ebd6341730";
 	private PolyvDownloader downloader;
