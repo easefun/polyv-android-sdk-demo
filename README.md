@@ -7,14 +7,17 @@ polyv-android-sdk-demo
 --
 下载本案例，在eclipse创建android项目，选择"android project from existing code"
 
-额外需要的包有
-        ijkmediaplayer.jar
-        ijkmediawidget.jar
-	commons-codec-1.5.jar
-	httpclient-android-4.3.3.jar
-	httpmime-4.3.5.jar
-	polyvSDK.jar
-	universal-image-loader-1.9.3-SNAPSHOT.jar
+需要的包
+libs\armeabi-v7a下的so文件
+```java
+ijkmediaplayer.jar
+ijkmediawidget.jar
+commons-codec-1.5.jar
+httpclient-android-4.3.3.jar
+httpmime-4.3.5.jar
+polyvSDK.jar
+universal-image-loader-1.9.3-SNAPSHOT.jar
+```
 案列所需要的权限
 ```xml
     <uses-permission android:name="android.permission.CAMERA" />
@@ -46,14 +49,23 @@ polyv-android-sdk-demo
 ```
 下载视频
 --
-使用NewTestActivity类做演示，调用
+视频将统一下载到client.getDownloadDir中.
+创建Downloader实例需提供视频ID，码率bitRate。示例如下：
 ```java
 downloader = new PolyvDownloader(videoId, 1);
+//开始下载
+downloader.start();
+//停止下载
+downloader.stop();
+```
+设置下载回调
+```java
+//设置下载回调
 downloader.setPolyvDownloadProressListener(new PolyvDownloadProgressListener() {
 					@Override
 					public void onDownloadSuccess() {
 						// TODO Auto-generated method stub
-						Log.i("NewTestActivity", "下载完成");
+						Log.i("aaa", "下载完成");
 					}
 
 					@Override
@@ -67,28 +79,32 @@ downloader.setPolyvDownloadProressListener(new PolyvDownloadProgressListener() {
 						msg.setData(bundle);
 						handler.sendMessage(msg);
 					}
+					@Override
+					public void onDownloadFail(String error) {
+						// TODO Auto-generated method stub
+						Log.i("aaa", "下载失败 ："+error);
+					}
 				});
 				
-//开始下载
-downloader.start()
-//删除					
+```
+删除视频
+```java
 downloader.deleteVideo(videoId, 1);
 //删除下载目录
 downloader.cleanDownloadDir();
 ```
+具体代码参见NewTestActivity.java
 
 如何用小窗口播放在线视频
 --
-
 使用IjkVideoActivity类做演示，调用方法：
 
 ```java
 Intent playUrl = new Intent(NewTestActivity.this,IjkVideoActicity.class);
 playUrl.putExtra("vid", videoId);
 startActivityForResult(playUrl, 1);
-
 ```
-  
+
 如何全屏播放在线视频
 --
 
@@ -103,8 +119,7 @@ startActivityForResult(playUrlFull, 1);
 使用IjkVideoView,IjkBaseMediaController构建播放器
 --
 1.自定义MediaController
-  创建一个类MediaController，继承自抽象类IjkBaseMediaController，其中
-  父类IjkBaseMediaController.java
+  创建一个类MediaController，继承自抽象类IjkBaseMediaController，其中父类IjkBaseMediaController.java
   ```java
   public abstract class IjkBaseMediaController extends FrameLayout {
  
@@ -139,8 +154,14 @@ startActivityForResult(playUrlFull, 1);
 }
   
   ```
-  MediaController.java 中的关于View布局的
+MediaController.java 中的关于布局的makeControllerView(),initControllerView()
 ```java
+  @Override
+  protected View makeControllerView() {
+        return ((LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(
+                R.layout.ijkmeida_controller, this);
+  }
+  @Override
   protected void initControllerView(View v) {
         mPauseButton = (ImageButton) v.findViewById(R.id.mediacontroller_play_pause);
     	if (mPauseButton != null) {
@@ -179,6 +200,25 @@ startActivityForResult(playUrlFull, 1);
         mCurrentTime = (TextView) v.findViewById(R.id.mediacontroller_time_current);
     }
 ```
+  另在MediaController中提供了几个接口
+ 设置切屏监听器,可在onLandscape(),onPortrait()中实现切屏方法
+```java
+  void setOnBoardChangeListener(OnBoardChangeListener l)
+```
+设置视频尺寸监听器，监听的是layout常量
+```java
+ void setOnVideoChangeListener(OnVideoChangeListener l)
+ ```
+  设置MediaController显示时的监听器
+```java
+void setOnShownListener(OnShownListener l)
+```
+  设置MediaController隐藏时的监听器
+```java  
+  void setOnHiddenListener(OnHiddenListener l)
+```  
+  设置MediaController隐藏时的监听器
+
   具体实现方式参考本案例中的MediaController.java
 
 
@@ -191,6 +231,48 @@ startActivityForResult(playUrlFull, 1);
 	mediaController.setAnchorView(videoview);
 	videoview.setMediaController(mediaController);
 	videoview.setVid(vid);//		
-				
+```
 
+视频上传
+--
+```java
+class VideoUploadTask extends AsyncTask<String, Void, String> {
+
+		@Override
+		protected String doInBackground(String... params) {
+			File path = new File(Environment.getExternalStorageDirectory(),"myRecording.mp4");
+			try {
+			String videojson = PolyvSDKClient.getInstance()
+						.resumableUpload(path.toString(), "我的标题", "desc", 0,
+								new Progress() {
+									@Override
+									public void run(long offset, long max) {
+										// TODO Auto-generated method stub
+										Message msg = new Message();
+										msg.what = UPLOAD;
+										Bundle bundle = new Bundle();
+										bundle.putLong("offset", offset);
+										bundle.putLong("max", max);
+										msg.setData(bundle);
+										handler.sendMessage(msg);
+									}
+								});
+				return videojson;
+			} catch (Exception e) {
+
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			try {
+				Video video = SDKUtil.convertJsonToVideo(result);
+				Log.d("VideoUploadTask","video uploaded vid: " + video.getVid());
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 ```
