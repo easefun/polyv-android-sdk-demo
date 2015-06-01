@@ -160,7 +160,6 @@ public class NewTestActivity extends Activity {
 				if(downloader!=null){
 					PolyvDownloader polyvDownloader = new PolyvDownloader(videoId, 1);
 					polyvDownloader.deleteVideo(videoId, 1);
-//					downloader.cleanDownloadDir();
 				}
 			}
 		});
@@ -203,7 +202,7 @@ public class NewTestActivity extends Activity {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				File mp4File = new File(PolyvSDKClient.getInstance().getDownloadDir(),
-						"sl8da4jjbx684cdae6bf17b1b70a8354_1.mp4");
+						"3.mp4");
 				if (mp4File.exists()) {
 					Intent playLocal = new Intent(NewTestActivity.this,IjkVideoActicity.class);
 					playLocal.putExtra("path",mp4File.getPath());
@@ -220,7 +219,7 @@ public class NewTestActivity extends Activity {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				File mp4File = new File(PolyvSDKClient.getInstance().getDownloadDir(),
-						"sl8da4jjbx684cdae6bf17b1b70a8354_1.mp4");
+						"3.mp4");
 				if (mp4File.exists()) {
 					Intent playLocal = new Intent(NewTestActivity.this,IjkVideoActicity.class);
 					playLocal.putExtra("path",mp4File.getPath());

@@ -65,6 +65,7 @@ public final class R {
     }
     public static final class id {
         public static final int AddTodownload=0x7f090030;
+        public static final int Layout1=0x7f090013;
         public static final int background=0x7f090026;
         public static final int bot=0x7f090012;
         public static final int botlayout=0x7f09002d;
@@ -98,8 +99,8 @@ public final class R {
         public static final int localvideo_1=0x7f090022;
         public static final int localvideo_2=0x7f090023;
         public static final int mediacontroller_play_pause=0x7f09001a;
-        public static final int mediacontroller_seekbar=0x7f090014;
-        public static final int mediacontroller_time_current=0x7f090015;
+        public static final int mediacontroller_seekbar=0x7f090015;
+        public static final int mediacontroller_time_current=0x7f090014;
         public static final int mediacontroller_time_total=0x7f090016;
         public static final int next=0x7f09001c;
         public static final int onlinevideo_1=0x7f090020;
@@ -111,7 +112,6 @@ public final class R {
         public static final int progressbar=0x7f090029;
         public static final int rate=0x7f090037;
         public static final int recordvideo=0x7f090024;
-        public static final int relativeLayout1=0x7f090013;
         public static final int rew=0x7f090019;
         public static final int rl=0x7f09002a;
         public static final int startButton=0x7f09000d;

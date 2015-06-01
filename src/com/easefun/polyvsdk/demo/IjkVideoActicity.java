@@ -243,6 +243,7 @@ public class IjkVideoActicity extends Activity {
 			// TODO Auto-generated method stub
 			super.onConfigurationChanged(arg0);
 			mediaController.hide();
+			videoview.setVideoLayout(IjkVideoView.VIDEO_LAYOUT_SCALE);
 		}
 	
 	   @Override

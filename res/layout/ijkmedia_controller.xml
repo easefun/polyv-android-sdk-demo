@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     android:background="@null"
     android:orientation="horizontal" >
-   
+
     <!--
     <ImageButton
         android:id="@+id/mediacontroller_play_pause"
@@ -68,8 +68,7 @@
             android:layout_alignParentBottom="true"
             android:ellipsize="marquee"
             android:singleLine="true" />
-    </RelativeLayout>
-    -->
+    </RelativeLayout>-->
 
     <RelativeLayout
         android:id="@+id/topbar"
@@ -106,15 +105,16 @@
     <RelativeLayout
         android:id="@+id/bot"
         android:layout_width="match_parent"
-        android:layout_height="90dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@drawable/bg_mc" >
 
-        <RelativeLayout
+   <!--       <RelativeLayout
             android:id="@+id/relativeLayout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
+          
             <SeekBar
                 android:id="@+id/mediacontroller_seekbar"
                 style="@style/MediaController_SeekBar"
@@ -138,13 +138,58 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/mediacontroller_seekbar" />
-        </RelativeLayout>
+            </RelativeLayout>
+            -->
+
+            <LinearLayout
+                android:id="@+id/Layout1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+               android:gravity="center_horizontal"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/mediacontroller_time_current"
+                    style="@style/MediaController_Text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:paddingEnd="4dip"
+                    android:paddingStart="4dip"
+                    android:paddingTop="4dip"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <SeekBar
+                    android:id="@+id/mediacontroller_seekbar"
+                    style="@style/MediaController_SeekBar"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:focusable="true"
+                    android:max="1000" />
+
+                <TextView
+                    android:id="@+id/mediacontroller_time_total"
+                    style="@style/MediaController_Text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:paddingEnd="4dip"
+                    android:paddingStart="4dip"
+                    android:paddingTop="4dip"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        
 
         <LinearLayout
             android:id="@+id/btn_ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/relativeLayout1"
+            android:layout_below="@+id/Layout1"
             android:gravity="center"
             android:orientation="horizontal" >
 
