@@ -1,11 +1,9 @@
 package com.easefun.polyvsdk.demo;
-  
+
 import java.io.File;
 
 import org.json.JSONException;
 import com.easefun.polyvsdk.DownloadProgressListener;
-import com.easefun.polyvsdk.Downloader;
-import com.easefun.polyvsdk.DownloadHelper;
 import com.easefun.polyvsdk.PolyvDownloadProgressListener;
 import com.easefun.polyvsdk.PolyvDownloader;
 import com.easefun.polyvsdk.PolyvSDKClient;
@@ -30,15 +28,18 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class NewTestActivity extends Activity {
-	// 不再需要以下参数.. 
+	// 不再需要以下参数..
 	// private String downloadId="testdownload";
 	// private String downloadSercetkey="f24c67d9bc0940b69ad8c0ebd6341730";
 	private PolyvDownloader downloader;
 	// sl8da4jjbx684cdae6bf17b1b70a8354_s 非加密
 	// sl8da4jjbx80cb8878980c1626c51923_s 加密
-	private static String videoId = "sl8da4jjbx5bffac3a4e7896506ad1e4_s";
+	private static String videoId = "sl8da4jjbx0ec6ae62ea9c8f5d5fb0a0_s";
+	private static String TAG="NewTestActivity";
 	private ProgressDialog barProgressDialog;
-	private Button btn_down, btn_downloadlist, btn_del,btn_playUrl, btn_playUrlFull,btn_playLocal, btn_playLocalFull, btn_record, btn_upload,btn_videolist;
+	private Button btn_down, btn_downloadlist, btn_del,btn_playUrl, btn_playUrlFull,
+			btn_playLocal, btn_playLocalFull, btn_record, btn_upload,
+			btn_videolist;
 	File saveDir;
 	private static final int DOWNLOAD = 1;
 	private static final int UPLOAD = 2;
@@ -118,7 +119,14 @@ public class NewTestActivity extends Activity {
 					@Override
 					public void onDownloadSuccess() {
 						// TODO Auto-generated method stub
-						Log.i("NewTestActivity", "下载完成");
+						Message msg = new Message();
+						msg.what = DOWNLOAD;
+						Bundle bundle = new Bundle();
+						bundle.putLong("current", 1);
+						bundle.putLong("total", 1);
+						msg.setData(bundle);
+						handler.sendMessage(msg);
+						Log.i(TAG, "下载完成");
 					}
 
 					@Override
@@ -136,7 +144,7 @@ public class NewTestActivity extends Activity {
 					@Override
 					public void onDownloadFail(String error) {
 						// TODO Auto-generated method stub
-						Log.i("aaa", "下载失败 "+error);
+						Log.i(TAG, "下载失败"+error);
 					}
 				});
 		btn_down.setOnClickListener(new View.OnClickListener() {
@@ -158,8 +166,8 @@ public class NewTestActivity extends Activity {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				if(downloader!=null){
-					PolyvDownloader polyvDownloader = new PolyvDownloader(videoId, 1);
-					polyvDownloader.deleteVideo(videoId, 1);
+					downloader.deleteVideo(videoId, 1);
+//					downloader.cleanDownloadDir();
 				}
 			}
 		});
@@ -209,7 +217,7 @@ public class NewTestActivity extends Activity {
 					playLocal.putExtra("vid", videoId);
 					startActivityForResult(playLocal, 1);
 				}else{
-					Log.i("TAG", "视频文件不存在,请先行下载");
+					Toast.makeText(NewTestActivity.this, "视频文件不存在,请先行下载",Toast.LENGTH_LONG );
 				}
 			}
 		});
@@ -221,12 +229,12 @@ public class NewTestActivity extends Activity {
 				File mp4File = new File(PolyvSDKClient.getInstance().getDownloadDir(),
 						"3.mp4");
 				if (mp4File.exists()) {
-					Intent playLocal = new Intent(NewTestActivity.this,IjkVideoActicity.class);
+					Intent playLocal = new Intent(NewTestActivity.this,IjkFullVideoActivity.class);
 					playLocal.putExtra("path",mp4File.getPath());
 					playLocal.putExtra("vid", videoId);
 					startActivityForResult(playLocal, 1);
 				}else{
-					Log.i("TAG", "视频文件不存在,请先行下载");
+					Toast.makeText(NewTestActivity.this, "视频文件不存在,请先行下载",Toast.LENGTH_LONG );
 				}
 			}
 		});
@@ -246,8 +254,7 @@ public class NewTestActivity extends Activity {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				barProgressDialog.setTitle("正在上传 ...");
-				barProgressDialog
-						.setProgressStyle(barProgressDialog.STYLE_HORIZONTAL);
+				barProgressDialog.setProgressStyle(barProgressDialog.STYLE_HORIZONTAL);
 				barProgressDialog.setProgress(0);
 				barProgressDialog.setMax(100);
 				barProgressDialog.setCancelable(true);
@@ -304,8 +311,7 @@ public class NewTestActivity extends Activity {
 		protected void onPostExecute(String result) {
 			try {
 				Video video = SDKUtil.convertJsonToVideo(result);
-				Log.d("VideoUploadTask",
-						"video uploaded vid: " + video.getVid());
+				Log.d("VideoUploadTask","video uploaded vid: " + video.getVid());
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

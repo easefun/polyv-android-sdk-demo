@@ -6,7 +6,6 @@ import com.easefun.polyvsdk.R;
 import com.easefun.polyvsdk.ijk.IjkMediaController;
 import com.easefun.polyvsdk.ijk.IjkVideoView;
 import com.easefun.polyvsdk.ijk.OnPreparedListener;
-import com.easefun.polyvsdk.ijk.PreviewIjkVideoView;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;

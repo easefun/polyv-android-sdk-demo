@@ -1,14 +1,8 @@
 package com.easefun.polyvsdk.demo;
-  
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
-
-import com.easefun.polyvsdk.DownloadHelper;
-import com.easefun.polyvsdk.DownloadProgressListener;
-import com.easefun.polyvsdk.Downloader;
-import com.easefun.polyvsdk.R;
-import com.easefun.polyvsdk.SDKUtil;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -25,13 +19,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.easefun.polyvsdk.DownloadProgressListener;
+import com.easefun.polyvsdk.PolyvDownloadProgressListener;
+import com.easefun.polyvsdk.PolyvDownloader;
+import com.easefun.polyvsdk.R;
+import com.easefun.polyvsdk.SDKUtil;
+
 public class ListAdapter extends BaseAdapter {
-	private static final String TAG="DownloadList";
+	private static final String TAG = "DownloadList";
 	private LinkedList<DownloadInfo> data;
 	private Context context;
 	private LayoutInflater inflater;
-	private DownloadHelper downloadHelper;
-	private Downloader downloader;
 	private File downloadedFile;
 
 	private static ViewHolder holder;
@@ -40,7 +38,7 @@ public class ListAdapter extends BaseAdapter {
 	private LinkedList<TextView> rlist;
 	private LinkedList<Boolean> flags;
 	private LinkedList<String> vids;
-	private ArrayList<Downloader> downloaders;
+	private ArrayList<PolyvDownloader> downloaders;
 	private LinkedList<Button> butlist;
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -55,8 +53,8 @@ public class ListAdapter extends BaseAdapter {
 				progressBar.setProgress((int) precent);
 				tv.setText("" + precent);
 				if (progressBar.getProgress() == progressBar.getMax()) {
-//					if (downloader != null)
-//						downloader.stop();
+					// if (downloader != null)
+					// downloader.stop();
 					Button btn = butlist.get(position);
 					btn.setEnabled(true);
 					Toast.makeText(context, "下载成功", 1).show();
@@ -75,7 +73,7 @@ public class ListAdapter extends BaseAdapter {
 		this.inflater = LayoutInflater.from(context);
 		this.barlist = new LinkedList<ProgressBar>();
 		this.rlist = new LinkedList<TextView>();
-		this.butlist=new LinkedList<Button>();
+		this.butlist = new LinkedList<Button>();
 		this.flags = new LinkedList<Boolean>();
 		this.vids = new LinkedList<String>();
 	}
@@ -106,11 +104,15 @@ public class ListAdapter extends BaseAdapter {
 			convertView = inflater.inflate(R.layout.view_item, null);
 			holder = new ViewHolder();
 			holder.tv_vid = (TextView) convertView.findViewById(R.id.tv_vid);
-			holder.tv_duration = (TextView) convertView.findViewById(R.id.tv_duration);
-			holder.tv_filesize = (TextView) convertView.findViewById(R.id.tv_filesize);
-			holder.progressBar = (ProgressBar) convertView.findViewById(R.id.progressBar);
+			holder.tv_duration = (TextView) convertView
+					.findViewById(R.id.tv_duration);
+			holder.tv_filesize = (TextView) convertView
+					.findViewById(R.id.tv_filesize);
+			holder.progressBar = (ProgressBar) convertView
+					.findViewById(R.id.progressBar);
 			barlist.addLast(holder.progressBar);
-			holder.btn_download = (Button) convertView.findViewById(R.id.download);
+			holder.btn_download = (Button) convertView
+					.findViewById(R.id.download);
 			holder.tv_rate = (TextView) convertView.findViewById(R.id.rate);
 			rlist.addLast(holder.tv_rate);
 			butlist.addLast(holder.btn_download);
@@ -130,7 +132,8 @@ public class ListAdapter extends BaseAdapter {
 		holder.progressBar.setTag("" + position);
 		holder.progressBar.setMax(100);
 		if (downloadedFile.exists()) {
-			float downloaded = ((float) downloadedFile.length()/ (float) filesize * 100);
+			float downloaded = ((float) downloadedFile.length()
+					/ (float) filesize * 100);
 			holder.progressBar.setProgress((int) Math.round(downloaded));
 			holder.tv_rate.setText("" + (int) Math.round(downloaded));
 		}
@@ -142,64 +145,68 @@ public class ListAdapter extends BaseAdapter {
 	public void downloadAllFile() {
 		Log.i("ListAdapter", vids.toString());
 		// 实例化N个downloader，令flags 全true,for()启动下载
-		downloaders = new ArrayList<Downloader>();
+		downloaders = new ArrayList<PolyvDownloader>();
 
 		for (int i = 0; i < vids.size(); i++) {
-			downloadHelper = new DownloadHelper(context, vids.get(i), 1);
-			downloader = downloadHelper.initDownloader("mp4");
+			PolyvDownloader downloader = new PolyvDownloader(vids.get(i), 1);
+			final int p = i;
+			downloader
+					.setPolyvDownloadProressListener(new PolyvDownloadProgressListener() {
+						public void onDownload(long downloaded, long total) {
+							Message msg = new Message();
+							msg.what = REFRESH_PROGRESS;
+							msg.arg1 = p;
+							Bundle bundle = new Bundle();
+							bundle.putLong("downloaded", downloaded);
+							bundle.putLong("total", total);
+							msg.setData(bundle);
+							handler.sendMessage(msg);
+						}
+
+						public void onDownloadSuccess() {
+							Message msg = new Message();
+							msg.what = REFRESH_PROGRESS;
+							Bundle bundle = new Bundle();
+							bundle.putLong("current", 1);
+							bundle.putLong("total", 1);
+							msg.setData(bundle);
+							handler.sendMessage(msg);
+							Log.i(TAG, "下载完成");
+						}
+
+						public void onDownloadFail(String error) {
+
+						}
+
+					});
 			downloaders.add(downloader);
+			downloader.start();
 		}
-		for (int j = 0; j < vids.size(); j++) {
-			final int p = j;
-			new AsyncTask<String, String, String>() {
+		/*
+		 * for (int j = 0; j < vids.size(); j++) { final int p = j; new
+		 * AsyncTask<String, String, String>() {
+		 * 
+		 * @Override protected String doInBackground(String... arg0) { // TODO
+		 * Auto-generated method stub downloaders.get(p).start(); return null; }
+		 * 
+		 * }.execute(); }
+		 */
+	}
 
-				@Override
-				protected String doInBackground(String... arg0) {
-					// TODO Auto-generated method stub
-					downloaders.get(p).begin(vids.get(p),
-							new DownloadProgressListener() {
-
-								@Override
-								public void onDownloadSize(long downloaded,
-										long total) {
-									// TODO Auto-generated method stub
-									Message msg = new Message();
-									msg.what = REFRESH_PROGRESS;
-									msg.arg1 = p;
-									Bundle bundle = new Bundle();
-									bundle.putLong("downloaded", downloaded);
-									bundle.putLong("total", total);
-									msg.setData(bundle);
-									handler.sendMessage(msg);
-								}
-
-								@Override
-								public void onDownloadSuccess() {
-									// TODO Auto-generated method stub
-									//下载完成调用
-								}
-							});
-					return null;
-				}
-
-			}.execute();
+	public void updateAllButton(boolean isStop) {
+		if (isStop) {
+			for (int i = 0; i < butlist.size(); i++) {
+				butlist.get(i).setText("暂停");
+				flags.set(i, !isStop);
+			}
+		} else {
+			for (int i = 0; i < butlist.size(); i++) {
+				butlist.get(i).setText("开始");
+				flags.set(i, !isStop);
+			}
 		}
 	}
-    
-	public void updateAllButton(boolean isStop){
-	   if(isStop){
-		   for(int i=0;i<butlist.size();i++){
-			   butlist.get(i).setText("暂停");
-			   flags.set(i, !isStop);
-		   }
-	   }else{
-		   for(int i=0;i<butlist.size();i++){
-			   butlist.get(i).setText("开始");
-			   flags.set(i, !isStop);
-		   }
-	   }
-	}
-	
+
 	private class ViewHolder {
 		TextView tv_vid, tv_duration, tv_filesize, tv_rate;
 		ProgressBar progressBar;
@@ -220,69 +227,34 @@ public class ListAdapter extends BaseAdapter {
 			// TODO Auto-generated method stub
 			boolean isStop = flags.get(p);
 			if (!isStop) {
-				Log.i(TAG, "start download - position "+p);
+				Log.i(TAG, "start download - position " + p);
 				((TextView) v).setText("暂停");
-				downloadHelper = new DownloadHelper(context, vid, 1);
-				downloader = downloadHelper.initDownloader("mp4");
-				downloader.start();
-				new DownloadTask(p).execute(vid);
+				/*
+				 * downloadHelper = new DownloadHelper(context, vid, 1);
+				 * downloader = downloadHelper.initDownloader("mp4");
+				 * downloader.start(); new DownloadTask(p).execute(vid);
+				 */
 				flags.set(p, !isStop);
 			} else {
-				Log.i(TAG, "stop download - position "+p);
+				Log.i(TAG, "stop download - position " + p);
 				((TextView) v).setText("开始");
-				if (downloader != null) {
-					downloader.stop();
-				}
+				/*
+				 * if (downloader != null) { downloader.stop(); }
+				 */
 				flags.set(p, !isStop);
 			}
 		}
 
 	}
 
-	class DownloadTask extends AsyncTask<String, String, String> {
-		private int position;
-
-		public DownloadTask(int p) {
-			// TODO Auto-generated constructor stub
-			this.position = p;
-		}
-
-		@Override
-		protected String doInBackground(String... params) {
-			// TODO Auto-generated method stub
-			downloader.begin(params[0], new DownloadProgressListener() {
-				@Override
-				public void onDownloadSize(long downloaded, long total) {
-					// TODO Auto-generated method stub
-					Message msg = new Message();
-					msg.what = REFRESH_PROGRESS;
-					msg.arg1 = position;
-					Bundle bundle = new Bundle();
-					bundle.putLong("downloaded", downloaded);
-					bundle.putLong("total", total);
-					msg.setData(bundle);
-					handler.sendMessage(msg);
-				}
-
-				@Override
-				public void onDownloadSuccess() {
-					// TODO Auto-generated method stub
-					//下载完成后调用
-				}
-			});
-			return null;
-		}
-
-	}
-
 	public void stopAll() {
 		// TODO Auto-generated method stub
-		if(downloaders!=null){
-	   for(int i=0;i<downloaders.size();i++){
-		   if(downloaders.get(i)!=null){
-			   downloaders.get(i).stop();
-		   }
-	   }
+		if (downloaders != null) {
+			for (int i = 0; i < downloaders.size(); i++) {
+				if (downloaders.get(i) != null) {
+					downloaders.get(i).stop();
+				}
+			}
 		}
 	}
 }
