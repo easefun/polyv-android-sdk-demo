@@ -44,7 +44,6 @@ universal-image-loader-1.9.3-SNAPSHOT.jar
 	client.setUserId(userid);
 	client.setSign(true);
 	client.setDownloadDir(saveDir);//下载文件的目录
-        client.setPort(port);//设置端口,默认是8033
         client.startService(getApplicationContext());//启动服务
 ```
 下载视频
@@ -275,4 +274,22 @@ class VideoUploadTask extends AsyncTask<String, Void, String> {
 			}
 		}
 	}
+```
+
+上传视频
+--
+引入polyvSDK.jar
+
+调用方法:
+
+```java
+PolyvUploadClient client = new PolyvUploadClient("userid",
+				"readToken",
+				"writeToken","我的标题","desc",1);
+		client.setFilename("F:\\文档\\v\\13993026.mp4");
+		client.setProgress(new ProgressImpl());
+		client.upload();
+		System.out.println(client.getLocation());
+		System.out.println(client.getJson());
+
 ```
