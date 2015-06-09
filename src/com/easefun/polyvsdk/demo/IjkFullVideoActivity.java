@@ -21,7 +21,6 @@ public class IjkFullVideoActivity extends Activity {
 	private ProgressBar progressBar;
 	private String path;
 	private String vid;
-	private boolean encrypt = false;
 
 	@Override
 	public void onCreate(Bundle arg0) {
@@ -33,19 +32,18 @@ public class IjkFullVideoActivity extends Activity {
 			path = e.getString("path");
 			vid = e.getString("vid");
 		}
-		if (path != null && path.length() > 0) {
-			encrypt = true;
-		}
+		
 		progressBar = (ProgressBar) findViewById(R.id.loadingprogress);
 		videoview = (IjkVideoView) findViewById(R.id.videoview);
 		mediaController = new MediaController(this, false);
 		videoview.setMediaController(mediaController);
 		videoview.setMediaBufferingIndicator(progressBar);
-		if (!encrypt) {
-			videoview.setVid(vid, 1);
-		} else {
+		if (path != null && path.length() > 0) {
 			progressBar.setVisibility(View.GONE);
 			videoview.setVideoURI(Uri.parse(path));
+			
+		} else {
+			videoview.setVid(vid, 1);
 		}
 		videoview.setOnPreparedListener(new OnPreparedListener() {
 

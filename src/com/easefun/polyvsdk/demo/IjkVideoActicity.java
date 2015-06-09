@@ -44,7 +44,7 @@ public class IjkVideoActicity extends Activity {
    private View view =null;
    private String path;
    private String vid;
-   boolean encrypt=false;
+   //boolean encrypt=false;
    private DBservice service;
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,9 +57,7 @@ public class IjkVideoActicity extends Activity {
 			path = e.getString("path");
 			vid = e.getString("vid");
 		}
-		if (path != null && path.length() > 0) {
-			encrypt = true;
-		}
+		
 		service=new DBservice(this);
     	wm = this.getWindowManager();
 		w = wm.getDefaultDisplay().getWidth();
@@ -76,11 +74,12 @@ public class IjkVideoActicity extends Activity {
 		mediaController = new MediaController(this,false);//
 		mediaController.setAnchorView(videoview);
 		videoview.setMediaController(mediaController);
-		if(!encrypt){
-	        videoview.setVid(vid,1);
-		}else{
+		if(path != null && path.length() > 0){
 			progressBar.setVisibility(View.GONE);
 			videoview.setVideoPath(path);
+	        
+		}else{
+			videoview.setVid(vid,1);
 		}
 		videoview.setOnPreparedListener(new OnPreparedListener() {
 			

@@ -34,7 +34,7 @@ public class NewTestActivity extends Activity {
 	private PolyvDownloader downloader;
 	// sl8da4jjbx684cdae6bf17b1b70a8354_s 非加密
 	// sl8da4jjbx80cb8878980c1626c51923_s 加密
-	private static String videoId = "sl8da4jjbx0ec6ae62ea9c8f5d5fb0a0_s";
+	private static String videoId = "sl8da4jjbx14c6890b5c5a9dbe6f6c38_s";
 	private static String TAG="NewTestActivity";
 	private ProgressDialog barProgressDialog;
 	private Button btn_down, btn_downloadlist, btn_del,btn_playUrl, btn_playUrlFull,
@@ -209,15 +209,19 @@ public class NewTestActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
+				int range = videoId.indexOf("_");
+				String vpid = videoId.substring(0, range);
+				int bitRate = 1;
 				File mp4File = new File(PolyvSDKClient.getInstance().getDownloadDir(),
-						"3.mp4");
+						vpid+"_"+bitRate+".mp4");
+				
 				if (mp4File.exists()) {
 					Intent playLocal = new Intent(NewTestActivity.this,IjkVideoActicity.class);
 					playLocal.putExtra("path",mp4File.getPath());
 					playLocal.putExtra("vid", videoId);
 					startActivityForResult(playLocal, 1);
 				}else{
-					Toast.makeText(NewTestActivity.this, "视频文件不存在,请先行下载",Toast.LENGTH_LONG );
+					Toast.makeText(NewTestActivity.this, "视频文件不存在,请先行下载",Toast.LENGTH_LONG ).show();;
 				}
 			}
 		});
@@ -226,15 +230,18 @@ public class NewTestActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
+				int range = videoId.indexOf("_");
+				String vpid = videoId.substring(0, range);
+				int bitRate = 1;
 				File mp4File = new File(PolyvSDKClient.getInstance().getDownloadDir(),
-						"3.mp4");
+						vpid+"_"+bitRate+".mp4");
 				if (mp4File.exists()) {
 					Intent playLocal = new Intent(NewTestActivity.this,IjkFullVideoActivity.class);
 					playLocal.putExtra("path",mp4File.getPath());
 					playLocal.putExtra("vid", videoId);
 					startActivityForResult(playLocal, 1);
 				}else{
-					Toast.makeText(NewTestActivity.this, "视频文件不存在,请先行下载",Toast.LENGTH_LONG );
+					Toast.makeText(NewTestActivity.this, "视频文件不存在,请先行下载",Toast.LENGTH_LONG ).show();;
 				}
 			}
 		});
