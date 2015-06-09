@@ -276,20 +276,3 @@ class VideoUploadTask extends AsyncTask<String, Void, String> {
 	}
 ```
 
-上传视频
---
-引入polyvSDK.jar
-
-调用方法:
-
-```java
-PolyvUploadClient client = new PolyvUploadClient("userid",
-				"readToken",
-				"writeToken","我的标题","desc",1);
-		client.setFilename("F:\\文档\\v\\13993026.mp4");
-		client.setProgress(new ProgressImpl());
-		client.upload();
-		System.out.println(client.getLocation());
-		System.out.println(client.getJson());
-
-```
