@@ -3,7 +3,6 @@ package com.easefun.polyvsdk.demo;
 import java.io.File;
 
 import org.json.JSONException;
-import com.easefun.polyvsdk.DownloadProgressListener;
 import com.easefun.polyvsdk.PolyvDownloadProgressListener;
 import com.easefun.polyvsdk.PolyvDownloader;
 import com.easefun.polyvsdk.PolyvSDKClient;
