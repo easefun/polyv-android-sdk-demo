@@ -35,6 +35,7 @@ universal-image-loader-1.9.3-SNAPSHOT.jar
 描述
 --
 在MyApplication初始化PolyvSDKClient,设置token
+(最好通过服务器端加载json拿到这些参数)
 
 ```java
 	PolyvSDKClient client = PolyvSDKClient.getInstance();
@@ -92,6 +93,18 @@ downloader.deleteVideo(videoId, 1);
 //删除下载目录
 downloader.cleanDownloadDir();
 ```
+拿到视频大小
+
+```
+Video.loadVideo(vid, new Video.OnVideoLoaded(){
+			public void onloaded(Video v){
+				Log.i("filesize",v.getFilesize(1)+"");
+				
+				
+			}
+});
+```
+
 具体代码参见NewTestActivity.java
 
 如何用小窗口播放在线视频
