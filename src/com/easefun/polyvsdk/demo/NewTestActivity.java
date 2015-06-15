@@ -100,7 +100,7 @@ public class NewTestActivity extends Activity {
 		barProgressDialog.setMax(100);
 		barProgressDialog.setCancelable(true);
 		barProgressDialog.setCanceledOnTouchOutside(false);
-
+		
 		barProgressDialog
 				.setOnCancelListener(new DialogInterface.OnCancelListener() {
 
