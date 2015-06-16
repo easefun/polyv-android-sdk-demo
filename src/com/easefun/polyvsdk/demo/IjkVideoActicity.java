@@ -71,6 +71,8 @@ public class IjkVideoActicity extends Activity {
 		videoview=(IjkVideoView)findViewById(R.id.videoview);
 		progressBar =(ProgressBar)findViewById(R.id.loadingprogress);
 		videoview.setMediaBufferingIndicator(progressBar); //在缓冲时出现的loading
+		videoview.setVideoLayout(IjkVideoView.VIDEO_LAYOUT_SCALE);
+
 		mediaController = new MediaController(this,false);//
 		mediaController.setAnchorView(videoview);
 		videoview.setMediaController(mediaController);
@@ -87,6 +89,9 @@ public class IjkVideoActicity extends Activity {
 			public void onPrepared(IMediaPlayer mp) {
 				// TODO Auto-generated method stub
 				//do nothing
+				//Log.i(TAG,"video prepared..");
+				//videoview.setVideoLayout(IjkVideoView.VIDEO_LAYOUT_SCALE);
+
 				
 			}
 		});
@@ -211,7 +216,7 @@ public class IjkVideoActicity extends Activity {
 	      	 @Override
 	      	public void onPrepared(IMediaPlayer mp) {
 	      		// TODO Auto-generated method stub
-	      		videoview.setVideoLayout(IjkVideoView.VIDEO_LAYOUT_ORIGIN);
+	      		videoview.setVideoLayout(IjkVideoView.VIDEO_LAYOUT_SCALE);
 	      	}
 	  }
 
@@ -223,6 +228,10 @@ public class IjkVideoActicity extends Activity {
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		botlayout.setVisibility(View.GONE);
 		isLandscape = !isLandscape;
+		//Log.i("vv","lanscape");
+		//videoview.setVideoLayout(IjkVideoView.VIDEO_LAYOUT_SCALE);
+		
+
 	}
 	
 //	切换到竖屏
@@ -233,6 +242,8 @@ public class IjkVideoActicity extends Activity {
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		botlayout.setVisibility(View.VISIBLE);
 		isLandscape = !isLandscape;
+		//Log.i("vv","portrait");
+
 	}
 	
 	
@@ -241,7 +252,7 @@ public class IjkVideoActicity extends Activity {
 		public void onConfigurationChanged(Configuration arg0) {
 			// TODO Auto-generated method stub
 			super.onConfigurationChanged(arg0);
-			videoview.setVideoLayout(IjkVideoView.VIDEO_LAYOUT_ORIGIN);
+			videoview.setVideoLayout(IjkVideoView.VIDEO_LAYOUT_SCALE);
 			mediaController.hide();
 		}
 	
