@@ -3,6 +3,7 @@ package com.easefun.polyvsdk.demo;
 import java.io.File;
 
 import org.json.JSONException;
+import com.easefun.polyvsdk.DownloadProgressListener;
 import com.easefun.polyvsdk.PolyvDownloadProgressListener;
 import com.easefun.polyvsdk.PolyvDownloader;
 import com.easefun.polyvsdk.PolyvSDKClient;
@@ -33,10 +34,10 @@ public class NewTestActivity extends Activity {
 	private PolyvDownloader downloader;
 	// sl8da4jjbx684cdae6bf17b1b70a8354_s 非加密
 	// sl8da4jjbx80cb8878980c1626c51923_s 加密
-	private static String videoId = "sl8da4jjbx14c6890b5c5a9dbe6f6c38_s";
+	private static String videoId = "sl8da4jjbxffffe1b760a9448bbc9850_s";
 	private static String TAG="NewTestActivity";
 	private ProgressDialog barProgressDialog;
-	private Button btn_down, btn_downloadlist, btn_del,btn_playUrl, btn_playUrlFull,
+	private Button btn_down,btn_stopdown, btn_downloadlist, btn_del,btn_playUrl, btn_playUrlFull,
 			btn_playLocal, btn_playLocalFull, btn_record, btn_upload,
 			btn_videolist;
 	File saveDir;
@@ -80,10 +81,12 @@ public class NewTestActivity extends Activity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		btn_down = (Button) findViewById(R.id.download);
+		btn_stopdown = (Button) findViewById(R.id.stopdownload);
 		btn_downloadlist = (Button) findViewById(R.id.download_list);
 		btn_del=(Button)findViewById(R.id.del);
 		btn_playUrl = (Button) findViewById(R.id.onlinevideo_1);
@@ -100,7 +103,7 @@ public class NewTestActivity extends Activity {
 		barProgressDialog.setMax(100);
 		barProgressDialog.setCancelable(true);
 		barProgressDialog.setCanceledOnTouchOutside(false);
-		
+
 		barProgressDialog
 				.setOnCancelListener(new DialogInterface.OnCancelListener() {
 
@@ -138,6 +141,7 @@ public class NewTestActivity extends Activity {
 						bundle.putLong("total", total);
 						msg.setData(bundle);
 						handler.sendMessage(msg);
+						Log.i("vvv","downloading");
 					}
 
 					@Override
@@ -151,8 +155,21 @@ public class NewTestActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				barProgressDialog.show();
+				//barProgressDialog.show();
 				downloader.start();
+				// 跳转测试类
+				// Intent intent = new Intent(NewTestActivity.this, TestDownloadActivity.class);
+				// startActivity(intent);
+			}
+		});
+		
+		btn_stopdown.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				//barProgressDialog.show();
+				downloader.stop();
 				// 跳转测试类
 				// Intent intent = new Intent(NewTestActivity.this, TestDownloadActivity.class);
 				// startActivity(intent);
@@ -165,7 +182,8 @@ public class NewTestActivity extends Activity {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				if(downloader!=null){
-					downloader.deleteVideo(videoId, 1);
+					//downloader.deleteVideo(videoId, 1);
+					downloader.stop();
 //					downloader.cleanDownloadDir();
 				}
 			}
