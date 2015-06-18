@@ -85,10 +85,10 @@ public class NewTestActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		btn_down = (Button) findViewById(R.id.download);
-		btn_stopdown = (Button) findViewById(R.id.stopdownload);
+		//btn_down = (Button) findViewById(R.id.download);
+		//btn_stopdown = (Button) findViewById(R.id.stopdownload);
 		btn_downloadlist = (Button) findViewById(R.id.download_list);
-		btn_del=(Button)findViewById(R.id.del);
+		//btn_del=(Button)findViewById(R.id.del);
 		btn_playUrl = (Button) findViewById(R.id.onlinevideo_1);
 		btn_playUrlFull = (Button) findViewById(R.id.onlinevideo_2);
 		btn_playLocal = (Button) findViewById(R.id.localvideo_1);
@@ -150,16 +150,14 @@ public class NewTestActivity extends Activity {
 						Log.i(TAG, "下载失败"+error);
 					}
 				});
-		btn_down.setOnClickListener(new View.OnClickListener() {
+		/*btn_down.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				//barProgressDialog.show();
+				barProgressDialog.show();
 				downloader.start();
-				// 跳转测试类
-				// Intent intent = new Intent(NewTestActivity.this, TestDownloadActivity.class);
-				// startActivity(intent);
+				
 			}
 		});
 		
@@ -174,9 +172,9 @@ public class NewTestActivity extends Activity {
 				// Intent intent = new Intent(NewTestActivity.this, TestDownloadActivity.class);
 				// startActivity(intent);
 			}
-		});
+		});*/
 		
-		btn_del.setOnClickListener(new View.OnClickListener() {
+		/*btn_del.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View arg0) {
@@ -187,7 +185,7 @@ public class NewTestActivity extends Activity {
 //					downloader.cleanDownloadDir();
 				}
 			}
-		});
+		});*/
 
 		btn_downloadlist.setOnClickListener(new View.OnClickListener() {
 

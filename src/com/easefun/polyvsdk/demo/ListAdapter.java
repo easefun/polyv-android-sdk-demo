@@ -31,13 +31,12 @@ public class ListAdapter extends BaseAdapter {
 	private Context context;
 	private LayoutInflater inflater;
 	private File downloadedFile;
-
+	private DBservice dbService;
 	private static ViewHolder holder;
 	private static final int REFRESH_PROGRESS = 1;
 	private LinkedList<ProgressBar> barlist;
 	private LinkedList<TextView> rlist;
 	private LinkedList<Boolean> flags;
-	private LinkedList<String> vids;
 	private ArrayList<PolyvDownloader> downloaders;
 	private LinkedList<Button> butlist;
 	private Handler handler = new Handler() {
@@ -66,7 +65,51 @@ public class ListAdapter extends BaseAdapter {
 			}
 		};
 	};
+	private void initDownloaders(){
+		downloaders = new ArrayList<PolyvDownloader>();
 
+		for (int i = 0; i < data.size(); i++) {
+			final DownloadInfo info = data.get(i);
+			final String _vid=info.getVid();
+			PolyvDownloader downloader = new PolyvDownloader(_vid, info.getBitrate());
+			final int p = i;
+			downloader
+					.setPolyvDownloadProressListener(new PolyvDownloadProgressListener() {
+						public void onDownload(long downloaded, long total) {
+							Log.i("download","downloading:"+_vid + " - " + downloaded + "/" + total);
+							Message msg = new Message();
+							msg.what = REFRESH_PROGRESS;
+							msg.arg1 = p;
+							Bundle bundle = new Bundle();
+							bundle.putLong("downloaded", downloaded);
+							bundle.putLong("total", total);
+							msg.setData(bundle);
+							handler.sendMessage(msg);
+							long percent = downloaded * 100 / total;
+							dbService.updatePercent(info, (int)percent);
+						}
+
+						public void onDownloadSuccess() {
+							Message msg = new Message();
+							msg.what = REFRESH_PROGRESS;
+							Bundle bundle = new Bundle();
+							bundle.putLong("current", 1);
+							bundle.putLong("total", 1);
+							msg.setData(bundle);
+							handler.sendMessage(msg);
+							dbService.updatePercent(info, 100);
+							Log.i(TAG, "下载完成");
+						}
+
+						public void onDownloadFail(String error) {
+
+						}
+
+					});
+			downloaders.add(downloader);
+			
+		}
+	}
 	public ListAdapter(Context context, LinkedList<DownloadInfo> data) {
 		this.context = context;
 		this.data = data;
@@ -75,7 +118,8 @@ public class ListAdapter extends BaseAdapter {
 		this.rlist = new LinkedList<TextView>();
 		this.butlist = new LinkedList<Button>();
 		this.flags = new LinkedList<Boolean>();
-		this.vids = new LinkedList<String>();
+		this.dbService = new DBservice(context);
+		initDownloaders();
 	}
 
 	@Override
@@ -99,7 +143,7 @@ public class ListAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup group) {
 		// TODO Auto-generated method stub
-
+		
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.view_item, null);
 			holder = new ViewHolder();
@@ -113,84 +157,58 @@ public class ListAdapter extends BaseAdapter {
 			barlist.addLast(holder.progressBar);
 			holder.btn_download = (Button) convertView
 					.findViewById(R.id.download);
+			holder.btn_delete = (Button) convertView
+					.findViewById(R.id.delete);
 			holder.tv_rate = (TextView) convertView.findViewById(R.id.rate);
 			rlist.addLast(holder.tv_rate);
 			butlist.addLast(holder.btn_download);
 			convertView.setTag(holder);
 			flags.addLast(new Boolean(false));
+			
+			
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		String vid = data.get(position).getVid();
-		vids.addLast(vid);
 		String duration = data.get(position).getDuration();
-		int filesize = data.get(position).getFilesize();
+		long filesize = data.get(position).getFilesize();
+		int percent = data.get(position).getPercent();
 		downloadedFile = SDKUtil.getDownloadFileByVid(vid);
-		holder.tv_vid.setText(vid + ".mp4");
+		holder.tv_vid.setText(data.get(position).getTitle());
 		holder.tv_duration.setText(duration);
 		holder.tv_filesize.setText("" + filesize);
 		holder.progressBar.setTag("" + position);
 		holder.progressBar.setMax(100);
-		if (downloadedFile.exists()) {
+		
+		holder.progressBar.setProgress(percent);
+		holder.tv_rate.setText("" + percent);
+
+		/*if (downloadedFile.exists()) {
 			float downloaded = ((float) downloadedFile.length()
 					/ (float) filesize * 100);
 			holder.progressBar.setProgress((int) Math.round(downloaded));
 			holder.tv_rate.setText("" + (int) Math.round(downloaded));
-		}
+		}*/
 		holder.btn_download.setOnClickListener(new DownloadListener(data.get(
 				position).getVid(), position));
+		
+		holder.btn_delete.setOnClickListener(new DeleteListener(data.get(
+				position),position));
+		
+
+		
 		return convertView;
 	}
 
 	public void downloadAllFile() {
-		Log.i("ListAdapter", vids.toString());
-		// 实例化N个downloader，令flags 全true,for()启动下载
-		downloaders = new ArrayList<PolyvDownloader>();
-
-		for (int i = 0; i < vids.size(); i++) {
-			PolyvDownloader downloader = new PolyvDownloader(vids.get(i), 1);
-			final int p = i;
-			downloader
-					.setPolyvDownloadProressListener(new PolyvDownloadProgressListener() {
-						public void onDownload(long downloaded, long total) {
-							Message msg = new Message();
-							msg.what = REFRESH_PROGRESS;
-							msg.arg1 = p;
-							Bundle bundle = new Bundle();
-							bundle.putLong("downloaded", downloaded);
-							bundle.putLong("total", total);
-							msg.setData(bundle);
-							handler.sendMessage(msg);
-						}
-
-						public void onDownloadSuccess() {
-							Message msg = new Message();
-							msg.what = REFRESH_PROGRESS;
-							Bundle bundle = new Bundle();
-							bundle.putLong("current", 1);
-							bundle.putLong("total", 1);
-							msg.setData(bundle);
-							handler.sendMessage(msg);
-							Log.i(TAG, "下载完成");
-						}
-
-						public void onDownloadFail(String error) {
-
-						}
-
-					});
-			downloaders.add(downloader);
-			downloader.start();
+		if (downloaders != null) {
+			for (int i = 0; i < downloaders.size(); i++) {
+				if (downloaders.get(i) != null) {
+					downloaders.get(i).start();
+				}
+			}
 		}
-		/*
-		 * for (int j = 0; j < vids.size(); j++) { final int p = j; new
-		 * AsyncTask<String, String, String>() {
-		 * 
-		 * @Override protected String doInBackground(String... arg0) { // TODO
-		 * Auto-generated method stub downloaders.get(p).start(); return null; }
-		 * 
-		 * }.execute(); }
-		 */
+
 	}
 
 	public void updateAllButton(boolean isStop) {
@@ -210,7 +228,7 @@ public class ListAdapter extends BaseAdapter {
 	private class ViewHolder {
 		TextView tv_vid, tv_duration, tv_filesize, tv_rate;
 		ProgressBar progressBar;
-		Button btn_download;
+		Button btn_download,btn_delete;
 	}
 
 	class DownloadListener implements View.OnClickListener {
@@ -229,6 +247,10 @@ public class ListAdapter extends BaseAdapter {
 			if (!isStop) {
 				Log.i(TAG, "start download - position " + p);
 				((TextView) v).setText("暂停");
+				PolyvDownloader downloader = downloaders.get(p);
+				if(downloader!=null){
+					downloader.start();
+				}
 				/*
 				 * downloadHelper = new DownloadHelper(context, vid, 1);
 				 * downloader = downloadHelper.initDownloader("mp4");
@@ -238,10 +260,41 @@ public class ListAdapter extends BaseAdapter {
 			} else {
 				Log.i(TAG, "stop download - position " + p);
 				((TextView) v).setText("开始");
+				PolyvDownloader downloader = downloaders.get(p);
+				if(downloader!=null){
+					downloader.stop();
+				}
 				/*
 				 * if (downloader != null) { downloader.stop(); }
 				 */
 				flags.set(p, !isStop);
+			}
+		}
+
+	}
+	class DeleteListener implements View.OnClickListener {
+		private DownloadInfo info;
+		int p;
+
+		public DeleteListener(DownloadInfo info,int p) {
+			this.info = info;
+			this.p = p;
+		}
+
+		@Override
+		public void onClick(View v) {
+			PolyvDownloader downloader = downloaders.get(p);
+			
+			if(downloader!=null){
+				downloader.stop();
+				downloader.deleteVideo(info.getVid(),info.getBitrate());
+				dbService.deleteDownloadFile(info);
+				//data = dbService.getDownloadFiles();
+				//initDownloaders();
+				data.remove(p);
+				flags.remove(p);
+				notifyDataSetChanged();
+				
 			}
 		}
 

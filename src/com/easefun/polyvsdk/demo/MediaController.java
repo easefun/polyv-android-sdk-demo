@@ -2,17 +2,6 @@ package com.easefun.polyvsdk.demo;
 
 import java.util.Locale;
 
-import tv.danmaku.ijk.media.widget.OutlineTextView;
-
-import com.easefun.polyvsdk.R;
-import com.easefun.polyvsdk.ijk.IjkBaseMediaController;
-import com.easefun.polyvsdk.ijk.IjkMediaController.MediaPlayerControl;
-import com.easefun.polyvsdk.ijk.IjkMediaController.OnBoardChangeListener;
-import com.easefun.polyvsdk.ijk.IjkMediaController.OnHiddenListener;
-import com.easefun.polyvsdk.ijk.IjkMediaController.OnPreNextListener;
-import com.easefun.polyvsdk.ijk.IjkMediaController.OnShownListener;
-import com.easefun.polyvsdk.ijk.IjkMediaController.OnVideoChangeListener;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -31,8 +20,11 @@ import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
-import android.widget.TextView;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
+
+import com.easefun.polyvsdk.R;
+import com.easefun.polyvsdk.ijk.IjkBaseMediaController;
 
 public class MediaController extends IjkBaseMediaController {
 	private static final String TAG = "MediaController";
@@ -64,7 +56,7 @@ public class MediaController extends IjkBaseMediaController {
     private boolean isUsePreNext=false;
     private OnBoardChangeListener onBoardChangeListener;
     private OnVideoChangeListener onVideoChangeListener;
-    private ImageButton btn_back;
+    //private ImageButton btn_back;
     private ImageButton btn_boardChange;
     private ImageButton btn_videoChange;
     private OnPreNextListener onPreNextListener;

@@ -53,6 +53,14 @@ public class DownloadListActivity extends Activity {
 		});
 		
 	}
+	@Override
+	public void finish() {
+		if(adapter!=null){
+			Log.i("downloader","stop all");
+			adapter.stopAll();
+		}
+		super.finish();
+	}
 	private void initData() {
 		service=new DBservice(this);
 		infos = service.getDownloadFiles();

@@ -1,19 +1,16 @@
 package com.easefun.polyvsdk.demo;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
-
-import com.easefun.polyvsdk.R;
-import com.easefun.polyvsdk.ijk.IjkMediaController;
-import com.easefun.polyvsdk.ijk.IjkVideoView;
-import com.easefun.polyvsdk.ijk.OnPreparedListener;
-import com.easefun.polyvsdk.ijk.PolyvOnPreparedListener;
-
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.easefun.polyvsdk.R;
+import com.easefun.polyvsdk.ijk.IjkVideoView;
+import com.easefun.polyvsdk.ijk.OnPreparedListener;
 
 public class IjkFullVideoActivity extends Activity {
 	private IjkVideoView videoview;
@@ -34,7 +31,7 @@ public class IjkFullVideoActivity extends Activity {
 		}
 		
 		progressBar = (ProgressBar) findViewById(R.id.loadingprogress);
-		videoview = (IjkVideoView) findViewById(R.id.full_videoview);
+		videoview = (IjkVideoView) findViewById(R.id.videoview);
 		mediaController = new MediaController(this, false);
 		videoview.setMediaController(mediaController);
 		videoview.setMediaBufferingIndicator(progressBar);
@@ -45,6 +42,7 @@ public class IjkFullVideoActivity extends Activity {
 		} else {
 			videoview.setVid(vid, 1);
 		}
+		videoview.setVideoLayout(IjkVideoView.VIDEO_LAYOUT_ZOOM);
 		videoview.setOnPreparedListener(new OnPreparedListener() {
 
 			@Override

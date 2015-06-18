@@ -19,17 +19,29 @@ public class DBservice {
 
 	public void addDownloadFile(DownloadInfo info) {
 		SQLiteDatabase db = dbOpenHepler.getWritableDatabase();
-		String sql = "insert into downloadlist(vid,duration,filesize) values(?,?,?)";
+		String sql = "insert into downloadlist(vid,title,duration,filesize,bitrate) values(?,?,?,?,?)";
 		db.execSQL(
 				sql,
-				new Object[] { info.getVid(), info.getDuration(),
-						info.getFilesize() });
-		Log.i(TAG, "add to db");
+				new Object[] { info.getVid(),info.getTitle(), info.getDuration(),
+						info.getFilesize(),info.getBitrate() });
 	}
-
+	public void deleteDownloadFile(DownloadInfo info) {
+		SQLiteDatabase db = dbOpenHepler.getWritableDatabase();
+		String sql = "delete from downloadlist where vid=? and bitrate=?";
+		db.execSQL(
+				sql,
+				new Object[] { info.getVid(),info.getBitrate() });
+	}
+	public void updatePercent(DownloadInfo info,int percent) {
+		SQLiteDatabase db = dbOpenHepler.getWritableDatabase();
+		String sql = "update downloadlist set percent=? where vid=? and bitrate=?";
+		db.execSQL(
+				sql,
+				new Object[] { percent, info.getVid(),info.getBitrate() });
+	}
 	public boolean isAdd(DownloadInfo info) {
 		SQLiteDatabase db = dbOpenHepler.getWritableDatabase();
-		String sql = "select vid ,duration,filesize from downloadlist where vid=?";
+		String sql = "select vid ,duration,filesize,bitrate from downloadlist where vid=? and bitrate=" + info.getBitrate();
 		Cursor cursor = db.rawQuery(sql, new String[] { info.getVid() });
 		if (cursor.getCount() == 1) {
 			return true;
@@ -41,13 +53,19 @@ public class DBservice {
 	public LinkedList<DownloadInfo> getDownloadFiles(){
 		LinkedList<DownloadInfo> infos = new LinkedList<DownloadInfo>();
 		SQLiteDatabase db = dbOpenHepler.getWritableDatabase();
-		String sql ="select vid,duration,filesize from downloadlist";
+		String sql ="select vid,title,duration,filesize,bitrate,percent from downloadlist";
 		Cursor cursor= db.rawQuery(sql, null);
 		while(cursor.moveToNext()){
 			String vid=cursor.getString(cursor.getColumnIndex("vid"));
+			String title=cursor.getString(cursor.getColumnIndex("title"));
 			String duration=cursor.getString(cursor.getColumnIndex("duration"));
 			int filesize=cursor.getInt(cursor.getColumnIndex("filesize"));
-			infos.addLast(new DownloadInfo(vid, duration, filesize));
+			int bitrate=cursor.getInt(cursor.getColumnIndex("bitrate"));
+			int percent=cursor.getInt(cursor.getColumnIndex("percent"));
+			DownloadInfo info = new DownloadInfo(vid, duration, filesize,bitrate);
+			info.setPercent(percent);
+			info.setTitle(title);
+			infos.addLast(info);
 		}
 		return infos;
 	}

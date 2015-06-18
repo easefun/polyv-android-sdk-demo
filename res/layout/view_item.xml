@@ -9,7 +9,7 @@
      android:layout_height="wrap_content"
      android:layout_margin="5dp"
      >
- 
+
      <TextView
          android:id="@+id/tv_vid"
          android:layout_width="350px"
@@ -88,6 +88,13 @@
     android:layout_alignTop="@+id/rl"
     android:text="开始" />
 
-
+<Button
+    android:id="@+id/delete"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignBaseline="@+id/download"
+    android:layout_alignBottom="@+id/download"
+    android:layout_toLeftOf="@+id/download"
+    android:text="删除" />
 
 </RelativeLayout>

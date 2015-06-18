@@ -17,8 +17,12 @@ import com.easefun.polyvsdk.ijk.PolyvOnPreparedListener;
 
 import com.easefun.polyvsdk.R;
 import com.easefun.polyvsdk.SDKUtil;
+import com.easefun.polyvsdk.Video;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
@@ -81,8 +85,12 @@ public class IjkVideoActicity extends Activity {
 			videoview.setVideoPath(path);
 	        
 		}else{
+			//播放流畅，参数1
 			videoview.setVid(vid,1);
 		}
+		
+		
+		
 		videoview.setOnPreparedListener(new OnPreparedListener() {
 			
 			@Override
@@ -100,7 +108,7 @@ public class IjkVideoActicity extends Activity {
 			@Override
 			public void onStatus(int status) {
 				// TODO Auto-generated method stub
-				Log.i(TAG, " video status ->"+status);
+				//Log.i(TAG, " video status ->"+status);
 			}
 		});
 		//设置切屏事件
@@ -156,19 +164,45 @@ public class IjkVideoActicity extends Activity {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Log.i("IjkVideoActivity","码率数----->"+videoview.getLevel());
-				videoview.swtichLevel(videoview.getLevel()-1);
+				int df_num = videoview.getLevel();
+				String[] items = null;
+				if(df_num==1){
+					items = new String[]{ "流畅" };
+				}
+				if(df_num==2){
+					items = new String[]{ "流畅","高清" };
+				}
+				if(df_num==3){
+					items = new String[]{ "流畅","高清","超清" };
+				}
+				
+				final Builder selectDialog = new AlertDialog.Builder(
+						IjkVideoActicity.this).setTitle("选择下载码率")
+				// 数字2代表的是数组的下标
+						.setSingleChoiceItems(items, 0,
+								new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(
+											DialogInterface dialog,
+											int which) {
+										int bitrate = which + 1;
+										videoview.switchLevel(bitrate);
+										dialog.dismiss();
+									}
+								});
+				selectDialog.show().setCanceledOnTouchOutside(true);
+				
 			}
 		});
         
-        findViewById(R.id.AddTodownload).setOnClickListener(new View.OnClickListener() {
+        /*findViewById(R.id.seekTo).setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				String currentvid= videoview.getCurrentVideoId();
-				new VideoInfo().execute(currentvid);
+				videoview.seekTo(10*1000);
 			}
-		});
+		});*/
     }
 	
 	class VideoInfo extends AsyncTask<String,String,String>{
@@ -189,7 +223,7 @@ public class IjkVideoActicity extends Activity {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			 downloadInfo = new DownloadInfo(vid, duration, filesize);
+			 downloadInfo = new DownloadInfo(vid, duration, filesize,1);
 			 if(service!=null&&!service.isAdd(downloadInfo)){
 				 service.addDownloadFile(downloadInfo);
 			 }else{

@@ -28,8 +28,7 @@ import android.preference.PreferenceManager;
 
 public class MyApplication extends Application {
 	private File saveDir;
-	 private String downloadId="testdownload";
-	 private String downloadSercetkey="f24c67d9bc0940b69ad8c0ebd6341730";
+	 
 	public MyApplication() {
 		// TODO Auto-generated constructor stub
 	}
@@ -82,9 +81,14 @@ public class MyApplication extends Application {
 		client.setUserId("sl8da4jjbx");
 		client.setSign(true);
 		client.setDownloadDir(saveDir);
-		//client.setPort(10655);
-		client.startService(getApplicationContext());
 		
+		
+		
+		client.startService(getApplicationContext());
+		 //client.init();
+		 //System.out.println("private...:"+client.getPrivatekey());
+			//client.setSign(true);
+			
 		
 	}
 	

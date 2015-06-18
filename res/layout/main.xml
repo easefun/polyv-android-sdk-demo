@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <Button
+    <!-- <Button
         android:id="@+id/download"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -13,18 +13,24 @@
         android:id="@+id/stopdownload"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="停止下载" />
+        android:text="停止下载" /> -->
+      <Button
+        android:id="@+id/videolist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="获取视频列表" />
      <Button
         android:id="@+id/download_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:enabled="true"
         android:text="下载列表" />
- <Button
+	<!-- <Button
         android:id="@+id/del"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="删除视频" />
+         -->
  
   <Button
         android:id="@+id/onlinevideo_1"
@@ -56,9 +62,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="上传视频" />
-      <Button
-        android:id="@+id/videolist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="获取视频列表" />
+
 </LinearLayout>

@@ -1,19 +1,16 @@
 package com.easefun.polyvsdk.demo;
-  
+
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
 import com.easefun.polyvsdk.R;
-import com.easefun.polyvsdk.ijk.IjkMediaController;
 import com.easefun.polyvsdk.ijk.IjkVideoView;
 import com.easefun.polyvsdk.ijk.OnPreparedListener;
-
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
