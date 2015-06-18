@@ -158,6 +158,14 @@ public class IjkVideoActicity extends Activity {
 			    videoview.start();	
 			}
 		});
+		findViewById(R.id.stop).setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+			    videoview.pause();
+			}
+		});
         findViewById(R.id.swtichlevel).setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -205,7 +213,7 @@ public class IjkVideoActicity extends Activity {
 		});*/
     }
 	
-	class VideoInfo extends AsyncTask<String,String,String>{
+	/*class VideoInfo extends AsyncTask<String,String,String>{
 		@Override
 		protected String doInBackground(String... params) {
 			// TODO Auto-generated method stub
@@ -239,7 +247,7 @@ public class IjkVideoActicity extends Activity {
 			 }
 			return null;
 		}
-	}
+	}*/
 	
 	 class MyListener extends PolyvOnPreparedListener{
 
