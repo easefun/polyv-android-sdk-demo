@@ -18,6 +18,9 @@ httpmime-4.3.5.jar
 polyvSDK.jar
 universal-image-loader-1.9.3-SNAPSHOT.jar
 ```
+如果需要兼容其他cpu类型，可以增加libs\x86目录下的内容。
+
+
 案列所需要的权限
 ```xml
     <uses-permission android:name="android.permission.CAMERA" />
