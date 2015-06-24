@@ -8,7 +8,8 @@ polyv-android-sdk-demo
 下载本案例，在eclipse创建android项目，选择"android project from existing code"
 
 需要的包
-libs\armeabi-v7a下的so文件
+libs\armeabi-v7a下的so文件(如果需要兼容其他cpu类型，可以增加libs\x86目录下的内容)
+
 ```java
 ijkmediaplayer.jar
 ijkmediawidget.jar
@@ -18,10 +19,10 @@ httpmime-4.3.5.jar
 polyvSDK.jar
 universal-image-loader-1.9.3-SNAPSHOT.jar
 ```
-如果需要兼容其他cpu类型，可以增加libs\x86目录下的内容。
 
 
-案列所需要的权限
+
+案例所需要的权限
 ```xml
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
