@@ -1,0 +1,243 @@
+Manifest-Version: 1.0
+Created-By: 1.0 (Android)
+
+Name: res/drawable-xhdpi/ic_launcher.png
+SHA1-Digest: eqyxNn1GAmq8r9o40i9RIqoEba0=
+
+Name: res/drawable-xxhdpi/loader_show_image_03.png
+SHA1-Digest: AraH3Et00KZ5uD5jX5Hvf7k7ScE=
+
+Name: res/layout/fragment_record.xml
+SHA1-Digest: raEWe7ZCVnVr+t6Grfs9qlCcUCE=
+
+Name: res/drawable-hdpi/btn_video.png
+SHA1-Digest: G4Rmd7tAdO3s7SCvEBtemGCJcRw=
+
+Name: lib/armeabi-v7a/libijksdl.so
+SHA1-Digest: zweXw9KvAXa25FvRaOeg+ZkMSQg=
+
+Name: res/drawable-hdpi/bg_mc.png
+SHA1-Digest: QhIl1waMgCmNpSHnv9zcn/U+S0Q=
+
+Name: res/drawable-hdpi/change.png
+SHA1-Digest: chkbhQm+qDKyy9pz8YBSowEmlUM=
+
+Name: res/drawable/scrubber_control_selector_holo.xml
+SHA1-Digest: p0LfxeYgNA/9C4aKkRHCh8G6dIo=
+
+Name: res/drawable-hdpi/bg_loading.9.png
+SHA1-Digest: 9um/wUtWH4AOSJtekSlbY63dnLM=
+
+Name: res/drawable-hdpi/ic_full.png
+SHA1-Digest: vgGVG6kdjRaNbEqXE4K7v8cz9MM=
+
+Name: res/drawable-hdpi/scrubber_track_holo_dark.9.png
+SHA1-Digest: wTi4Vw97EcIswSzJbZNwh9lnJfA=
+
+Name: lib/x86/libpolyvModule.so
+SHA1-Digest: Nh2P0yhgIW3t/swVnpssfMu4E5Y=
+
+Name: lib/armeabi-v7a/libijkplayer.so
+SHA1-Digest: RBQdQWSIxM8hsSERH+eK4xnLqdM=
+
+Name: res/drawable-hdpi/btn_back.png
+SHA1-Digest: WREZLfZzrjywBPqualOYnYurnVQ=
+
+Name: res/drawable-xxhdpi/loader_show_image_07.png
+SHA1-Digest: 8JgMEP9qwCB8KUS0bDiLhYdEk2U=
+
+Name: lib/x86/libijkffmpeg.so
+SHA1-Digest: KdMrZoFQ4IUeWOHkNb/PdnAf1Lg=
+
+Name: res/layout/video_full2.xml
+SHA1-Digest: GPwgk7l9fdxKqRgSG++7D50sScw=
+
+Name: lib/armeabi/libijksdl.so
+SHA1-Digest: 6A4/SHfSCywDIZ6tYb7M1KtHaKE=
+
+Name: res/drawable-hdpi/media_pause.png
+SHA1-Digest: DHnt4vM9sttteeYH/I19MF0+JSc=
+
+Name: res/layout/activity_videolist.xml
+SHA1-Digest: xYsOw/jpH9+PH5fLfsEfQST8BTQ=
+
+Name: org/apache/http/entity/mime/version.properties
+SHA1-Digest: oGm1drTC2nMVM1hIoBuTEc9k+eg=
+
+Name: res/drawable-xxhdpi/loader_show_image_08.png
+SHA1-Digest: TW0/D/AZERlKWBEl0Cw1IlJEfMw=
+
+Name: res/drawable-hdpi/ic_media_next.png
+SHA1-Digest: VBuvZIxYI00xVs+5AcJjLcgNaR0=
+
+Name: res/drawable-xxhdpi/ic_launcher.png
+SHA1-Digest: eU+KHgyVe4bGs/dl6aOcINUIe8c=
+
+Name: lib/x86/libijkplayer.so
+SHA1-Digest: 6G0WCpJOLbtphyFLkFe7X2ml+Vs=
+
+Name: res/drawable/scrubber_progress_horizontal_holo_dark.xml
+SHA1-Digest: T5Ek6IbHJGb1xzeKPWxh0KrGu3s=
+
+Name: res/drawable-hdpi/media_play.png
+SHA1-Digest: PZaEKuOlopUcX6tfYo2HsGFEiD8=
+
+Name: res/layout/main.xml
+SHA1-Digest: MK0iPLZkSw4st3QyyCPhW6QehdQ=
+
+Name: res/layout/preview_videoview.xml
+SHA1-Digest: sI7OFJ2yALF7YqtvJCm2z96bwmo=
+
+Name: res/drawable/bg_title_button_player.xml
+SHA1-Digest: R4yPQBmJImuOJdAwncwIHxVXo6s=
+
+Name: res/drawable-hdpi/scrubber_secondary_holo.9.png
+SHA1-Digest: VgshkMRO27AhKXVD73YdRQkOKco=
+
+Name: res/layout/fragment_main.xml
+SHA1-Digest: D8MgmvSXzx04cKvQLFYyBIXUwHU=
+
+Name: lib/x86/libijksdl.so
+SHA1-Digest: b7efOtXZ8pC0osI2rf4qCFDswoE=
+
+Name: res/drawable-xxhdpi/loader_show_image_06.png
+SHA1-Digest: BdemKlX4z3VRnzyxf9aynfoFr64=
+
+Name: res/drawable-hdpi/ic_media_ff.png
+SHA1-Digest: zWxmbvtBPeAxr/NNnxENBu6V4sQ=
+
+Name: res/drawable-hdpi/mediacontroller_seekbar01.png
+SHA1-Digest: RzcNCvTCogOuL7Kq1bKI+M4p/mY=
+
+Name: res/layout/view_video.xml
+SHA1-Digest: l87fniDnwCGYB2AL0gFB+6Y87mU=
+
+Name: res/drawable-xxhdpi/big_image_loading.xml
+SHA1-Digest: szCGjzrICfYTW1onF00rZCq3aVs=
+
+Name: res/drawable-hdpi/ic_launcher.png
+SHA1-Digest: z/ZZKwlhjkcgYbHjoAHYdH5TNvA=
+
+Name: res/drawable-hdpi/scrubber_control_pressed_holo.png
+SHA1-Digest: zxJaa2+l+N1uL0ODj0WiDdghYQQ=
+
+Name: lib/armeabi/libijkutil.so
+SHA1-Digest: Fpct6H3PBiVr0Uj7vOAxHjm5a0g=
+
+Name: resources.arsc
+SHA1-Digest: /E0D+UHyCwVp6IDApJghR59x3f0=
+
+Name: lib/arm64-v8a/libpolyvModule.so
+SHA1-Digest: XAcX5SV3u4j6PNslpNoin0ByPV0=
+
+Name: res/drawable-hdpi/scrubber_control_focused_holo.png
+SHA1-Digest: LhXJCz02y+frkCfB0eXS8gvr4nQ=
+
+Name: lib/armeabi/libstlport_shared.so
+SHA1-Digest: P8N/UK+btWILylN5CbBmqhvLCpA=
+
+Name: lib/arm64-v8a/libijkplayer.so
+SHA1-Digest: caRKce9paDDwFnTvy1smJdSy7zw=
+
+Name: lib/armeabi-v7a/libijkutil.so
+SHA1-Digest: tXVkHNfWK1JWR5tJdc3YEVQp+KY=
+
+Name: lib/arm64-v8a/libijksdl.so
+SHA1-Digest: QzM1lm2X7fS3rYyUHRYTF5cp+t8=
+
+Name: res/drawable-hdpi/ic_media_rew.png
+SHA1-Digest: wJiCiYL3oFq4YElrEEBDf9syyvo=
+
+Name: AndroidManifest.xml
+SHA1-Digest: L7FSXRC2ThIq9/soEOjae2VqBG0=
+
+Name: lib/armeabi-v7a/libpolyvModule.so
+SHA1-Digest: mgkB7pzhTyrESzAyo7h4hvGFB0E=
+
+Name: lib/armeabi/libijkplayer.so
+SHA1-Digest: Nw85I4hkWU94gtnVTnuNf1GJcOU=
+
+Name: res/layout/ijkmedia_controller.xml
+SHA1-Digest: KbRTjbEFmAKGvlsLN9lIRt2cFKk=
+
+Name: lib/armeabi-v7a/libijkffmpeg.so
+SHA1-Digest: tdgHE0VCb0ym7BIGcyHVoSZNuZs=
+
+Name: lib/arm64-v8a/libijkffmpeg.so
+SHA1-Digest: wfnTfisrIe7RTXJQC61ymEA3O9M=
+
+Name: res/drawable-xxhdpi/loader_show_image_04.png
+SHA1-Digest: mYZdJDNPFlyAFz6IJ5OErLj6t2E=
+
+Name: res/drawable-xxhdpi/loader_show_image_02.png
+SHA1-Digest: lU/Li5xeBvpmBK0nO5NMvbpwhbo=
+
+Name: res/drawable-xxhdpi/loader_show_image_01.png
+SHA1-Digest: ul0BjyswVE8UU5LScHTvHHw4BLU=
+
+Name: lib/armeabi/libijkffmpeg.so
+SHA1-Digest: 4/kFLvMvzYp1tJPekDlNNd+Bo0U=
+
+Name: res/drawable-hdpi/ic_media_fullscreen.png
+SHA1-Digest: 0ds2KQ8OTjgtLEjDnXBbkg7dL5w=
+
+Name: lib/armeabi/libpolyvModule.so
+SHA1-Digest: 53ELF8kfgk6ZHqLckEibzb6D7kw=
+
+Name: lib/arm64-v8a/libijkutil.so
+SHA1-Digest: 2oEEVwBs/SUJTs0Rmh/2f31bWts=
+
+Name: res/menu/record.xml
+SHA1-Digest: LMwOgJafIwZ+nERhKV+p3GNySBE=
+
+Name: classes.dex
+SHA1-Digest: 9ODec7qGyhNEQztBpKgF14E9a2A=
+
+Name: res/drawable/bg_mediacontroller_button.xml
+SHA1-Digest: uDQs4Lcn51GIa51EWtTs0lS9dFk=
+
+Name: res/drawable-xxhdpi/loader_show_image_05.png
+SHA1-Digest: vfdXhwa4ZbH47SsxyRDbcMdJZj8=
+
+Name: res/layout/video_small2.xml
+SHA1-Digest: lAU+DtNeANUb/nxBhlOZ1EjhIuE=
+
+Name: res/layout/video_small_preview.xml
+SHA1-Digest: 5lzfrucDy/gr0UVLunZpt3Ke6Ug=
+
+Name: res/menu/main.xml
+SHA1-Digest: +1SlO7VqFk/+4Diqy8nHR634fDI=
+
+Name: res/layout/view_item.xml
+SHA1-Digest: mnpofdg1nrSRTvScxDH5SIuxtbg=
+
+Name: res/drawable-mdpi/ic_launcher.png
+SHA1-Digest: WrW6Qb8XqAF9EB8q0xsyvj3UR2s=
+
+Name: res/drawable-hdpi/mediacontroller_seekbar02.png
+SHA1-Digest: sAHqRwB+4MFvuGFvvsj6eoE+ddg=
+
+Name: res/drawable-hdpi/scrubber_primary_holo.9.png
+SHA1-Digest: N4fsJ5gjCs2/Ui7vLfSRsziTbFQ=
+
+Name: res/layout/activity_downloadlist.xml
+SHA1-Digest: t1DBxO4gb1Ve8eq9yTuz9Y5kdTw=
+
+Name: res/drawable-hdpi/scrubber_control_disabled_holo.png
+SHA1-Digest: ZQFA1Ad68b4MJ5GA6gHsMxxqDh8=
+
+Name: lib/x86/libijkutil.so
+SHA1-Digest: tXvirC74cwVY3IIXlLVFofarazs=
+
+Name: res/layout/activity_main.xml
+SHA1-Digest: hZXA8EBfV4QtFErYmvdv/m+Qx/k=
+
+Name: res/drawable-hdpi/scrubber_control_normal_holo.png
+SHA1-Digest: 7x4myIgwzrkxYMeDXCFbhMTOmuk=
+
+Name: res/layout/activity_record.xml
+SHA1-Digest: hZXA8EBfV4QtFErYmvdv/m+Qx/k=
+
+Name: res/drawable-hdpi/ic_media_previous.png
+SHA1-Digest: bqaS4mr74Nh/0dw8S/juhyoD2DY=
+
