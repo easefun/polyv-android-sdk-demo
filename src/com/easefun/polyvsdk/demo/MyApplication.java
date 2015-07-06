@@ -84,7 +84,7 @@ public class MyApplication extends Application {
 		
 		
 		
-		client.startService(getApplicationContext());
+		client.startService(getApplicationContext(),PolyvDemoService.class);
 		 //client.init();
 		 //System.out.println("private...:"+client.getPrivatekey());
 			//client.setSign(true);

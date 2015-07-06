@@ -19,6 +19,9 @@
 # view AndroidManifest.xml #generated:23
 -keep class com.easefun.polyvsdk.demo.NewTestActivity { <init>(...); }
 
+# view AndroidManifest.xml #generated:90
+-keep class com.easefun.polyvsdk.demo.PolyvDemoService { <init>(...); }
+
 # view AndroidManifest.xml #generated:84
 -keep class com.easefun.polyvsdk.demo.PreviewVideoActivity { <init>(...); }
 
@@ -38,7 +41,4 @@
 
 # view res/layout/video_small_preview.xml #generated:16
 -keep class com.easefun.polyvsdk.ijk.PreviewIjkVideoView { <init>(...); }
-
-# view AndroidManifest.xml #generated:90
--keep class com.easefun.polyvsdk.server.AndroidService { <init>(...); }
 
