@@ -14,6 +14,7 @@ libs\armeabi-v7a下的so文件(如果需要兼容其他cpu类型，可以增加l
 ijkmediaplayer.jar
 ijkmediawidget.jar
 commons-codec-1.5.jar
+commons-io-2.4.jar
 httpclient-android-4.3.3.jar
 httpmime-4.3.5.jar
 polyvSDK.jar
