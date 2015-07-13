@@ -2,10 +2,13 @@ package com.easefun.polyvsdk.demo;
 
 import java.io.File;
 
+import android.app.Application;
+import android.content.ComponentName;
+import android.content.ServiceConnection;
+import android.os.Environment;
+import android.os.IBinder;
 
 import com.easefun.polyvsdk.PolyvSDKClient;
-import com.easefun.polyvsdk.server.AndroidServer;
-import com.easefun.polyvsdk.server.AndroidService;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -13,18 +16,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
-
-
 import com.nostra13.universalimageloader.utils.StorageUtils;
-
-import android.app.Application;
-import android.content.ComponentName;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.content.SharedPreferences;
-import android.os.Environment;
-import android.os.IBinder;
-import android.preference.PreferenceManager;
 
 public class MyApplication extends Application {
 	private File saveDir;
