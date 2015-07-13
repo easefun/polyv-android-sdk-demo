@@ -18,3 +18,8 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-keep class com.easefun.polyvsdk.**
+-keep class tv.danmaku.ijk.media.**
+-keep class com.nostra13.universalimageloader.**
+-keep class org.apache.http.**
+-keep class org.apache.commons.**
