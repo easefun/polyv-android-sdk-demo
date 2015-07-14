@@ -67,11 +67,10 @@ public class MyApplication extends Application {
 	      }  
 		
 		PolyvSDKClient client = PolyvSDKClient.getInstance();
-		client.setReadtoken("nsJ7ZgQMN0-QsVkscukWt-qLfodxoDFm");
-		client.setWritetoken("Y07Q4yopIVXN83n-MPoIlirBKmrMPJu0");
-		client.setPrivatekey("DFZhoOnkQf");
-		client.setUserId("sl8da4jjbx");
-		client.setSign(true);
+		client.setReadtoken();
+		client.setWritetoken();
+		client.setPrivatekey();
+		client.setUserId();
 		client.setDownloadDir(saveDir);
 		
 		
