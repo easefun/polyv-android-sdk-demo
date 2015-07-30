@@ -90,19 +90,18 @@ public class IjkVideoActicity extends Activity {
 		}
 		
 		
-		
-		videoview.setOnPreparedListener(new OnPreparedListener() {
-			
+		videoview.setOnPreparedListener(new OnPreparedListener(){
 			@Override
-			public void onPrepared(IMediaPlayer mp) {
-				// TODO Auto-generated method stub
-				//do nothing
-				//Log.i(TAG,"video prepared..");
-				//videoview.setVideoLayout(IjkVideoView.VIDEO_LAYOUT_SCALE);
-
-				
-			}
+	      	public void onPrepared(IMediaPlayer mp) {
+	      		// TODO Auto-generated method stub
+	      		videoview.setVideoLayout(IjkVideoView.VIDEO_LAYOUT_SCALE);
+	      		if(stopPosition>0){
+	      			Log.d(TAG,"seek to stopPosition:"+stopPosition);
+	      			videoview.seekTo(stopPosition);
+	      		}
+	      	}
 		});
+		
 		videoview.setOnVideoStatusListener(new IjkVideoView.OnVideoStatusListener() {
 			
 			@Override
@@ -185,7 +184,7 @@ public class IjkVideoActicity extends Activity {
 				}
 				
 				final Builder selectDialog = new AlertDialog.Builder(
-						IjkVideoActicity.this).setTitle("选择下载码率")
+						IjkVideoActicity.this).setTitle("选择切换的码率")
 				// 数字2代表的是数组的下标
 						.setSingleChoiceItems(items, 0,
 								new DialogInterface.OnClickListener() {
@@ -194,6 +193,8 @@ public class IjkVideoActicity extends Activity {
 											DialogInterface dialog,
 											int which) {
 										int bitrate = which + 1;
+										stopPosition = videoview.getCurrentPosition();
+										Log.d(TAG,"switch bitrate on stopPosition:"+stopPosition);
 										videoview.switchLevel(bitrate);
 										dialog.dismiss();
 									}
@@ -247,7 +248,7 @@ public class IjkVideoActicity extends Activity {
 			 }
 			return null;
 		}
-	}*/
+	}
 	
 	 class MyListener extends PolyvOnPreparedListener{
 
@@ -255,12 +256,16 @@ public class IjkVideoActicity extends Activity {
 	  			super(path, videoId);
 	  		
 	  		}
-	      	 @Override
+	      	@Override
 	      	public void onPrepared(IMediaPlayer mp) {
 	      		// TODO Auto-generated method stub
 	      		videoview.setVideoLayout(IjkVideoView.VIDEO_LAYOUT_SCALE);
+	      		if(stopPosition>0){
+	      			Log.d("videoview","seek to stopPosition:"+stopPosition);
+	      			videoview.seekTo(stopPosition);
+	      		}
 	      	}
-	  }
+	  }*/
 
 //	   切换到横屏
 	public void changeToLandscape(){
