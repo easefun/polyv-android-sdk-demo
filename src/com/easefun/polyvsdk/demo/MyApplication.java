@@ -78,10 +78,10 @@ public class MyApplication extends Application {
 		client.setDownloadDir(saveDir);
 
 		
-		client.setReadtoken("AAiK2jiX0t-BAnX4n6CrX-xV0TfqPUML");
-		client.setWritetoken("ZDYlp4fGF8g100D-TYug02Z14idkcelP");
-		client.setPrivatekey("ylzOkbgQcn");
-		client.setUserId("00018093b1");
+		client.setReadtoken("EY1iLovxQm-foW8CazYSb-OAc7UVROY0");
+		client.setWritetoken("v2JgCbBbp5Gp91W-mtbFkDrzIjbacCyM");
+		client.setPrivatekey("BFfwPHDXoj");
+		client.setUserId("6f3bb5e6c5");
 		
 		
 		client.startService(getApplicationContext(),PolyvDemoService.class);
