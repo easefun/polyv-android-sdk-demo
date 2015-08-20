@@ -48,7 +48,6 @@ universal-image-loader-1.9.3-SNAPSHOT.jar
 	client.setWritetoken(writetoken);
 	client.setPrivatekey(privatekey);
 	client.setUserId(userid);
-	client.setSign(true);
 	client.setDownloadDir(saveDir);//下载文件的目录
         client.startService(getApplicationContext());//启动服务
 ```
@@ -249,6 +248,33 @@ void setOnShownListener(OnShownListener l)
 	videoview.setMediaController(mediaController);
 	videoview.setVid(vid);//		
 ```
+3.错误处理
+```java
+		videoview.setOnVideoPlayErrorLisener(new IjkVideoView.OnVideoPlayErrorLisener(){
+			public boolean onVideoPlayError(IjkVideoView.ErrorReason errorReason){
+				ErrorType errorType = errorReason.getType();
+				/** ErrorType
+					 未知 
+					UNKNOWN,
+					 空指针 
+					JSON_ERROR,
+					 网络异常 
+					NETWORK_DENIED,
+					 存储空间不可用 
+					SPACE_CAN_NOT_WRITE,
+					 存储空间不足 
+					SPACE_NOT_ENOUGH,
+					视频无法播放
+					VIDEO_CANNOT_PLAY
+					**/
+				
+				return false;
+			}
+			
+			
+		});
+```
+
 
 视频上传
 --
