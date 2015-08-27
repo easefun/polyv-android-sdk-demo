@@ -3,7 +3,6 @@ package com.easefun.polyvsdk.demo;
 import com.easefun.polyvsdk.PolyvSDKClient;
 import com.easefun.polyvsdk.server.AndroidServer;
 import com.easefun.polyvsdk.server.AndroidService;
-import com.easefun.polyvsdk.server.nanohttp.ServerRunner;
 
 import android.app.IntentService;
 import android.content.Intent;
