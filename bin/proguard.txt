@@ -1,0 +1,44 @@
+# view AndroidManifest.xml #generated:38
+-keep class com.easefun.polyvsdk.VideoViewActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:72
+-keep class com.easefun.polyvsdk.demo.DownloadListActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:54
+-keep class com.easefun.polyvsdk.demo.FullVideoDemoActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:66
+-keep class com.easefun.polyvsdk.demo.IjkFullVideoActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:60
+-keep class com.easefun.polyvsdk.demo.IjkVideoActicity { <init>(...); }
+
+# view AndroidManifest.xml #generated:18
+-keep class com.easefun.polyvsdk.demo.MyApplication { <init>(...); }
+
+# view AndroidManifest.xml #generated:23
+-keep class com.easefun.polyvsdk.demo.NewTestActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:90
+-keep class com.easefun.polyvsdk.demo.PolyvDemoService { <init>(...); }
+
+# view AndroidManifest.xml #generated:84
+-keep class com.easefun.polyvsdk.demo.PreviewVideoActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:32
+-keep class com.easefun.polyvsdk.demo.RecordActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:46
+-keep class com.easefun.polyvsdk.demo.SmallVideoDemoActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:78
+-keep class com.easefun.polyvsdk.demo.VideoListActivity { <init>(...); }
+
+# view res/layout/preview_videoview.xml #generated:8
+# view res/layout/video_full2.xml #generated:16
+# view res/layout/video_small2.xml #generated:17
+-keep class com.easefun.polyvsdk.ijk.IjkVideoView { <init>(...); }
+
+# view res/layout/video_small_preview.xml #generated:16
+-keep class com.easefun.polyvsdk.ijk.PreviewIjkVideoView { <init>(...); }
+

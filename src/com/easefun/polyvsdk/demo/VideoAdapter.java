@@ -61,7 +61,12 @@ public class VideoAdapter extends BaseAdapter {
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
-		return videos.size();
+		if(videos!=null){
+			return videos.size();
+		}else{
+			return 0;
+		}
+		
 	}
 
 	@Override

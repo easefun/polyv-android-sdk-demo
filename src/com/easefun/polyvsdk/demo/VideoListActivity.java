@@ -30,7 +30,6 @@ public class VideoListActivity extends Activity {
 	}
 	
 	class LoadVideoList extends AsyncTask<String,String,String>{
-     
 		@Override
 		protected String doInBackground(String... arg0) {
 			// TODO Auto-generated method stub
@@ -44,8 +43,8 @@ public class VideoListActivity extends Activity {
 			super.onPostExecute(result);
 			adapter=new VideoAdapter(VideoListActivity.this, videos);
 			list.setAdapter(adapter);
-			String a = videos.toString();
-			Log.i(TAG,a);
+			//String a = videos.toString();
+			//Log.i(TAG,a);
 		}
 	}
 }
