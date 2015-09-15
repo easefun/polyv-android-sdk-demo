@@ -31,7 +31,7 @@ public class IjkFullVideoActivity extends Activity {
 		}
 		
 		progressBar = (ProgressBar) findViewById(R.id.loadingprogress);
-		videoview = (IjkVideoView) findViewById(R.id.videoview);
+		videoview = (IjkVideoView) findViewById(R.id.full_videoview);
 		mediaController = new MediaController(this, false);
 		videoview.setMediaController(mediaController);
 		videoview.setMediaBufferingIndicator(progressBar);
