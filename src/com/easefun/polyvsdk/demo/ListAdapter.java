@@ -1,11 +1,9 @@
 package com.easefun.polyvsdk.demo;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,9 +17,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.easefun.polyvsdk.DownloadProgressListener;
 import com.easefun.polyvsdk.PolyvDownloadProgressListener;
 import com.easefun.polyvsdk.PolyvDownloader;
+import com.easefun.polyvsdk.PolyvDownloaderManager;
+import com.easefun.polyvsdk.PolyvSDKClient;
 import com.easefun.polyvsdk.R;
 import com.easefun.polyvsdk.SDKUtil;
 
@@ -37,7 +36,6 @@ public class ListAdapter extends BaseAdapter {
 	private LinkedList<ProgressBar> barlist;
 	private LinkedList<TextView> rlist;
 	private LinkedList<Boolean> flags;
-	private ArrayList<PolyvDownloader> downloaders;
 	private LinkedList<Button> butlist;
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -56,6 +54,7 @@ public class ListAdapter extends BaseAdapter {
 					// downloader.stop();
 					Button btn = butlist.get(position);
 					btn.setEnabled(true);
+					//Log.i(TAG, "toast");
 					Toast.makeText(context, "下载成功", 1).show();
 				}
 				break;
@@ -66,12 +65,10 @@ public class ListAdapter extends BaseAdapter {
 		};
 	};
 	private void initDownloaders(){
-		downloaders = new ArrayList<PolyvDownloader>();
-
 		for (int i = 0; i < data.size(); i++) {
 			final DownloadInfo info = data.get(i);
 			final String _vid=info.getVid();
-			PolyvDownloader downloader = new PolyvDownloader(_vid, info.getBitrate());
+			PolyvDownloader downloader = PolyvDownloaderManager.getPolyvDownloader(_vid, info.getBitrate());
 			final int p = i;
 			downloader
 					.setPolyvDownloadProressListener(new PolyvDownloadProgressListener() {
@@ -93,7 +90,7 @@ public class ListAdapter extends BaseAdapter {
 							Message msg = new Message();
 							msg.what = REFRESH_PROGRESS;
 							Bundle bundle = new Bundle();
-							bundle.putLong("current", 1);
+							bundle.putLong("downloaded", 1);
 							bundle.putLong("total", 1);
 							msg.setData(bundle);
 							handler.sendMessage(msg);
@@ -102,12 +99,10 @@ public class ListAdapter extends BaseAdapter {
 						}
 
 						public void onDownloadFail(String error) {
-
+							Log.i(TAG, "下载失败:" + error);
 						}
 
 					});
-			downloaders.add(downloader);
-			
 		}
 	}
 	public ListAdapter(Context context, LinkedList<DownloadInfo> data) {
@@ -190,7 +185,7 @@ public class ListAdapter extends BaseAdapter {
 			holder.tv_rate.setText("" + (int) Math.round(downloaded));
 		}*/
 		holder.btn_download.setOnClickListener(new DownloadListener(data.get(
-				position).getVid(), position));
+				position).getVid(), data.get(position).getBitrate(), position));
 		
 		holder.btn_delete.setOnClickListener(new DeleteListener(data.get(
 				position),position));
@@ -201,14 +196,7 @@ public class ListAdapter extends BaseAdapter {
 	}
 
 	public void downloadAllFile() {
-		if (downloaders != null) {
-			for (int i = 0; i < downloaders.size(); i++) {
-				if (downloaders.get(i) != null) {
-					downloaders.get(i).start();
-				}
-			}
-		}
-
+		PolyvDownloaderManager.startAll();
 	}
 
 	public void updateAllButton(boolean isStop) {
@@ -232,11 +220,13 @@ public class ListAdapter extends BaseAdapter {
 	}
 
 	class DownloadListener implements View.OnClickListener {
-		private String vid;
-		int p;
+		private final String vid;
+		private final int bitRate;
+		private final int p;
 
-		public DownloadListener(String vid, int p) {
+		public DownloadListener(String vid, int bitRate, int p) {
 			this.vid = vid;
+			this.bitRate = bitRate;
 			this.p = p;
 		}
 
@@ -247,7 +237,7 @@ public class ListAdapter extends BaseAdapter {
 			if (!isStop) {
 				Log.i(TAG, "start download - position " + p);
 				((TextView) v).setText("暂停");
-				PolyvDownloader downloader = downloaders.get(p);
+				PolyvDownloader downloader = PolyvDownloaderManager.getPolyvDownloader(vid, bitRate);
 				if(downloader!=null){
 					downloader.start();
 				}
@@ -260,7 +250,7 @@ public class ListAdapter extends BaseAdapter {
 			} else {
 				Log.i(TAG, "stop download - position " + p);
 				((TextView) v).setText("开始");
-				PolyvDownloader downloader = downloaders.get(p);
+				PolyvDownloader downloader = PolyvDownloaderManager.getPolyvDownloader(vid, bitRate);
 				if(downloader!=null){
 					downloader.stop();
 				}
@@ -283,10 +273,8 @@ public class ListAdapter extends BaseAdapter {
 
 		@Override
 		public void onClick(View v) {
-			PolyvDownloader downloader = downloaders.get(p);
-			
-			if(downloader!=null){
-				downloader.stop();
+			PolyvDownloader downloader = PolyvDownloaderManager.clearPolyvDownload(info.getVid(), info.getBitrate());
+			if (downloader!=null){
 				downloader.deleteVideo(info.getVid(),info.getBitrate());
 				dbService.deleteDownloadFile(info);
 				//data = dbService.getDownloadFiles();
@@ -294,20 +282,29 @@ public class ListAdapter extends BaseAdapter {
 				data.remove(p);
 				flags.remove(p);
 				notifyDataSetChanged();
-				
 			}
+			
+//			long length = getFileSize(PolyvSDKClient.getInstance().getDownloadDir());
+//			Toast.makeText(context, String.valueOf(length), 1).show();
 		}
+		
+//		private long getFileSize(File f) {
+//			long size = 0;
+//			File flist[] = f.listFiles();
+//			for (int i = 0 ; i < flist.length ; i++) {
+//				if (flist[i].isDirectory()) {
+//					size = size + getFileSize(flist[i]);
+//				} else {
+//					size = size + flist[i].length();
+//				}
+//			}
+//			
+//			return size;
+//		}
 
 	}
 
 	public void stopAll() {
-		// TODO Auto-generated method stub
-		if (downloaders != null) {
-			for (int i = 0; i < downloaders.size(); i++) {
-				if (downloaders.get(i) != null) {
-					downloaders.get(i).stop();
-				}
-			}
-		}
+		PolyvDownloaderManager.stopAll();
 	}
 }

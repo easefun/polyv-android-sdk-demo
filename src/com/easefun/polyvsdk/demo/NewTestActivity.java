@@ -3,7 +3,6 @@ package com.easefun.polyvsdk.demo;
 import java.io.File;
 
 import org.json.JSONException;
-import com.easefun.polyvsdk.DownloadProgressListener;
 import com.easefun.polyvsdk.PolyvDownloadProgressListener;
 import com.easefun.polyvsdk.PolyvDownloader;
 import com.easefun.polyvsdk.PolyvSDKClient;
@@ -34,7 +33,7 @@ public class NewTestActivity extends Activity {
 	private PolyvDownloader downloader;
 	// sl8da4jjbx684cdae6bf17b1b70a8354_s 非加密
 	// sl8da4jjbx80cb8878980c1626c51923_s 加密
-	private static String videoId = "sl8da4jjbxe69c6942a7a737819660de_s";
+	private static String videoId = "536036bd58ea06f6e90cbf8779dd9446_5";
 	private static String TAG="NewTestActivity";
 	private ProgressDialog barProgressDialog;
 	private Button btn_down,btn_stopdown, btn_downloadlist, btn_del,btn_playUrl, btn_playUrlFull,
@@ -333,7 +332,6 @@ public class NewTestActivity extends Activity {
 		protected void onPostExecute(String result) {
 			try {
 				Video video = SDKUtil.convertJsonToVideo(result);
-				Log.d("VideoUploadTask","video uploaded vid: " + video.getVid());
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

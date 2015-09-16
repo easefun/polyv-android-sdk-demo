@@ -2,30 +2,13 @@ package com.easefun.polyvsdk.demo;
 
 
 
-import java.io.File;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import tv.danmaku.ijk.media.player.IMediaPlayer;
-
-import com.easefun.polyvsdk.ijk.IjkVideoView;
-import com.easefun.polyvsdk.ijk.OnPreparedListener;
-import com.easefun.polyvsdk.ijk.PolyvOnPreparedListener;
-
-
-import com.easefun.polyvsdk.R;
-import com.easefun.polyvsdk.SDKUtil;
-import com.easefun.polyvsdk.Video;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -33,6 +16,10 @@ import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import com.easefun.polyvsdk.R;
+import com.easefun.polyvsdk.ijk.IjkVideoView;
+import com.easefun.polyvsdk.ijk.OnPreparedListener;
 
 public class IjkVideoActicity extends Activity {
    private  static final String TAG = "IjkVideoActicity";
@@ -85,8 +72,8 @@ public class IjkVideoActicity extends Activity {
 			videoview.setVideoPath(path);
 	        
 		}else{
-			//播放流畅，参数1
-			videoview.setVid(vid,1);
+			
+			videoview.setVid(vid);
 		}
 		
 		

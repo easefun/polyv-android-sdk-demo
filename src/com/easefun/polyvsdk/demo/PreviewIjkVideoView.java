@@ -2,12 +2,9 @@ package com.easefun.polyvsdk.demo;
 
 import java.io.IOException;
 import java.io.InputStream;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import com.easefun.polyvsdk.ijk.IjkBaseMediaController;
 import com.easefun.polyvsdk.ijk.IjkVideoView;
@@ -176,37 +173,47 @@ public class PreviewIjkVideoView extends RelativeLayout implements
 
 		@Override
 		protected String doInBackground(String... params) {
-			// TODO Auto-generated method stub
-			DefaultHttpClient httpclient = new DefaultHttpClient();
-			InputStream in = null;
+			InputStream is = null;
 			try {
-				HttpGet httpget = new HttpGet(
-						"http://v.polyv.net/uc/video/getImage?vid=" + params[0]);
-				;
-				HttpResponse response = httpclient.execute(httpget);
-				HttpEntity entity = response.getEntity();
-				in = entity.getContent();
-				Bitmap bitmap = BitmapFactory.decodeStream(in);
+				URL url = new URL("http://v.polyv.net/uc/video/getImage?vid=" + params[0]);
+				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+				conn.setReadTimeout(10000);
+				conn.setConnectTimeout(15000);
+				conn.setRequestMethod("GET");
+				conn.addRequestProperty("User-Agent", "polyv-android-sdk");
+				conn.connect();
+				is = conn.getInputStream();
+				Bitmap bitmap = BitmapFactory.decodeStream(is);
 				drawable = new BitmapDrawable(bitmap);
-			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (MalformedURLException e1) {
+				e1.printStackTrace();
+				return "";
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return "";
+			} finally {
+				if (is != null) {
+					try {
+						is.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 			}
+			
 			return params[0];
 		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			// TODO Auto-generated method stub
-			super.onPostExecute(result);
-			btn_video.setVisibility(View.VISIBLE);
-			mIjkVideoView.setBackgroundDrawable(drawable);
-			mProgressBar.setVisibility(View.INVISIBLE);
-		}
 	}
+
+//	@Override
+//	protected void onPostExecute(String result) {
+//			// TODO Auto-generated method stub
+//			super.onPostExecute(result);
+//			btn_video.setVisibility(View.VISIBLE);
+//			mIjkVideoView.setBackgroundDrawable(drawable);
+//			mProgressBar.setVisibility(View.INVISIBLE);
+//		}
+//	}
 
 	public int getResourseIdByName(String className, String name) {
 		Class r = null;
