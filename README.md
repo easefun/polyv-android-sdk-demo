@@ -56,7 +56,7 @@ universal-image-loader-1.9.3-SNAPSHOT.jar
 视频将统一下载到client.getDownloadDir中.
 创建Downloader实例需提供视频ID，码率bitRate。示例如下：
 ```java
-downloader = new PolyvDownloader(videoId, 1);
+PolyvDownloader downloader = new PolyvDownloaderManager.getPolyvDownloader(videoId, 1);
 //开始下载
 downloader.start();
 //停止下载
@@ -279,43 +279,42 @@ void setOnShownListener(OnShownListener l)
 视频上传
 --
 ```java
-class VideoUploadTask extends AsyncTask<String, Void, String> {
+	class VideoUploadTask extends AsyncTask<String, Void, String> {
 
 		@Override
 		protected String doInBackground(String... params) {
-			File path = new File(Environment.getExternalStorageDirectory(),"myRecording.mp4");
-			try {
-			String videojson = PolyvSDKClient.getInstance()
-						.resumableUpload(path.toString(), "我的标题", "desc", 0,
-								new Progress() {
-									@Override
-									public void run(long offset, long max) {
-										// TODO Auto-generated method stub
-										Message msg = new Message();
-										msg.what = UPLOAD;
-										Bundle bundle = new Bundle();
-										bundle.putLong("offset", offset);
-										bundle.putLong("max", max);
-										msg.setData(bundle);
-										handler.sendMessage(msg);
-									}
-								});
-				return videojson;
-			} catch (Exception e) {
-
-			}
-			return null;
+			File path = new File(Environment.getExternalStorageDirectory(), "myRecording.mp4");
+			String videojson = PolyvUploadManager.getInstance().upload(path.getAbsolutePath(), "我的标题", "desc", 0,
+					new Progress() {
+				
+						@Override
+						public void run(long offset, long max) {
+							Bundle bundle = new Bundle();
+							bundle.putLong("offset", offset);
+							bundle.putLong("max", max);
+							
+							Message msg = new Message();
+							msg.what = PROGRESS;
+							msg.setData(bundle);
+							
+							handler.sendMessage(msg);
+						}
+					}, new Success() {
+						
+						@Override
+						public void run() {
+							Message msg = new Message();
+							msg.what = SUCCESS;
+							handler.sendMessage(msg);
+						}
+					});
+			
+			return videojson;
 		}
 
 		@Override
 		protected void onPostExecute(String result) {
-			try {
-				Video video = SDKUtil.convertJsonToVideo(result);
-				Log.d("VideoUploadTask","video uploaded vid: " + video.getVid());
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
 		}
 	}
 ```
