@@ -3,7 +3,7 @@
     android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent" 
-     
+    
     >
     <com.easefun.polyvsdk.ijk.IjkVideoView 
         android:id="@+id/ijkvideoview"

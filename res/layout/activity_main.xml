@@ -5,4 +5,3 @@
     android:layout_height="match_parent"
     tools:context="com.easefun.polyvsdk.demo.MainActivity"
     tools:ignore="MergeRootFrame" />
- 

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.easefun.polyvsdk.RecordActivity$PlaceholderFragment" >
-  
+
 	<FrameLayout
 	    android:id="@+id/videoview"
 	    android:layout_width="fill_parent"
