@@ -1,7 +1,5 @@
 package com.easefun.polyvsdk.demo;
 
-
-
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -65,6 +63,7 @@ public class IjkVideoActicity extends Activity {
 		videoview.setVideoLayout(IjkVideoView.VIDEO_LAYOUT_SCALE);
 
 		mediaController = new MediaController(this,false);//
+		mediaController.setIjkVideoView(videoview);
 		mediaController.setAnchorView(videoview);
 		videoview.setMediaController(mediaController);
 		if(path != null && path.length() > 0){

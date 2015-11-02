@@ -55,6 +55,7 @@ public class VideoAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
+		if (videos == null) return 0;
 		return videos.size();
 	}
 

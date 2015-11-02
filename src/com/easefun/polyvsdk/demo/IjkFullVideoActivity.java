@@ -29,16 +29,17 @@ public class IjkFullVideoActivity extends Activity {
 			path = e.getString("path");
 			vid = e.getString("vid");
 		}
-		
+
 		progressBar = (ProgressBar) findViewById(R.id.loadingprogress);
 		videoview = (IjkVideoView) findViewById(R.id.videoview);
 		mediaController = new MediaController(this, false);
+		mediaController.setIjkVideoView(videoview);
 		videoview.setMediaController(mediaController);
 		videoview.setMediaBufferingIndicator(progressBar);
 		if (path != null && path.length() > 0) {
 			progressBar.setVisibility(View.GONE);
 			videoview.setVideoURI(Uri.parse(path));
-			
+
 		} else {
 			videoview.setVid(vid, 1);
 		}
@@ -51,29 +52,29 @@ public class IjkFullVideoActivity extends Activity {
 
 			}
 		});
-		
-				// 设置视频尺寸 ，在横屏下效果较明显
-			   mediaController.setOnVideoChangeListener(new MediaController.OnVideoChangeListener() {
-				
-				@Override
-				public void onVideoChange(int layout) {
-					// TODO Auto-generated method stub
-					videoview.setVideoLayout(layout);
-					switch (layout) {
-					case IjkVideoView.VIDEO_LAYOUT_ORIGIN:
-						Toast.makeText(IjkFullVideoActivity.this, "VIDEO_LAYOUT_ORIGIN", 1).show();
-						break;
-		            case IjkVideoView.VIDEO_LAYOUT_SCALE:
-		            	Toast.makeText(IjkFullVideoActivity.this, "VIDEO_LAYOUT_SCALE", 1).show();
-						break;
-		            case IjkVideoView.VIDEO_LAYOUT_STRETCH:
-		            	Toast.makeText(IjkFullVideoActivity.this, "VIDEO_LAYOUT_STRETCH", 1).show();
-			            break;
-		             case IjkVideoView.VIDEO_LAYOUT_ZOOM:
-		            	 Toast.makeText(IjkFullVideoActivity.this, "VIDEO_LAYOUT_ZOOM", 1).show();
-			            break;
-			            }
+
+		// 设置视频尺寸 ，在横屏下效果较明显
+		mediaController.setOnVideoChangeListener(new MediaController.OnVideoChangeListener() {
+
+			@Override
+			public void onVideoChange(int layout) {
+				// TODO Auto-generated method stub
+				videoview.setVideoLayout(layout);
+				switch (layout) {
+				case IjkVideoView.VIDEO_LAYOUT_ORIGIN:
+					Toast.makeText(IjkFullVideoActivity.this, "VIDEO_LAYOUT_ORIGIN", 1).show();
+					break;
+				case IjkVideoView.VIDEO_LAYOUT_SCALE:
+					Toast.makeText(IjkFullVideoActivity.this, "VIDEO_LAYOUT_SCALE", 1).show();
+					break;
+				case IjkVideoView.VIDEO_LAYOUT_STRETCH:
+					Toast.makeText(IjkFullVideoActivity.this, "VIDEO_LAYOUT_STRETCH", 1).show();
+					break;
+				case IjkVideoView.VIDEO_LAYOUT_ZOOM:
+					Toast.makeText(IjkFullVideoActivity.this, "VIDEO_LAYOUT_ZOOM", 1).show();
+					break;
 				}
-			});
+			}
+		});
 	}
 }

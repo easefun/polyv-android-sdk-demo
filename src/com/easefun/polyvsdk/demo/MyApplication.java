@@ -3,8 +3,6 @@ package com.easefun.polyvsdk.demo;
 import java.io.File;
 
 import com.easefun.polyvsdk.PolyvSDKClient;
-import com.easefun.polyvsdk.server.AndroidServer;
-import com.easefun.polyvsdk.server.AndroidService;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -17,12 +15,9 @@ import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import android.app.Application;
 import android.content.ComponentName;
-import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.os.Environment;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
 
 public class MyApplication extends Application {
 	private File saveDir;
@@ -30,7 +25,12 @@ public class MyApplication extends Application {
 	public MyApplication() {
 		// TODO Auto-generated constructor stub
 	}
-
+	@Override
+	public void onTerminate(){
+		super.onTerminate();
+		PolyvSDKClient client = PolyvSDKClient.getInstance();
+		client.stopService(getApplicationContext(), PolyvDemoService.class);
+	}
 	@Override
 	public void onCreate() {
 		// TODO Auto-generated method stub
@@ -72,7 +72,7 @@ public class MyApplication extends Application {
 		initPolyvCilent();
 
 	}
-
+	
 	public void initPolyvCilent() {
 		if (Environment.getExternalStorageState().equals(
 				Environment.MEDIA_MOUNTED)) {
@@ -88,27 +88,10 @@ public class MyApplication extends Application {
 		client.setWritetoken("Y07Q4yopIVXN83n-MPoIlirBKmrMPJu0");
 		client.setPrivatekey("DFZhoOnkQf");
 		client.setUserId("sl8da4jjbx");
+		
 		client.setDownloadDir(saveDir);
-		
-
-		
-		
-		//client.stopService(getApplicationContext(), PolyvDemoService.class);
+		client.initDatabaseService(this);
 		client.startService(getApplicationContext(), PolyvDemoService.class);
-		
-		 
-		//client.startService(getApplicationContext());
-		
-		/*
-		 * client.setReadtoken("XOC1VQNBVi-hkTY7yOOwb-CZ3YtDPdok");
-		 * client.setWritetoken("W1U4jQHewhltyPW-kZL1ziOCIVNZda0H");
-		 * client.setPrivatekey("JF0HsaQVWU"); client.setUserId("a0dedeea8b");
-		 */
-
-		
-		// client.init();
-		// System.out.println("private...:"+client.getPrivatekey());
-		// client.setSign(true);
 
 	}
 

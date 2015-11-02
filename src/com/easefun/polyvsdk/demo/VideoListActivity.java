@@ -43,6 +43,7 @@ public class VideoListActivity extends Activity {
 		@Override
 		protected void onPostExecute(List<RestVO> result) {
 			super.onPostExecute(result);
+			if (result == null) return;
 			VideoAdapter adapter = new VideoAdapter(VideoListActivity.this, result);
 			list.setAdapter(adapter);
 			String a = result.toString();
