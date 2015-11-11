@@ -219,34 +219,34 @@ MediaController.java 中的关于布局的makeControllerView(),initControllerVie
   另在MediaController中提供了几个接口
  设置切屏监听器,可在onLandscape(),onPortrait()中实现切屏方法
 ```java
-  void setOnBoardChangeListener(OnBoardChangeListener l)
+	void setOnBoardChangeListener(OnBoardChangeListener l)
 ```
 设置视频尺寸监听器，监听的是layout常量
 ```java
- void setOnVideoChangeListener(OnVideoChangeListener l)
+	void setOnVideoChangeListener(OnVideoChangeListener l)
  ```
   设置MediaController显示时的监听器
 ```java
-void setOnShownListener(OnShownListener l)
+	void setOnShownListener(OnShownListener l)
 ```
   设置MediaController隐藏时的监听器
 ```java  
-  void setOnHiddenListener(OnHiddenListener l)
+	void setOnHiddenListener(OnHiddenListener l)
 ```  
-  设置MediaController隐藏时的监听器
 
   具体实现方式参考本案例中的MediaController.java
 
 
 2.视频播放代码调用
 ```java
-        videoview=(IjkVideoView)findViewById(R.id.videoview);
+    videoview=(IjkVideoView)findViewById(R.id.videoview);
 	progressBar =(ProgressBar)findViewById(R.id.loadingprogress);
 	videoview.setMediaBufferingIndicator(progressBar); //在缓冲时出现的loading
 	mediaController = new MediaController(this,false);//
+	mediaController.setIjkVideoView(videoview);
 	mediaController.setAnchorView(videoview);
 	videoview.setMediaController(mediaController);
-	videoview.setVid(vid);//		
+	videoview.setVid(vid);		
 ```
 3.错误处理
 ```java
