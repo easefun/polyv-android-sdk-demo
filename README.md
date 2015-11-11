@@ -13,10 +13,9 @@ libs\armeabi-v7a下的so文件(如果需要兼容其他cpu类型，可以增加l
 ```java
 ijkmediaplayer.jar
 ijkmediawidget.jar
-commons-codec-1.5.jar
-commons-io-2.4.jar
-httpclient-android-4.3.3.jar
-httpmime-4.3.5.jar
+commons-codec-1.9.jar
+httpclient-4.5.jar
+httpcore-4.4.1.jar
 polyvSDK.jar
 universal-image-loader-1.9.3-SNAPSHOT.jar
 ```
@@ -34,7 +33,7 @@ universal-image-loader-1.9.3-SNAPSHOT.jar
 ```
 注册Service
 ```xml
-   <service  android:name="com.easefun.polyvsdk.server.AndroidService"></service>
+   <service  android:name="com.easefun.polyvsdk.demo.PolyvDemoService"></service>
 ```
 
 描述
@@ -49,7 +48,8 @@ universal-image-loader-1.9.3-SNAPSHOT.jar
 	client.setPrivatekey(privatekey);
 	client.setUserId(userid);
 	client.setDownloadDir(saveDir);//下载文件的目录
-        client.startService(getApplicationContext());//启动服务
+	client.initDatabaseService(this);//初始化数据库服务
+    client.startService(getApplicationContext(), PolyvDemoService.class);//启动服务
 ```
 下载视频
 --
@@ -93,19 +93,19 @@ downloader.setPolyvDownloadProressListener(new PolyvDownloadProgressListener() {
 ```
 删除视频
 ```java
+//删除视频,删除之前会做stop停止动作
 downloader.deleteVideo(videoId, 1);
-//删除下载目录
-downloader.cleanDownloadDir();
+
+//删除视频的所有码率，工具方法
+PolyvDownloader.deleteVideo(String vid);
 ```
 拿到视频大小
 
 ```
 Video.loadVideo(vid, new Video.OnVideoLoaded(){
-			public void onloaded(Video v){
-				Log.i("filesize",v.getFilesize(1)+"");
-				
-				
-			}
+	public void onloaded(Video v){
+		Log.i("filesize",v.getFilesize(1)+"");
+	}
 });
 ```
 
