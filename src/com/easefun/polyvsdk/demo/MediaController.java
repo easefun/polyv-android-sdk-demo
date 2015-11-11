@@ -691,14 +691,8 @@ public class MediaController extends IjkBaseMediaController {
 		protected Integer doInBackground(String... params) {
 			vid = params[0];
 			currBitRate = Integer.parseInt(params[1]);
+			if (currBitRate < 0) currBitRate = 0;
 			int dfNum = PolyvSDKClient.getInstance().getVideoDBService().getDFNum(vid);
-			if (dfNum == 0) return dfNum;
-			int minBitRate = BitRateEnum.getMinBitRate();
-			int maxBitRate = BitRateEnum.getMaxBitRate(dfNum);
-			if (currBitRate < minBitRate || currBitRate > maxBitRate) {
-				currBitRate = maxBitRate;
-			}
-			
 			return dfNum;
 		}
 
@@ -711,6 +705,7 @@ public class MediaController extends IjkBaseMediaController {
 			List<BitRateEnum> list = BitRateEnum.getBitRateList(result);
 			Button bitRateBtn = null;
 			for (BitRateEnum bitRateEnum : list) {
+				if (bitRateEnum == BitRateEnum.ziDong) continue;
 				bitRateBtn = bitRateBtnArray.get(bitRateEnum.getNum());
 				bitRateBtn.setVisibility(View.VISIBLE);
 				bitRateBtn.setOnClickListener(new bitRateClientListener(vid, currBitRate, bitRateEnum.getNum()));
