@@ -45,7 +45,7 @@ universal-image-loader-1.9.3-SNAPSHOT.jar
 	PolyvSDKClient client = PolyvSDKClient.getInstance();
 	client.setReadtoken(readtoken);
 	client.setWritetoken(writetoken);
-	client.setPrivatekey(privatekey);
+	client.setSecretkey(secretkey);
 	client.setUserId(userid);
 	client.setDownloadDir(saveDir);//下载文件的目录
 	client.initDatabaseService(this);//初始化数据库服务
