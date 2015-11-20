@@ -38,8 +38,8 @@ universal-image-loader-1.9.3-SNAPSHOT.jar
 
 描述
 --
-在MyApplication初始化PolyvSDKClient,设置token
-(最好通过服务器端加载json拿到这些参数)
+在MyApplication初始化PolyvSDKClient,设置token(最好通过服务器端加载json拿到这些参数)
+<font color="red">注意：client.initDatabaseService(this)</font>
 
 ```java
 	PolyvSDKClient client = PolyvSDKClient.getInstance();
@@ -48,7 +48,10 @@ universal-image-loader-1.9.3-SNAPSHOT.jar
 	client.setSecretkey(secretkey);
 	client.setUserId(userid);
 	client.setDownloadDir(saveDir);//下载文件的目录
-	client.initDatabaseService(this);//初始化数据库服务
+	
+	//初始化数据库服务，集成最新的sdk时，需要添加该语句
+	client.initDatabaseService(this);
+	
     client.startService(getApplicationContext(), PolyvDemoService.class);//启动服务
 ```
 下载视频
