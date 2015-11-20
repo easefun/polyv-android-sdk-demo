@@ -39,7 +39,6 @@ universal-image-loader-1.9.3-SNAPSHOT.jar
 描述
 --
 在MyApplication初始化PolyvSDKClient,设置token(最好通过服务器端加载json拿到这些参数)
-<font color="red">注意：client.initDatabaseService(this)</font>
 
 ```java
 	PolyvSDKClient client = PolyvSDKClient.getInstance();
