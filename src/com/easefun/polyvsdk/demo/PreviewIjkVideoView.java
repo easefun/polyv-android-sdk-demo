@@ -203,17 +203,15 @@ public class PreviewIjkVideoView extends RelativeLayout implements
 			
 			return params[0];
 		}
+		
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			btn_video.setVisibility(View.VISIBLE);
+			mIjkVideoView.setBackgroundDrawable(drawable);
+			mProgressBar.setVisibility(View.INVISIBLE);
+		}
 	}
-
-//	@Override
-//	protected void onPostExecute(String result) {
-//			// TODO Auto-generated method stub
-//			super.onPostExecute(result);
-//			btn_video.setVisibility(View.VISIBLE);
-//			mIjkVideoView.setBackgroundDrawable(drawable);
-//			mProgressBar.setVisibility(View.INVISIBLE);
-//		}
-//	}
 
 	public int getResourseIdByName(String className, String name) {
 		Class r = null;
