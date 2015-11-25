@@ -58,7 +58,7 @@ universal-image-loader-1.9.3-SNAPSHOT.jar
 视频将统一下载到client.getDownloadDir中.
 创建Downloader实例需提供视频ID，码率bitRate。示例如下：
 ```java
-PolyvDownloader downloader = new PolyvDownloaderManager.getPolyvDownloader(videoId, 1);
+PolyvDownloader downloader = PolyvDownloaderManager.getPolyvDownloader(videoId, 1);
 //开始下载
 downloader.start();
 //停止下载
