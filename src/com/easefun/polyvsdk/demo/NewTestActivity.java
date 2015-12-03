@@ -29,8 +29,9 @@ public class NewTestActivity extends Activity {
 	private static String videoId = "sl8da4jjbx80cb8878980c1626c51923_s";
 	private static String TAG="NewTestActivity";
 	private ProgressDialog barProgressDialog;
-	private Button btn_downloadlist, btn_playUrl, btn_playUrlFull, btn_playLocal,
-		btn_playLocalFull, btn_record, btn_upload, btn_videolist;
+	private Button btn_downloadlist, btn_playUrl, btn_playUrlFull,
+		btn_record, btn_upload, btn_videolist;
+//	private Button btn_playLocal, btn_playLocalFull;
 	File saveDir;
 	
 	private static final int PROGRESS = 1;
@@ -68,8 +69,8 @@ public class NewTestActivity extends Activity {
 		btn_downloadlist = (Button) findViewById(R.id.download_list);
 		btn_playUrl = (Button) findViewById(R.id.onlinevideo_1);
 		btn_playUrlFull = (Button) findViewById(R.id.onlinevideo_2);
-		btn_playLocal = (Button) findViewById(R.id.localvideo_1);
-		btn_playLocalFull = (Button) findViewById(R.id.localvideo_2);
+//		btn_playLocal = (Button) findViewById(R.id.localvideo_1);
+//		btn_playLocalFull = (Button) findViewById(R.id.localvideo_2);
 		btn_record = (Button) findViewById(R.id.recordvideo);
 		btn_upload = (Button) findViewById(R.id.upload);
 		btn_videolist = (Button) findViewById(R.id.videolist);
@@ -110,46 +111,46 @@ public class NewTestActivity extends Activity {
 			}
 		});
 		
-		btn_playLocal.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				int range = videoId.indexOf("_");
-				String vpid = videoId.substring(0, range);
-				int bitRate = 1;
-				File mp4File = new File(PolyvSDKClient.getInstance().getDownloadDir(), vpid + "_" + bitRate + ".mp4");
-
-				if (mp4File.exists()) {
-					Intent playLocal = new Intent(NewTestActivity.this, IjkVideoActicity.class);
-					playLocal.putExtra("path", mp4File.getPath());
-					playLocal.putExtra("vid", videoId);
-					startActivityForResult(playLocal, 1);
-				} else {
-					Toast.makeText(NewTestActivity.this, "视频文件不存在,请先行下载", Toast.LENGTH_LONG).show();
-					;
-				}
-			}
-		});
-		
-		btn_playLocalFull.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				int range = videoId.indexOf("_");
-				String vpid = videoId.substring(0, range);
-				int bitRate = 1;
-				File mp4File = new File(PolyvSDKClient.getInstance().getDownloadDir(), vpid + "_" + bitRate + ".mp4");
-				if (mp4File.exists()) {
-					Intent playLocal = new Intent(NewTestActivity.this, IjkFullVideoActivity.class);
-					playLocal.putExtra("path", mp4File.getPath());
-					playLocal.putExtra("vid", videoId);
-					startActivityForResult(playLocal, 1);
-				} else {
-					Toast.makeText(NewTestActivity.this, "视频文件不存在,请先行下载", Toast.LENGTH_LONG).show();
-					;
-				}
-			}
-		});
+//		btn_playLocal.setOnClickListener(new View.OnClickListener() {
+//
+//			@Override
+//			public void onClick(View arg0) {
+//				int range = videoId.indexOf("_");
+//				String vpid = videoId.substring(0, range);
+//				int bitRate = 1;
+//				File mp4File = new File(PolyvSDKClient.getInstance().getDownloadDir(), vpid + "_" + bitRate + ".mp4");
+//
+//				if (mp4File.exists()) {
+//					Intent playLocal = new Intent(NewTestActivity.this, IjkVideoActicity.class);
+//					playLocal.putExtra("path", mp4File.getPath());
+//					playLocal.putExtra("vid", videoId);
+//					startActivityForResult(playLocal, 1);
+//				} else {
+//					Toast.makeText(NewTestActivity.this, "视频文件不存在,请先行下载", Toast.LENGTH_LONG).show();
+//					;
+//				}
+//			}
+//		});
+//		
+//		btn_playLocalFull.setOnClickListener(new View.OnClickListener() {
+//
+//			@Override
+//			public void onClick(View arg0) {
+//				int range = videoId.indexOf("_");
+//				String vpid = videoId.substring(0, range);
+//				int bitRate = 1;
+//				File mp4File = new File(PolyvSDKClient.getInstance().getDownloadDir(), vpid + "_" + bitRate + ".mp4");
+//				if (mp4File.exists()) {
+//					Intent playLocal = new Intent(NewTestActivity.this, IjkFullVideoActivity.class);
+//					playLocal.putExtra("path", mp4File.getPath());
+//					playLocal.putExtra("vid", videoId);
+//					startActivityForResult(playLocal, 1);
+//				} else {
+//					Toast.makeText(NewTestActivity.this, "视频文件不存在,请先行下载", Toast.LENGTH_LONG).show();
+//					;
+//				}
+//			}
+//		});
 		
 		btn_record.setOnClickListener(new View.OnClickListener() {
 

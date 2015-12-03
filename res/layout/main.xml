@@ -36,22 +36,12 @@
         android:id="@+id/onlinevideo_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="在线播放(小窗口)" />
+        android:text="播放(小窗口)" />
      <Button
         android:id="@+id/onlinevideo_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="在线播放(横屏)" />
-  <Button
-        android:id="@+id/localvideo_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="本地播放(小窗口)" />
-    <Button
-        android:id="@+id/localvideo_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="本地播放(横屏)" />
+        android:text="播放(横屏)" />
       <Button
         android:id="@+id/recordvideo"
         android:layout_width="wrap_content"
