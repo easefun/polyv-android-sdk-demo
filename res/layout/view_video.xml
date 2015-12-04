@@ -50,7 +50,7 @@
           android:id="@+id/btn_play"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="在线播放"
+          android:text="播放"
            android:textSize="14sp"
            android:layout_weight="1"
           android:enabled="true"
