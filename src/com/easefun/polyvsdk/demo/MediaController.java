@@ -553,9 +553,21 @@ public class MediaController extends IjkBaseMediaController {
 				updatePausePlay();
 			}
 			return true;
-		} else if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_MENU) {
-			hide();
-			return true;
+		} else if (keyCode == KeyEvent.KEYCODE_BACK) {
+			if (isShowing()) {
+				hide();
+				return true;
+			}
+			
+			if (isScreenPortrait() == false) {
+				if (onBoardChangeListener != null)
+					onBoardChangeListener.onLandscape();
+				return true;
+			}
+			
+			return false;
+		} else if (keyCode == KeyEvent.KEYCODE_MENU) {
+			show(sDefaultTimeout);
 		} else {
 			show(sDefaultTimeout);
 		}

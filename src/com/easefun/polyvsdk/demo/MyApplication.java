@@ -3,6 +3,7 @@ package com.easefun.polyvsdk.demo;
 import java.io.File;
 
 import com.easefun.polyvsdk.PolyvSDKClient;
+import com.easefun.polyvsdk.SDKUtil;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -16,8 +17,10 @@ import com.nostra13.universalimageloader.utils.StorageUtils;
 import android.app.Application;
 import android.content.ComponentName;
 import android.content.ServiceConnection;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.IBinder;
+import android.text.TextUtils;
 
 public class MyApplication extends Application {
 	private File saveDir;
@@ -82,13 +85,8 @@ public class MyApplication extends Application {
 				saveDir.mkdir();
 		}
 
+		new LoadConfigTask().execute();
 		PolyvSDKClient client = PolyvSDKClient.getInstance();
-		
-		client.setReadtoken("nsJ7ZgQMN0-QsVkscukWt-qLfodxoDFm");
-		client.setWritetoken("Y07Q4yopIVXN83n-MPoIlirBKmrMPJu0");
-		client.setSecretkey("DFZhoOnkQf");
-		client.setUserId("sl8da4jjbx");
-		
 		client.setDownloadDir(saveDir);
 		client.initDatabaseService(this);
 		client.startService(getApplicationContext(), PolyvDemoService.class);
@@ -107,6 +105,29 @@ public class MyApplication extends Application {
 		public void onServiceDisconnected(ComponentName arg0) {
 			// TODO Auto-generated method stub
 
+		}
+	}
+	
+	private class LoadConfigTask extends AsyncTask<String, String, String> {
+
+		@Override
+		protected String doInBackground(String... params) {
+			String config = SDKUtil.getUrl2String("http://demo.polyv.net/demo/appkey.php", false);
+			if (TextUtils.isEmpty(config)) {
+				try {
+					throw new Exception("没有取到数据");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+			return config;
+		}
+		
+		@Override
+		protected void onPostExecute(String config) {
+			PolyvSDKClient client = PolyvSDKClient.getInstance();
+			client.setConfig(config);
 		}
 	}
 

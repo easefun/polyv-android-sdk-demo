@@ -9,6 +9,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
@@ -279,26 +280,34 @@ public class IjkVideoActicity extends Activity {
 
 	}
 	
-	
 	// 配置文件设置congfigchange 切屏调用一次该方法，hide()之后再次show才会出现在正确位置
 	@Override
-		public void onConfigurationChanged(Configuration arg0) {
-			// TODO Auto-generated method stub
-			super.onConfigurationChanged(arg0);
-			videoview.setVideoLayout(IjkVideoView.VIDEO_LAYOUT_SCALE);
-			mediaController.hide();
-		}
-	
-	   @Override
-		public void onBackPressed() {
-			// TODO Auto-generated method stub
-			super.onBackPressed();
-			if(videoview.getMediaPlayer()!=null) videoview.getMediaPlayer().release();
-		}
-	   
-	   @Override
-		protected void onPause() {
-			// TODO Auto-generated method stub
-			super.onPause();
-		}
+	public void onConfigurationChanged(Configuration arg0) {
+		// TODO Auto-generated method stub
+		super.onConfigurationChanged(arg0);
+		videoview.setVideoLayout(IjkVideoView.VIDEO_LAYOUT_SCALE);
+		mediaController.hide();
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		boolean value = mediaController.dispatchKeyEvent(event);
+		if (value)
+			return true;
+		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		if (videoview.getMediaPlayer() != null)
+			videoview.getMediaPlayer().release();
+	}
+
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+	}
 }
