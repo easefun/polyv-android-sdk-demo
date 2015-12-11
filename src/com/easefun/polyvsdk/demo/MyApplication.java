@@ -85,10 +85,17 @@ public class MyApplication extends Application {
 				saveDir.mkdir();
 		}
 
-		new LoadConfigTask().execute();
+		//网络方式取得SDK加密串，（推荐）
+//		new LoadConfigTask().execute();
+		
 		PolyvSDKClient client = PolyvSDKClient.getInstance();
+		//设置SDK加密串
+		client.setConfig("你的SDK加密串");
+		//下载文件的目录
 		client.setDownloadDir(saveDir);
+		//初始化数据库服务
 		client.initDatabaseService(this);
+		//启动服务
 		client.startService(getApplicationContext(), PolyvDemoService.class);
 
 	}
