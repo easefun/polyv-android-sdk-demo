@@ -90,7 +90,8 @@ public class MyApplication extends Application {
 		
 		PolyvSDKClient client = PolyvSDKClient.getInstance();
 		//设置SDK加密串
-		client.setConfig("你的SDK加密串");
+//		client.setConfig("你的SDK加密串");
+		client.setConfig("iPGXfu3KLEOeCW4KXzkWGl1UYgrJP7hRxUfsJGldI6DEWJpYfhaXvMA+32YIYqAOocWd051v5XUAU17LoVlgZCSEVNkx11g7CxYadcFPYPozslnQhFjkxzzjOt7lUPsW");
 		//下载文件的目录
 		client.setDownloadDir(saveDir);
 		//初始化数据库服务
