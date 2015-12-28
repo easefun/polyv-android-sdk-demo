@@ -27,7 +27,7 @@ public class IjkVideoActicity extends Activity {
 	private WindowManager wm;
 	float ratio;
 	int w, h, adjusted_h;
-	RelativeLayout rl, botlayout;
+	RelativeLayout rl;
 	private int stopPosition = 0;
 	private String path;
 	private String vid;
@@ -51,7 +51,6 @@ public class IjkVideoActicity extends Activity {
 		ratio = (float) 4 / 3;
 		adjusted_h = (int) Math.ceil((float) w / ratio);
 		rl = (RelativeLayout) findViewById(R.id.rl);
-		botlayout = (RelativeLayout) findViewById(R.id.botlayout);
 		rl.setLayoutParams(new RelativeLayout.LayoutParams(w, adjusted_h));
 		videoview = (IjkVideoView) findViewById(R.id.videoview);
 		progressBar = (ProgressBar) findViewById(R.id.loadingprogress);
@@ -142,7 +141,6 @@ public class IjkVideoActicity extends Activity {
 		rl.setLayoutParams(p);
 		stopPosition = videoview.getCurrentPosition();
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-		botlayout.setVisibility(View.GONE);
 	}
 	
 	/**
@@ -153,7 +151,6 @@ public class IjkVideoActicity extends Activity {
 		rl.setLayoutParams(p);
 		stopPosition = videoview.getCurrentPosition();
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		botlayout.setVisibility(View.VISIBLE);
 	}
 	
 	// 配置文件设置congfigchange 切屏调用一次该方法，hide()之后再次show才会出现在正确位置
