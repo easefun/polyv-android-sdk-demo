@@ -36,7 +36,6 @@ import com.easefun.polyvsdk.ijk.IjkVideoView;
 
 public class MediaController extends IjkBaseMediaController {
 	private static final String TAG = "MediaController";
-	private static final int URL_LOADER = 0;
 	private MediaPlayerControl mPlayer;
 	private Context mContext;
 	private PopupWindow mWindow;
@@ -47,7 +46,6 @@ public class MediaController extends IjkBaseMediaController {
 	private TextView mEndTime, mCurrentTime;
 	private IjkVideoView ijkVideoView;
 
-	private String mTitle;
 	private long mDuration;
 	private boolean mShowing;
 	private boolean mDragging;
@@ -65,7 +63,6 @@ public class MediaController extends IjkBaseMediaController {
 	private boolean isUsePreNext = false;
 	private OnBoardChangeListener onBoardChangeListener;
 	private OnVideoChangeListener onVideoChangeListener;
-	// private ImageButton btn_back;
 	private ImageButton btn_boardChange;
 	private ImageButton btn_videoChange;
 	private Button selectBitrate = null;
@@ -138,7 +135,6 @@ public class MediaController extends IjkBaseMediaController {
 
 	@Override
 	protected View makeControllerView() {
-
 		mRoot = ((LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
 				.inflate(R.layout.ijkmedia_controller, this);
 		return mRoot;
@@ -146,43 +142,33 @@ public class MediaController extends IjkBaseMediaController {
 
 	@Override
 	protected void initControllerView(View v) {
-		// mPauseButton = (ImageButton)
-		// v.findViewById(R.id.mediacontroller_play_pause);
-		mPauseButton = (ImageButton) v.findViewById(getResourseIdByName("id", "mediacontroller_play_pause"));
+		mPauseButton = (ImageButton) v.findViewById(R.id.mediacontroller_play_pause);
 		if (mPauseButton != null) {
 			mPauseButton.requestFocus();
 			mPauseButton.setOnClickListener(mPauseListener);
 		}
-		// mFfwdButton =(ImageButton)v.findViewById(R.id.ffwd);
-		mFfwdButton = (ImageButton) v.findViewById(getResourseIdByName("id", "ffwd"));
+
+		mFfwdButton = (ImageButton) v.findViewById(R.id.ffwd);
 		mFfwdButton.setOnClickListener(mFfwdListener);
 
-		// mRewButton=(ImageButton)v.findViewById(R.id.rew);
-		mRewButton = (ImageButton) v.findViewById(getResourseIdByName("id", "rew"));
+		mRewButton = (ImageButton) v.findViewById(R.id.rew);
 		mRewButton.setOnClickListener(mRewListener);
-		// btn_boardChange=(ImageButton)v.findViewById(R.id.landscape);
-		btn_boardChange = (ImageButton) v.findViewById(getResourseIdByName("id", "landscape"));
+		btn_boardChange = (ImageButton) v.findViewById(R.id.landscape);
 		btn_boardChange.setOnClickListener(mBoardListener);
-		// btn_videoChange=(ImageButton)v.findViewById(R.id.videochange);
-		btn_videoChange = (ImageButton) v.findViewById(getResourseIdByName("id", "videochange"));
+		btn_videoChange = (ImageButton) v.findViewById(R.id.videochange);
 		btn_videoChange.setTag("0");
 		btn_videoChange.setOnClickListener(mVideoListener);
 
-		// mPreButton=(ImageButton)v.findViewById(getResourseIdByName("id",
-		// "prev"));
-		// mNextButton=(ImageButton)v.findViewById(getResourseIdByName("id",
-		// "next"));
 		mPreButton = (ImageButton) v.findViewById(R.id.prev);
 		mNextButton = (ImageButton) v.findViewById(R.id.next);
 		if (isUsePreNext) {
 			mPreButton.setVisibility(View.VISIBLE);
 			mNextButton.setVisibility(View.VISIBLE);
 		}
+
 		mPreButton.setOnClickListener(mPreListener);
 		mNextButton.setOnClickListener(mNextListener);
 		mProgress = (ProgressBar) v.findViewById(R.id.mediacontroller_seekbar);
-		// mProgress = (ProgressBar) v.findViewById(getResourseIdByName("id",
-		// "mediacontroller_seekbar"));
 		if (mProgress != null) {
 			if (mProgress instanceof SeekBar) {
 				SeekBar seeker = (SeekBar) mProgress;
@@ -190,15 +176,12 @@ public class MediaController extends IjkBaseMediaController {
 				seeker.setClickable(false);
 				seeker.setThumbOffset(1);
 			}
+
 			mProgress.setMax(1000);
 		}
 
 		mEndTime = (TextView) v.findViewById(R.id.mediacontroller_time_total);
-		// mEndTime = (TextView) v.findViewById(getResourseIdByName("id",
-		// "mediacontroller_time_total"));
 		mCurrentTime = (TextView) v.findViewById(R.id.mediacontroller_time_current);
-		// mCurrentTime = (TextView) v.findViewById(getResourseIdByName("id",
-		// "mediacontroller_time_current"));
 		
 		// 码率选择功能涉及的控件
 		selectBitrate = (Button) mRoot.findViewById(R.id.select_bitrate);
@@ -641,40 +624,6 @@ public class MediaController extends IjkBaseMediaController {
 			mProgress.setEnabled(enabled);
 		disableUnsupportedButtons();
 		super.setEnabled(enabled);
-	}
-
-	public int getResourseIdByName(String className, String name) {
-		Class r = null;
-		int id = 0;
-		try { // System.out.println(getPackageName() + ".R");
-			r = Class.forName(mContext.getPackageName() + ".R");
-
-			Class[] classes = r.getClasses();
-			Class desireClass = null;
-
-			for (int i = 0; i < classes.length; i++) {
-				if (classes[i].getName().split("\\$")[1].equals(className)) {
-					desireClass = classes[i];
-					break;
-				}
-			}
-
-			if (desireClass != null)
-				id = desireClass.getField(name).getInt(desireClass);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
-		}
-
-		return id;
-
 	}
 	
 	/**

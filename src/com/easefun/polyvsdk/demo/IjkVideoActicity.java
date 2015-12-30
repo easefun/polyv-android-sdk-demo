@@ -21,13 +21,11 @@ import com.easefun.polyvsdk.ijk.IjkVideoView.ErrorReason;
 
 public class IjkVideoActicity extends Activity {
 	private static final String TAG = "IjkVideoActicity";
-	IjkVideoView videoview;
-	MediaController mediaController;
-	ProgressBar progressBar;
-	private WindowManager wm;
-	float ratio;
-	int w, h, adjusted_h;
-	RelativeLayout rl;
+	private IjkVideoView videoview = null;
+	private MediaController mediaController = null;
+	private ProgressBar progressBar = null;
+	int w = 0, h = 0, adjusted_h = 0;
+	private RelativeLayout rl = null;
 	private int stopPosition = 0;
 	private String path;
 	private String vid;
@@ -42,13 +40,13 @@ public class IjkVideoActicity extends Activity {
 			vid = e.getString("vid");
 		}
 		
-    	wm = this.getWindowManager();
     	Point point = new Point();
+    	WindowManager wm = this.getWindowManager();
 		wm.getDefaultDisplay().getSize(point);
 		w = point.x;
 		h = point.y;
 		//小窗口的比例
-		ratio = (float) 4 / 3;
+		float ratio = (float) 4 / 3;
 		adjusted_h = (int) Math.ceil((float) w / ratio);
 		rl = (RelativeLayout) findViewById(R.id.rl);
 		rl.setLayoutParams(new RelativeLayout.LayoutParams(w, adjusted_h));
@@ -172,12 +170,18 @@ public class IjkVideoActicity extends Activity {
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
-		if (videoview.getMediaPlayer() != null)
-			videoview.getMediaPlayer().release();
+		if (videoview != null) {
+			videoview.stopPlayback();
+			videoview.release(true);
+		}
 	}
-
+	
 	@Override
-	protected void onPause() {
-		super.onPause();
-	}
+	protected void onDestroy() {
+		super.onDestroy();
+		if (videoview != null) {
+			videoview.stopPlayback();
+			videoview.release(true);
+		}
+	};
 }

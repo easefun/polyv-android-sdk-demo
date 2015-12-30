@@ -15,105 +15,69 @@ import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import android.app.Application;
-import android.content.ComponentName;
-import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.os.IBinder;
 import android.text.TextUtils;
 
 public class MyApplication extends Application {
-	private File saveDir;
 
 	public MyApplication() {
-		// TODO Auto-generated constructor stub
+		
 	}
+	
 	@Override
 	public void onTerminate(){
 		super.onTerminate();
 		PolyvSDKClient client = PolyvSDKClient.getInstance();
 		client.stopService(getApplicationContext(), PolyvDemoService.class);
 	}
+	
 	@Override
 	public void onCreate() {
-		// TODO Auto-generated method stub
 		super.onCreate();
-		File cacheDir = StorageUtils.getOwnCacheDirectory(
-				getApplicationContext(), "polyvSDK/Cache");
+		File cacheDir = StorageUtils.getOwnCacheDirectory(getApplicationContext(), "polyvSDK/Cache");
 		// This configuration tuning is custom. You can tune every option, you
 		// may tune some of them,
 		// or you can create default configuration by
 		// ImageLoaderConfiguration.createDefault(this);
 		// method.
-		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
-				getApplicationContext())
+		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
 				.memoryCacheExtraOptions(480, 800)
 				.threadPoolSize(2)
 				.threadPriority(Thread.NORM_PRIORITY - 2)
 				.denyCacheImageMultipleSizesInMemory()
-				// .memoryCache(new UsingFreqLimitedMemoryCache(2 * 1024 *
-				// 1024)) // You can pass your own memory cache implementation/
-				.memoryCache(new WeakMemoryCache())
-				.memoryCacheSize(2 * 1024 * 1024)
-				.discCacheSize(50 * 1024 * 1024)
+				// .memoryCache(new UsingFreqLimitedMemoryCache(2 * 1024 * 1024))
+				// You can pass your own memory cache implementation/
+				.memoryCache(new WeakMemoryCache()).memoryCacheSize(2 * 1024 * 1024)
+				.diskCacheSize(50 * 1024 * 1024)
 				// .discCacheFileNameGenerator(new Md5FileNameGenerator())//
 				.tasksProcessingOrder(QueueProcessingType.LIFO)
-				.discCacheFileCount(100)
-				.discCache(new UnlimitedDiscCache(cacheDir))
+				.diskCacheFileCount(100)
+				.diskCache(new UnlimitedDiscCache(cacheDir))
 				.defaultDisplayImageOptions(DisplayImageOptions.createSimple())
-				.imageDownloader(
-						new BaseImageDownloader(getApplicationContext(),
-								5 * 1000, 30 * 1000)) // connectTimeout (5 s),
-														// readTimeout (30
-														// s)��ʱʱ��
+				.imageDownloader(new BaseImageDownloader(getApplicationContext(), 5 * 1000, 30 * 1000))
 				.writeDebugLogs() // Remove for release app
 				.build();
-		// Initialize ImageLoader with configuration.
 
 		// Initialize ImageLoader with configuration
 		ImageLoader.getInstance().init(config);
 		initPolyvCilent();
-
 	}
 	
 	public void initPolyvCilent() {
-		if (Environment.getExternalStorageState().equals(
-				Environment.MEDIA_MOUNTED)) {
-			saveDir = new File(Environment.getExternalStorageDirectory()
-					.getPath() + "/polyvdownload");
-			if (!saveDir.exists())
+		File saveDir = null;
+		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+			saveDir = new File(Environment.getExternalStorageDirectory().getPath() + "/polyvdownload");
+			if (saveDir.exists() == false)
 				saveDir.mkdir();
 		}
 
-		//网络方式取得SDK加密串，（推荐）
-//		new LoadConfigTask().execute();
-		
+		new LoadConfigTask().execute();
 		PolyvSDKClient client = PolyvSDKClient.getInstance();
-		//设置SDK加密串
-//		client.setConfig("你的SDK加密串");
-		client.setConfig("iPGXfu3KLEOeCW4KXzkWGl1UYgrJP7hRxUfsJGldI6DEWJpYfhaXvMA+32YIYqAOocWd051v5XUAU17LoVlgZCSEVNkx11g7CxYadcFPYPozslnQhFjkxzzjOt7lUPsW");
-		//下载文件的目录
 		client.setDownloadDir(saveDir);
-		//初始化数据库服务
 		client.initDatabaseService(this);
-		//启动服务
 		client.startService(getApplicationContext(), PolyvDemoService.class);
 
-	}
-
-	class AndroidConnection implements ServiceConnection {
-
-		@Override
-		public void onServiceConnected(ComponentName arg0, IBinder arg1) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onServiceDisconnected(ComponentName arg0) {
-			// TODO Auto-generated method stub
-
-		}
 	}
 	
 	private class LoadConfigTask extends AsyncTask<String, String, String> {
