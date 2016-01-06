@@ -46,29 +46,38 @@ public class ListAdapter extends BaseAdapter {
 					long downloaded = msg.getData().getLong("downloaded");
 					long total = msg.getData().getLong("total");
 					long precent = downloaded * 100 / total;
-					ProgressBar progressBar = barlist.get(position);
-					progressBar.setProgress((int) precent);
-					TextView tv = rlist.get(position);
-					tv.setText("" + precent);
+					if (position < barlist.size()) {
+						ProgressBar progressBar = barlist.get(position);
+						progressBar.setProgress((int) precent);
+						TextView tv = rlist.get(position);
+						tv.setText("" + precent);
+					}
+					
 					break;
 					
 				case SUCCESS:
 					Log.i(TAG, "下载完成");
 					Toast.makeText(context, "下载成功", Toast.LENGTH_SHORT).show();
-					btn = btnlist.get(position);
-					btn.setEnabled(true);
-					btn.setText("开始");
-					flags.set(position, false);
+					if (position < btnlist.size()) {
+						btn = btnlist.get(position);
+						btn.setEnabled(true);
+						btn.setText("开始");
+						flags.set(position, false);
+					}
+					
 					break;
 					
 				case FAILURE:
 					String error = msg.getData().getString("error");
 					Log.i(TAG, "下载失败:" + error);
 					Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
-					btn = btnlist.get(position);
-					btn.setEnabled(true);
-					btn.setText("开始");
-					flags.set(position, false);
+					if (position < btnlist.size()) {
+						btn = btnlist.get(position);
+						btn.setEnabled(true);
+						btn.setText("开始");
+						flags.set(position, false);
+					}
+					
 					break;
 			}
 		};
