@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.easefun.polyvsdk.QuestionVO;
 import com.easefun.polyvsdk.R;
 import com.easefun.polyvsdk.ijk.IjkVideoView;
 import com.easefun.polyvsdk.ijk.OnPreparedListener;
@@ -21,7 +22,9 @@ import com.easefun.polyvsdk.ijk.IjkVideoView.ErrorReason;
 
 public class IjkVideoActicity extends Activity {
 	private static final String TAG = "IjkVideoActicity";
-	private IjkVideoView videoview = null;
+	private IjkVideoView videoView = null;
+	private PolyvQuestionView questionView = null;
+	private PolyvAuditionView auditionView = null;
 	private MediaController mediaController = null;
 	private ProgressBar progressBar = null;
 	int w = 0, h = 0, adjusted_h = 0;
@@ -50,23 +53,23 @@ public class IjkVideoActicity extends Activity {
 		adjusted_h = (int) Math.ceil((float) w / ratio);
 		rl = (RelativeLayout) findViewById(R.id.rl);
 		rl.setLayoutParams(new RelativeLayout.LayoutParams(w, adjusted_h));
-		videoview = (IjkVideoView) findViewById(R.id.videoview);
+		videoView = (IjkVideoView) findViewById(R.id.videoview);
 		progressBar = (ProgressBar) findViewById(R.id.loadingprogress);
 		//在缓冲时出现的loading
-		videoview.setMediaBufferingIndicator(progressBar);
-		videoview.setVideoLayout(IjkVideoView.VIDEO_LAYOUT_SCALE);
-		videoview.setOnPreparedListener(new OnPreparedListener() {
+		videoView.setMediaBufferingIndicator(progressBar);
+		videoView.setVideoLayout(IjkVideoView.VIDEO_LAYOUT_SCALE);
+		videoView.setOnPreparedListener(new OnPreparedListener() {
 			@Override
 			public void onPrepared(IMediaPlayer mp) {
-				videoview.setVideoLayout(IjkVideoView.VIDEO_LAYOUT_SCALE);
+				videoView.setVideoLayout(IjkVideoView.VIDEO_LAYOUT_SCALE);
 				if (stopPosition > 0) {
 					Log.d(TAG, "seek to stopPosition:" + stopPosition);
-					videoview.seekTo(stopPosition);
+					videoView.seekTo(stopPosition);
 				}
 			}
 		});
 		
-		videoview.setOnVideoStatusListener(new IjkVideoView.OnVideoStatusListener() {
+		videoView.setOnVideoStatusListener(new IjkVideoView.OnVideoStatusListener() {
 			
 			@Override
 			public void onStatus(int status) {
@@ -74,7 +77,7 @@ public class IjkVideoActicity extends Activity {
 			}
 		});
 		
-		videoview.setOnVideoPlayErrorLisener(new IjkVideoView.OnVideoPlayErrorLisener() {
+		videoView.setOnVideoPlayErrorLisener(new IjkVideoView.OnVideoPlayErrorLisener() {
 			
 			@Override
 			public boolean onVideoPlayError(ErrorReason errorReason) {
@@ -82,15 +85,55 @@ public class IjkVideoActicity extends Activity {
 			}
 		});
 		
+		videoView.setOnQuestionOutListener(new IjkVideoView.OnQuestionOutListener() {
+			
+			@Override
+			public void onOut(final QuestionVO questionVO) {
+				runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						switch (questionVO.getType()) {
+							case QuestionVO.TYPE_QUESTION:
+								if (questionView == null) {
+									questionView = new PolyvQuestionView(IjkVideoActicity.this);
+									questionView.setIjkVideoView(videoView);
+								}
+								
+								questionView.show(rl, questionVO);
+								break;
+								
+							case QuestionVO.TYPE_AUDITION:
+								if (auditionView == null) {
+									auditionView = new PolyvAuditionView(IjkVideoActicity.this);
+									auditionView.setIjkVideoView(videoView);
+								}
+								
+								auditionView.show(rl, questionVO);
+								break;
+						}
+					}
+				});
+			}
+		});
+		
+		videoView.setOnQuestionAnswerTipsListener(new IjkVideoView.OnQuestionAnswerTipsListener() {
+			
+			@Override
+			public void onTips(String msg) {
+				questionView.showAnswerTips(msg);
+			}
+		});
+		
 		mediaController = new MediaController(this,false);
-		mediaController.setIjkVideoView(videoview);
-		mediaController.setAnchorView(videoview);
-		videoview.setMediaController(mediaController);
+		mediaController.setIjkVideoView(videoView);
+		mediaController.setAnchorView(videoView);
+		videoView.setMediaController(mediaController);
 		if(path != null && path.length() > 0){
 			progressBar.setVisibility(View.GONE);
-			videoview.setVideoPath(path);
+			videoView.setVideoPath(path);
 		} else {
-			videoview.setVid(vid);
+			videoView.setVid(vid);
 		}
 		
 		//设置切屏事件
@@ -99,11 +142,13 @@ public class IjkVideoActicity extends Activity {
 			@Override
 			public void onPortrait() {
 				changeToLandscape();
+//				Log.i(TAG, videoview.getWatchTimeDuration() + "/" + videoview.getCurrentPosition());
 			}
 			
 			@Override
 			public void onLandscape() {
 				changeToPortrait();
+//				Log.i(TAG, videoview.getWatchTimeDuration() + "/" + videoview.getCurrentPosition());
 			}
 		});
 		
@@ -111,22 +156,28 @@ public class IjkVideoActicity extends Activity {
 		mediaController.setOnVideoChangeListener(new MediaController.OnVideoChangeListener() {
 		
 			@Override
-			public void onVideoChange(int layout) {
-				videoview.setVideoLayout(layout);
-				switch (layout) {
-				case IjkVideoView.VIDEO_LAYOUT_ORIGIN:
-					Toast.makeText(IjkVideoActicity.this, "VIDEO_LAYOUT_ORIGIN", Toast.LENGTH_SHORT).show();
-					break;
-				case IjkVideoView.VIDEO_LAYOUT_SCALE:
-					Toast.makeText(IjkVideoActicity.this, "VIDEO_LAYOUT_SCALE", Toast.LENGTH_SHORT).show();
-					break;
-				case IjkVideoView.VIDEO_LAYOUT_STRETCH:
-					Toast.makeText(IjkVideoActicity.this, "VIDEO_LAYOUT_STRETCH", Toast.LENGTH_SHORT).show();
-					break;
-				case IjkVideoView.VIDEO_LAYOUT_ZOOM:
-					Toast.makeText(IjkVideoActicity.this, "VIDEO_LAYOUT_ZOOM", Toast.LENGTH_SHORT).show();
-					break;
-				}
+			public void onVideoChange(final int layout) {
+				runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						videoView.setVideoLayout(layout);
+						switch (layout) {
+							case IjkVideoView.VIDEO_LAYOUT_ORIGIN:
+								Toast.makeText(IjkVideoActicity.this, "VIDEO_LAYOUT_ORIGIN", Toast.LENGTH_SHORT).show();
+								break;
+							case IjkVideoView.VIDEO_LAYOUT_SCALE:
+								Toast.makeText(IjkVideoActicity.this, "VIDEO_LAYOUT_SCALE", Toast.LENGTH_SHORT).show();
+								break;
+							case IjkVideoView.VIDEO_LAYOUT_STRETCH:
+								Toast.makeText(IjkVideoActicity.this, "VIDEO_LAYOUT_STRETCH", Toast.LENGTH_SHORT).show();
+								break;
+							case IjkVideoView.VIDEO_LAYOUT_ZOOM:
+								Toast.makeText(IjkVideoActicity.this, "VIDEO_LAYOUT_ZOOM", Toast.LENGTH_SHORT).show();
+								break;
+						}
+					}
+				});
 			}
 		});
     }
@@ -137,7 +188,7 @@ public class IjkVideoActicity extends Activity {
 	public void changeToLandscape(){
 		RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(h,w);
 		rl.setLayoutParams(p);
-		stopPosition = videoview.getCurrentPosition();
+		stopPosition = videoView.getCurrentPosition();
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 	}
 	
@@ -147,7 +198,7 @@ public class IjkVideoActicity extends Activity {
 	public void changeToPortrait(){
 		RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(w,adjusted_h);
 		rl.setLayoutParams(p);
-		stopPosition = videoview.getCurrentPosition();
+		stopPosition = videoView.getCurrentPosition();
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 	}
 	
@@ -155,7 +206,7 @@ public class IjkVideoActicity extends Activity {
 	@Override
 	public void onConfigurationChanged(Configuration arg0) {
 		super.onConfigurationChanged(arg0);
-		videoview.setVideoLayout(IjkVideoView.VIDEO_LAYOUT_SCALE);
+		videoView.setVideoLayout(IjkVideoView.VIDEO_LAYOUT_SCALE);
 		mediaController.hide();
 	}
 
@@ -170,18 +221,18 @@ public class IjkVideoActicity extends Activity {
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
-		if (videoview != null) {
-			videoview.stopPlayback();
-			videoview.release(true);
+		if (videoView != null) {
+			videoView.stopPlayback();
+			videoView.release(true);
 		}
 	}
 	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		if (videoview != null) {
-			videoview.stopPlayback();
-			videoview.release(true);
+		if (videoView != null) {
+			videoView.stopPlayback();
+			videoView.release(true);
 		}
 	};
 }
