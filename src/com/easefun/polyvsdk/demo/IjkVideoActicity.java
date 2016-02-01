@@ -225,6 +225,14 @@ public class IjkVideoActicity extends Activity {
 			videoView.stopPlayback();
 			videoView.release(true);
 		}
+		
+		if (questionView != null) {
+			questionView.hide();
+		}
+		
+		if (auditionView != null) {
+			auditionView.hide();
+		}
 	}
 	
 	@Override
@@ -233,6 +241,14 @@ public class IjkVideoActicity extends Activity {
 		if (videoView != null) {
 			videoView.stopPlayback();
 			videoView.release(true);
+		}
+		
+		if (questionView != null) {
+			questionView.hide();
+		}
+		
+		if (auditionView != null) {
+			auditionView.hide();
 		}
 	};
 }
