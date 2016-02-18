@@ -49,6 +49,7 @@ public class PolyvQuestionView extends RelativeLayout implements OnCheckedChange
 
 	private Context context = null;
 	private PopupWindow popupWindow = null;
+	private View anchorView = null;
 	private IjkVideoView ijkVideoView = null;
 	private TextView passBtn = null;
 	private Button submitBtn = null;
@@ -60,6 +61,7 @@ public class PolyvQuestionView extends RelativeLayout implements OnCheckedChange
 	private List<RadioButton> answerRadioList = null;
 	private List<LinearLayout> answerCheckLayoutList = null;
 	private List<CheckBox> answerCheckList = null;
+	private QuestionVO questionVO = null;
 	private int rightAnswerNum = 0;
 	private static final int PLEASE_SELECT_MSG = 1;
 	private static final int ANSWER_TIPS_MSG = 2;
@@ -271,6 +273,15 @@ public class PolyvQuestionView extends RelativeLayout implements OnCheckedChange
 	 * @param questionVO
 	 */
 	public void show(View anchorView, QuestionVO questionVO) {
+		this.anchorView = anchorView;
+		this.questionVO = questionVO;
+		refresh();
+	}
+	
+	/**
+	 * 重新设置控件
+	 */
+	public void refresh() {
 		int[] location = new int[2];
 		anchorView.getLocationInWindow(location);
 		Rect anchorRect = new Rect(location[0], location[1], location[0] + anchorView.getWidth(), location[1] + anchorView.getHeight());
@@ -392,6 +403,14 @@ public class PolyvQuestionView extends RelativeLayout implements OnCheckedChange
     		
     		index++;
     	}
+	}
+	
+	/**
+	 * 是否在显示中
+	 * @return
+	 */
+	public boolean isShowing() {
+		return this.getVisibility() == View.VISIBLE;
 	}
 	
 	/**

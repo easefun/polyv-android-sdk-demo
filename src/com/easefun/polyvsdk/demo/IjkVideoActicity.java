@@ -142,13 +142,11 @@ public class IjkVideoActicity extends Activity {
 			@Override
 			public void onPortrait() {
 				changeToLandscape();
-//				Log.i(TAG, videoview.getWatchTimeDuration() + "/" + videoview.getCurrentPosition());
 			}
 			
 			@Override
 			public void onLandscape() {
 				changeToPortrait();
-//				Log.i(TAG, videoview.getWatchTimeDuration() + "/" + videoview.getCurrentPosition());
 			}
 		});
 		
@@ -208,6 +206,14 @@ public class IjkVideoActicity extends Activity {
 		super.onConfigurationChanged(arg0);
 		videoView.setVideoLayout(IjkVideoView.VIDEO_LAYOUT_SCALE);
 		mediaController.hide();
+		
+		if (questionView != null && questionView.isShowing()) {
+			questionView.hide();
+			questionView.refresh();
+		} else if (auditionView != null && auditionView.isShowing()) {
+			auditionView.hide();
+			auditionView.refresh();
+		}
 	}
 
 	@Override

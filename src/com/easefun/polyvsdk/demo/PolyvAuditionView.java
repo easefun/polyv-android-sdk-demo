@@ -34,6 +34,7 @@ public class PolyvAuditionView extends RelativeLayout {
 	private TextView progressTotalText = null;
 	private MediaPlayer mediaPlayer = null;
 	private PopupWindow popupWindow = null;
+	private View anchorView = null;
 	private QuestionVO questionVO = null;
 	
 	private static final int UPDATE_PROGRESS = 1;
@@ -106,10 +107,6 @@ public class PolyvAuditionView extends RelativeLayout {
 		progressTotalText = (TextView) findViewById(R.id.audition_progress_total_text);
 		progressTotalText.setText(String.format("%s/%s", SDKUtil.getVideoDisplayTime(0), SDKUtil.getVideoDisplayTime(0)));
 		
-		if (mediaPlayer == null) {
-			mediaPlayer = new MediaPlayer();
-		}
-		
 		if (popupWindow == null) {
     		popupWindow = new PopupWindow(context);
     		popupWindow.setContentView(this);
@@ -131,7 +128,15 @@ public class PolyvAuditionView extends RelativeLayout {
 	 * @param questionVO
 	 */
 	public void show(View anchorView, QuestionVO questionVO) {
+		this.anchorView = anchorView;
 		this.questionVO = questionVO;
+		refresh();
+	}
+	
+	/**
+	 * 重新设置控件
+	 */
+	public void refresh() {
 		int[] location = new int[2];
 		anchorView.getLocationInWindow(location);
 		Rect anchorRect = new Rect(location[0], location[1], location[0] + anchorView.getWidth(), location[1] + anchorView.getHeight());
@@ -144,6 +149,11 @@ public class PolyvAuditionView extends RelativeLayout {
 		}
 		
 		title.setText(questionVO.getQuestion());
+		if (mediaPlayer != null) {
+			mediaPlayer.release();
+		}
+		
+		mediaPlayer = new MediaPlayer();
 		try {
 			mediaPlayer.setDataSource(context, Uri.parse(questionVO.getMp3url()));
 			mediaPlayer.prepare();
@@ -158,14 +168,22 @@ public class PolyvAuditionView extends RelativeLayout {
 		}
 		
 		mediaPlayer.start();
+		handler.removeMessages(UPDATE_PROGRESS);
 		handler.sendEmptyMessageDelayed(UPDATE_PROGRESS, 1000);
+	}
+	
+	/**
+	 * 是否在显示中
+	 * @return
+	 */
+	public boolean isShowing() {
+		return this.getVisibility() == View.VISIBLE;
 	}
 	
 	/**
 	 * 隐藏
 	 */
 	public void hide() {
-		mediaPlayer.stop();
 		mediaPlayer.release();
 		handler.removeMessages(UPDATE_PROGRESS);
 		popupWindow.dismiss();
