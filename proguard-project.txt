@@ -24,3 +24,4 @@
 -keep class com.nostra13.universalimageloader.* { ; }
 -keep class org.apache.http.* { ; }
 -keep class org.apache.commons.* { *; }
+-keep public class com.tencent.bugly.**{*;}
