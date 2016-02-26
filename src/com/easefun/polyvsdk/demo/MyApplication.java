@@ -84,7 +84,10 @@ public class MyApplication extends Application {
 		client.initDatabaseService(this);
 		//启动服务
 		client.startService(getApplicationContext(), PolyvDemoService.class);
-
+		//启动Bugly
+		client.initCrashReport(getApplicationContext());
+		//启动Bugly后，在学员登录时设置学员id
+//		client.crashReportSetUserId(userId);
 	}
 	
 	private class LoadConfigTask extends AsyncTask<String, String, String> {

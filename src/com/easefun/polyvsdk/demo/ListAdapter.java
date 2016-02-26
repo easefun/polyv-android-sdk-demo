@@ -1,15 +1,11 @@
 package com.easefun.polyvsdk.demo;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.LinkedList;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +21,7 @@ import com.easefun.polyvsdk.PolyvDownloader;
 import com.easefun.polyvsdk.PolyvDownloaderErrorReason;
 import com.easefun.polyvsdk.PolyvDownloaderManager;
 import com.easefun.polyvsdk.R;
+import com.easefun.polyvsdk.SDKUtil;
 
 public class ListAdapter extends BaseAdapter {
 	private static final String TAG = "DownloadList";
@@ -137,56 +134,12 @@ public class ListAdapter extends BaseAdapter {
 					msg.arg1 = p;
 					
 					Bundle bundle = new Bundle();
-					bundle.putString("error", getExceptionFullMessage(errorReason.getCause(), -1));
+					bundle.putString("error", SDKUtil.getExceptionFullMessage(errorReason.getCause(), -1));
 					
 					msg.setData(bundle);
 					handler.sendMessage(msg);
 				}
 			});
-		}
-	}
-
-	/**
-	 * 取得异常详细信息
-	 * @param e
-	 * @param readLength - 读取信息的长度，-1表示读取全部
-	 * @return
-	 */
-	private String getExceptionFullMessage(Throwable e, int readLength) {
-		if (e == null) return "";
-		
-		StringWriter errors = null;
-		PrintWriter printWriter = null;
-		try {
-			errors = new StringWriter();
-			printWriter = new PrintWriter(errors);
-			e.printStackTrace(printWriter);
-			String message = errors.toString();
-			if (TextUtils.isEmpty(message)) {
-				return "";
-			}
-			
-			if (readLength == -1) {
-				readLength = message.length();
-			} else if (message.length() < readLength) {
-				readLength = message.length();
-			}
-			
-			return message.substring(0, readLength);
-		} catch (Exception e1) {
-			return "";
-		} finally {
-			if (printWriter != null) {
-				printWriter.close();
-			}
-			
-			if (errors != null) {
-				try {
-					errors.close();
-				} catch (IOException e1) {
-					
-				}
-			}
 		}
 	}
 	
