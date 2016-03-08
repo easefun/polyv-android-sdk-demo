@@ -2,7 +2,6 @@ package com.easefun.polyvsdk.demo;
 
 import java.io.File;
 
-import com.easefun.polyvsdk.PolyvSDKClient;
 import com.easefun.polyvsdk.R;
 import com.easefun.polyvsdk.demo.RecordActivity;
 import com.easefun.polyvsdk.demo.IjkVideoActicity;
@@ -95,9 +94,7 @@ public class NewTestActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				Intent playUrl = new Intent(NewTestActivity.this, IjkVideoActicity.class);
-				playUrl.putExtra("vid", videoId);
-				startActivityForResult(playUrl, 1);
+				IjkVideoActicity.intentTo(NewTestActivity.this, IjkVideoActicity.PlayMode.portrait, IjkVideoActicity.PlayType.vid, videoId, false);
 			}
 		});
 
@@ -105,9 +102,7 @@ public class NewTestActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				Intent playUrlFull = new Intent(NewTestActivity.this, IjkFullVideoActivity.class);
-				playUrlFull.putExtra("vid", videoId);
-				startActivityForResult(playUrlFull, 1);
+				IjkVideoActicity.intentTo(NewTestActivity.this, IjkVideoActicity.PlayMode.landScape, IjkVideoActicity.PlayType.vid, videoId, false);
 			}
 		});
 		

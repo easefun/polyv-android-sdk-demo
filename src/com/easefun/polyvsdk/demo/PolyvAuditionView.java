@@ -23,6 +23,10 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+/**
+ * 听力问答视图
+ * @author TanQu 2016-1-25
+ */
 public class PolyvAuditionView extends RelativeLayout {
 
 	private Context context = null;
@@ -177,7 +181,7 @@ public class PolyvAuditionView extends RelativeLayout {
 	 * @return
 	 */
 	public boolean isShowing() {
-		return this.getVisibility() == View.VISIBLE;
+		return popupWindow.isShowing();
 	}
 	
 	/**

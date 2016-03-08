@@ -18,7 +18,6 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -112,10 +111,7 @@ public class VideoAdapter extends BaseAdapter {
 
 		@Override
 		public void onClick(View arg0) {
-			Intent playUrl = new Intent(context, IjkVideoActicity.class);
-			VideoListActivity activity = (VideoListActivity) context;
-			playUrl.putExtra("vid", vid);
-			activity.startActivityForResult(playUrl, 1);
+			IjkVideoActicity.intentTo(context, IjkVideoActicity.PlayMode.portrait, IjkVideoActicity.PlayType.vid, vid, false);
 		}
 	}
 

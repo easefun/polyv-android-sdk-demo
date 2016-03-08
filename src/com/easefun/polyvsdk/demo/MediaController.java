@@ -493,6 +493,25 @@ public class MediaController extends IjkBaseMediaController {
 
 		return position;
 	}
+	
+	/**
+	 * 设置进度为最大，因为播放器的当前时间点不准确，在最后总是差一两秒，
+	 * 因此在视频播放完后调用此方法来设置进度。
+	 */
+	public void setProgressMax() {
+		if (mProgress != null) {
+			mProgress.setProgress(mProgress.getMax());
+		}
+		
+		mDuration = mPlayer.getDuration();
+		if (mEndTime != null) {
+			mEndTime.setText(generateTime(mDuration));
+		}
+			
+		if (mCurrentTime != null) {
+			mCurrentTime.setText(generateTime(mDuration));
+		}
+	}
 
 	private static String generateTime(long position) {
 		int totalSeconds = (int) (position / 1000);

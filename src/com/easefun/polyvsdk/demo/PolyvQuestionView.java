@@ -42,7 +42,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
- * 问答界面
+ * 问答视图
  * @author TanQu 2016-1-25
  */
 public class PolyvQuestionView extends RelativeLayout implements OnCheckedChangeListener {
@@ -410,7 +410,7 @@ public class PolyvQuestionView extends RelativeLayout implements OnCheckedChange
 	 * @return
 	 */
 	public boolean isShowing() {
-		return this.getVisibility() == View.VISIBLE;
+		return popupWindow.isShowing();
 	}
 	
 	/**
