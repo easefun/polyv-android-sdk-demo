@@ -8,15 +8,22 @@ import com.easefun.polyvsdk.demo.IjkVideoActicity;
 import com.easefun.polyvsdk.net.PolyvUploadManager;
 import com.easefun.polyvsdk.net.Progress;
 import com.easefun.polyvsdk.net.Success;
+import com.easefun.polyvsdk.server.AndroidService;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -27,6 +34,7 @@ public class NewTestActivity extends Activity {
 	// sl8da4jjbx80cb8878980c1626c51923_s 加密
 	private static String videoId = "sl8da4jjbx80cb8878980c1626c51923_s";
 	private static String TAG="NewTestActivity";
+	private MyBroadcastReceiver myBroadcastReceiver = null;
 	private ProgressDialog barProgressDialog;
 	private Button btn_downloadlist, btn_playUrl, btn_playUrlFull,
 		btn_record, btn_upload, btn_videolist;
@@ -178,12 +186,27 @@ public class NewTestActivity extends Activity {
 				startActivity(videolist);
 			}
 		});
+		
+		//如果httpd service 启动失败，就会发送消息上来提醒失败了
+		IntentFilter statusIntentFilter = new IntentFilter(AndroidService.SERVICE_ERROR_BROADCAST_ACTION);
+		statusIntentFilter.addCategory(Intent.CATEGORY_DEFAULT);
+		myBroadcastReceiver = new MyBroadcastReceiver();
+		LocalBroadcastManager.getInstance(this).registerReceiver(myBroadcastReceiver, statusIntentFilter);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
 		barProgressDialog.dismiss();
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if (myBroadcastReceiver != null) {
+			LocalBroadcastManager.getInstance(this).unregisterReceiver(myBroadcastReceiver);
+			myBroadcastReceiver = null;
+		}
 	}
 
 	class VideoUploadTask extends AsyncTask<String, Void, String> {
@@ -225,4 +248,22 @@ public class NewTestActivity extends Activity {
 		}
 	}
 
+	private class MyBroadcastReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			int count = intent.getIntExtra("count", 0);
+			AlertDialog.Builder builder = new AlertDialog.Builder(NewTestActivity.this);
+			builder.setTitle("提示");
+			builder.setMessage(String.format("%d次重试都没有成功开启server,请截图联系客服", count));
+			builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					dialog.dismiss();
+				}
+			});
+			
+			builder.setCancelable(false);
+			builder.show();
+		}
+	}
 }
