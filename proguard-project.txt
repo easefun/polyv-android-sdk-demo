@@ -18,10 +18,18 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
--keep class com.easefun.polyvsdk.** { ; }
--keep class tv.danmaku.ijk.media.* { ; }
--keep @interface tv.danmaku.ijk.media.* { ; }
--keep class com.nostra13.universalimageloader.* { ; }
--keep class org.apache.http.* { ; }
--keep class org.apache.commons.* { *; }
--keep public class com.tencent.bugly.**{*;}
+
+-ignorewarnings 										# 忽略警告，避免打包时某些警告出现
+-optimizationpasses 5									#  指定代码的压缩级别
+-dontusemixedcaseclassnames								# 是否使用大小写混合
+-dontskipnonpubliclibraryclasses						# 是否混淆第三方jar
+-verbose												# 混淆时是否记录日志
+-dontpreverify											# 混淆时是否做预校验
+
+-keep class com.easefun.polyvsdk.**{*;}					# 保持哪些类不被混淆
+-keep class tv.danmaku.ijk.media.**{*;}					# 保持哪些类不被混淆
+-keep @interface tv.danmaku.ijk.media.**{*;}			# 保持哪些类不被混淆
+-keep class com.nostra13.universalimageloader.**{*;}	# 保持哪些类不被混淆
+-keep class org.apache.http.**{*;}						# 保持哪些类不被混淆
+-keep class org.apache.commons.**{*;}					# 保持哪些类不被混淆
+-keep public class com.tencent.bugly.**{*;}				# 保持哪些类不被混淆
