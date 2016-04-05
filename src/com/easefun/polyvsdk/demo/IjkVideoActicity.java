@@ -81,6 +81,9 @@ public class IjkVideoActicity extends Activity {
 		rl = (RelativeLayout) findViewById(R.id.rl);
 		rl.setLayoutParams(new RelativeLayout.LayoutParams(w, adjusted_h));
 		videoView = (IjkVideoView) findViewById(R.id.videoview);
+		videoView.setOpenTeaser(true);
+		videoView.setOpenAd(true);
+		videoView.setOpenQuestion(true);
 		ProgressBar progressBar = (ProgressBar) findViewById(R.id.loadingprogress);
 		TextView videoAdCountDown = (TextView) findViewById(R.id.count_down);
 		logo = (ImageView) findViewById(R.id.logo);

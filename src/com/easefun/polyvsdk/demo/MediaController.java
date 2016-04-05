@@ -541,6 +541,7 @@ public class MediaController extends IjkBaseMediaController {
 
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
+		if (mPlayer == null) return false;
 		int keyCode = event.getKeyCode();
 		if (event.getRepeatCount() == 0 && (keyCode == KeyEvent.KEYCODE_HEADSETHOOK
 				|| keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE || keyCode == KeyEvent.KEYCODE_SPACE)) {
