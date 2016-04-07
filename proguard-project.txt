@@ -28,6 +28,7 @@
 
 -keep class com.easefun.polyvsdk.**{*;}					# 保持哪些类不被混淆
 -keep class tv.danmaku.ijk.media.**{*;}					# 保持哪些类不被混淆
+-keep public class tv.danmaku.ijk.media.player.IjkMediaPlayer {*;} # 保持这个类的类变量不被混淆
 -keep @interface tv.danmaku.ijk.media.**{*;}			# 保持哪些类不被混淆
 -keep class com.nostra13.universalimageloader.**{*;}	# 保持哪些类不被混淆
 -keep class org.apache.http.**{*;}						# 保持哪些类不被混淆
