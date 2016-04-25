@@ -134,6 +134,12 @@ public class PolyvAuditionView extends RelativeLayout {
 	public void show(View anchorView, QuestionVO questionVO) {
 		this.anchorView = anchorView;
 		this.questionVO = questionVO;
+		
+		//控制MeidaController界面不显示，因为MediaController是使用Window显示的，在听力问答界面显示的时候
+		//MeidaController界面还能显示，那么就能控制视频播放，这样是不正确的
+		//所以这里添加一个控制MeidaController不显示的代码
+		MediaController.setCanShow(false);
+		
 		refresh();
 	}
 	
@@ -191,5 +197,8 @@ public class PolyvAuditionView extends RelativeLayout {
 		mediaPlayer.release();
 		handler.removeMessages(UPDATE_PROGRESS);
 		popupWindow.dismiss();
+		
+		//设置回MeidaController可以显示
+		MediaController.setCanShow(true);
 	}
 }

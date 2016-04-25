@@ -374,6 +374,7 @@ public class MediaController extends IjkBaseMediaController {
 	 */
 	@Override
 	public void show(int timeout) {
+		if (mIsCanShow == false) return;
 		if (!mShowing && mAnchor != null && mAnchor.getWindowToken() != null) {
 			if (mPauseButton != null)
 				mPauseButton.requestFocus();
@@ -718,5 +719,11 @@ public class MediaController extends IjkBaseMediaController {
 			
 			ijkVideoView.setVid(vid, targetBitRate);
 		}
+	}
+	
+	/** 是否能显示，有些在显示的时候，本控制条界面是不能弹出的 */
+	private static boolean mIsCanShow = true;
+	public static void setCanShow(boolean isCanShow) {
+		mIsCanShow = isCanShow;
 	}
 }
