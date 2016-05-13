@@ -2,6 +2,7 @@ package com.easefun.polyvsdk.demo;
 
 import java.io.File;
 
+import com.easefun.polyvsdk.PolyvDevMountInfo;
 import com.easefun.polyvsdk.PolyvSDKClient;
 import com.easefun.polyvsdk.SDKUtil;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
@@ -16,11 +17,13 @@ import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import android.app.Application;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.text.TextUtils;
+import android.util.Log;
 
 public class MyApplication extends Application {
 
+	private static final String TAG = MyApplication.class.getSimpleName();
+	
 	public MyApplication() {
 		
 	}
@@ -65,21 +68,12 @@ public class MyApplication extends Application {
 	}
 	
 	public void initPolyvCilent() {
-		File saveDir = null;
-		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-			saveDir = new File(Environment.getExternalStorageDirectory().getPath() + "/polyvdownload");
-			if (saveDir.exists() == false)
-				saveDir.mkdir();
-		}
-
 		//网络方式取得SDK加密串，（推荐）
 //		new LoadConfigTask().execute();
 		PolyvSDKClient client = PolyvSDKClient.getInstance();
 		//设置SDK加密串
 //		client.setConfig("你的SDK加密串");
 		client.setConfig("iPGXfu3KLEOeCW4KXzkWGl1UYgrJP7hRxUfsJGldI6DEWJpYfhaXvMA+32YIYqAOocWd051v5XUAU17LoVlgZCSEVNkx11g7CxYadcFPYPozslnQhFjkxzzjOt7lUPsW");
-		//下载文件的目录
-		client.setDownloadDir(saveDir);
 		//初始化数据库服务
 		client.initDatabaseService(this);
 		//启动服务
@@ -88,6 +82,51 @@ public class MyApplication extends Application {
 		client.initCrashReport(getApplicationContext());
 		//启动Bugly后，在学员登录时设置学员id
 //		client.crashReportSetUserId(userId);
+		//获取SD卡信息
+		PolyvDevMountInfo.getInstance().init(this, new PolyvDevMountInfo.OnLoadCallback() {
+			
+			@Override
+			public void callback() {
+				if (PolyvDevMountInfo.getInstance().isSDCardAvaiable() == false) {
+					// TODO 没有可用的SD卡
+					Log.e(TAG, "没有sd卡");
+					return;
+				}
+				
+				long remainedSpareInMB = 100; 
+				if (PolyvDevMountInfo.getInstance().getSDCardAvailSpace() * 1024 < remainedSpareInMB) {
+					// TODO 可用剩余磁盘大小
+					Log.e(TAG, String.format("磁盘空间不足%d MB", remainedSpareInMB));
+					return;
+				}
+				
+				StringBuilder dirPath = new StringBuilder();
+				dirPath.append(PolyvDevMountInfo.getInstance().getSDCardPath()).append(File.separator).append("polyvdownload");
+				File saveDir = new File(dirPath.toString());
+				if (saveDir.exists() == false) {
+					saveDir.mkdir();
+				}
+				
+				//如果生成不了文件夹，可能是外部SD卡需要写入特定目录/storage/sdcard1/Android/data/包名/
+				if (saveDir.exists() == false) {
+					dirPath.delete(0, dirPath.length());
+					dirPath.append(PolyvDevMountInfo.getInstance().getSDCardPath()).append(File.separator).append("Android").append(File.separator).append("data")
+						.append(File.separator).append(getPackageName()).append(File.separator).append("polyvdownload");
+					saveDir = new File(dirPath.toString());
+					getExternalFilesDir(null); // 生成包名目录
+					saveDir.mkdirs();
+				}
+				
+				if (saveDir.exists() == false) {
+					// TODO 没有任何可写的SD卡
+					Log.e(TAG, "没有SD卡可供保存文件，不能使用下载功能");
+					return;
+				}
+				
+				//下载文件的目录
+				PolyvSDKClient.getInstance().setDownloadDir(saveDir);
+			}
+		});
 	}
 	
 	private class LoadConfigTask extends AsyncTask<String, String, String> {

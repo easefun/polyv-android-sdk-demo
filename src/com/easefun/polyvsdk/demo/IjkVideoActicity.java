@@ -1,6 +1,7 @@
 package com.easefun.polyvsdk.demo;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +26,7 @@ import com.easefun.polyvsdk.Video.ADMatter;
 import com.easefun.polyvsdk.ijk.IjkVideoView;
 import com.easefun.polyvsdk.ijk.OnPreparedListener;
 import com.easefun.polyvsdk.ijk.IjkVideoView.ErrorReason;
+import com.easefun.polyvsdk.srt.PolyvSRTItemVO;
 
 public class IjkVideoActicity extends Activity {
 	private static final String TAG = "IjkVideoActicity";
@@ -34,6 +36,7 @@ public class IjkVideoActicity extends Activity {
 	private PolyvPlayerAdvertisementView adView = null;
 	private MediaController mediaController = null;
 	private ImageView logo = null;
+	private TextView srtTextView = null;
 	private PolyvPlayerFirstStartView playerFirstStartView = null;
 	int w = 0, h = 0, adjusted_h = 0;
 	private RelativeLayout rl = null;
@@ -52,6 +55,7 @@ public class IjkVideoActicity extends Activity {
         context.startActivity(newIntent(context, playMode, playType, value, startNow));
     }
 	
+    @SuppressLint("ShowToast")
 	@Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
@@ -81,15 +85,18 @@ public class IjkVideoActicity extends Activity {
 		rl = (RelativeLayout) findViewById(R.id.rl);
 		rl.setLayoutParams(new RelativeLayout.LayoutParams(w, adjusted_h));
 		videoView = (IjkVideoView) findViewById(R.id.videoview);
-		videoView.setOpenTeaser(true);
-		videoView.setOpenAd(true);
-		videoView.setOpenQuestion(true);
 		ProgressBar progressBar = (ProgressBar) findViewById(R.id.loadingprogress);
 		TextView videoAdCountDown = (TextView) findViewById(R.id.count_down);
 		logo = (ImageView) findViewById(R.id.logo);
+		srtTextView = (TextView) findViewById(R.id.srt);
 		//在缓冲时出现的loading
 		videoView.setMediaBufferingIndicator(progressBar);
 		videoView.setAdCountDown(videoAdCountDown);
+		videoView.setOpenTeaser(false);
+		videoView.setOpenAd(false);
+		videoView.setOpenQuestion(true);
+		videoView.setOpenSRT(true);
+		videoView.setNeedGestureDetector(false);
 		videoView.setVideoLayout(IjkVideoView.VIDEO_LAYOUT_SCALE);
 		videoView.setOnPreparedListener(new OnPreparedListener() {
 			@Override
@@ -107,6 +114,10 @@ public class IjkVideoActicity extends Activity {
 						playerFirstStartView.show(rl, value);
 					}
 				}
+				
+				String msg = String.format("是否在线播放 %b", videoView.isLocalPlay() == false);
+				Log.d(TAG, msg);
+				Toast.makeText(IjkVideoActicity.this, msg, Toast.LENGTH_SHORT);
 			}
 		});
 		
@@ -196,6 +207,102 @@ public class IjkVideoActicity extends Activity {
 			public void onCompletion() {
 				logo.setVisibility(View.GONE);
 				mediaController.setProgressMax();
+			}
+		});
+		
+		videoView.setOnVideoSRTListener(new IjkVideoView.OnVideoSRTListener() {
+			
+			@Override
+			public void onVideoSRT(PolyvSRTItemVO sRTItemVO) {
+				if (sRTItemVO == null) {
+					srtTextView.setText("");
+				} else {
+					srtTextView.setText(sRTItemVO.getSubTitle());
+				}
+			}
+		});
+		
+		videoView.setClick(new IjkVideoView.Click() {
+			
+			@Override
+			public void callback(boolean start, boolean end) {
+				mediaController.toggleVisiblity();
+			}
+		});
+		
+		videoView.setLeftUp(new IjkVideoView.LeftUp() {
+			
+			@Override
+			public void callback(boolean start, boolean end) {
+				Log.d(TAG, String.format("LeftUp %b %b brightness %d", start, end, videoView.getBrightness()));
+				int brightness = videoView.getBrightness() + 5;
+				if (brightness > 100) {
+					brightness = 100;
+				}
+				
+				videoView.setBrightness(brightness);
+			}
+		});
+		
+		videoView.setLeftDown(new IjkVideoView.LeftDown() {
+			
+			@Override
+			public void callback(boolean start, boolean end) {
+				Log.d(TAG, String.format("LeftDown %b %b brightness %d", start, end, videoView.getBrightness()));
+				int brightness = videoView.getBrightness() - 5;
+				if (brightness < 0) {
+					brightness = 0;
+				}
+				
+				videoView.setBrightness(brightness);
+			}
+		});
+		
+		videoView.setRightUp(new IjkVideoView.RightUp() {
+			
+			@Override
+			public void callback(boolean start, boolean end) {
+				Log.d(TAG, String.format("RightUp %b %b volume %d", start, end, videoView.getVolume()));
+				// 加减单位最小为10，否则无效果
+				int volume = videoView.getVolume() + 10;
+				if (volume > 100) {
+					volume = 100;
+				}
+				
+				videoView.setVolume(volume);
+			}
+		});
+		
+		videoView.setRightDown(new IjkVideoView.RightDown() {
+			
+			@Override
+			public void callback(boolean start, boolean end) {
+				Log.d(TAG, String.format("RightDown %b %b volume %d", start, end, videoView.getVolume()));
+				// 加减单位最小为10，否则无效果
+				int volume = videoView.getVolume() - 10;
+				if (volume < 0) {
+					volume = 0;
+				}
+				
+				videoView.setVolume(volume);
+			}
+		});
+		
+		videoView.setSwipeLeft(new IjkVideoView.SwipeLeft() {
+			
+			@Override
+			public void callback(boolean start, boolean end) {
+				// TODO 左滑事件
+				Log.d(TAG, String.format("SwipeLeft %b %b", start, end));
+			}
+		});
+		
+		videoView.setSwipeRight(new IjkVideoView.SwipeRight() {
+			
+			@Override
+			public void callback(boolean start, boolean end) {
+				// TODO 右滑事件
+				Log.d(TAG, String.format("SwipeRight %b %b", start, end));
 			}
 		});
 		

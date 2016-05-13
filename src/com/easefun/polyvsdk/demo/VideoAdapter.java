@@ -3,11 +3,15 @@ package com.easefun.polyvsdk.demo;
 import java.util.List;
 
 import com.easefun.polyvsdk.BitRateEnum;
+import com.easefun.polyvsdk.PolyvDownloadProgressListener;
 import com.easefun.polyvsdk.PolyvDownloader;
+import com.easefun.polyvsdk.PolyvDownloaderErrorReason;
 import com.easefun.polyvsdk.PolyvDownloaderManager;
 import com.easefun.polyvsdk.R;
 import com.easefun.polyvsdk.RestVO;
 import com.easefun.polyvsdk.Video;
+import com.easefun.polyvsdk.demo.download.PolyvDBservice;
+import com.easefun.polyvsdk.demo.download.PolyvDownloadInfo;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
@@ -35,13 +39,13 @@ public class VideoAdapter extends BaseAdapter {
 	private LayoutInflater inflater;
 	private ViewHolder holder;
 	private DisplayImageOptions options;
-	private DBservice service;
+	private PolyvDBservice service;
 
 	public VideoAdapter(Context context, List<RestVO> videos) {
 		this.context = context;
 		this.videos = videos;
 		this.inflater = LayoutInflater.from(context);
-		this.service = new DBservice(context);
+		this.service = new PolyvDBservice(context);
 
 		options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.bg_loading) // 设置图片在下载期间显示的图片
 				.showImageForEmptyUri(R.drawable.bg_loading)// 设置图片Uri为空或是错误的时候显示的图片
@@ -142,12 +146,29 @@ public class VideoAdapter extends BaseAdapter {
 						public void onClick(DialogInterface dialog, int which) {
 							int bitrate = which + 1;
 
-							DownloadInfo downloadInfo = new DownloadInfo(vid, v.getDuration(), v.getFilesize(bitrate), bitrate);
+							final PolyvDownloadInfo downloadInfo = new PolyvDownloadInfo(vid, v.getDuration(), v.getFilesize(bitrate), bitrate);
 							downloadInfo.setTitle(title);
 							Log.i("videoAdapter", downloadInfo.toString());
 							if (service != null && !service.isAdd(downloadInfo)) {
 								service.addDownloadFile(downloadInfo);
 								PolyvDownloader polyvDownloader = PolyvDownloaderManager.getPolyvDownloader(vid, bitrate);
+								polyvDownloader.setPolyvDownloadProressListener(new PolyvDownloadProgressListener() {
+									private long total;
+									@Override
+									public void onDownloadSuccess() {
+										service.updatePercent(downloadInfo, total, total);
+									}
+									
+									@Override
+									public void onDownloadFail(PolyvDownloaderErrorReason errorReason) {
+										
+									}
+									
+									@Override
+									public void onDownload(long current, long total) {
+										this.total=total;
+									}
+								});
 								polyvDownloader.start();
 							} else {
 								((Activity) context).runOnUiThread(new Runnable() {

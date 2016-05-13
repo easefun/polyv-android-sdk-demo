@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:alpha="0.8"
+    android:background="#000000" >
+
+    <TextView 
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="字幕设置"/>
+	
+    <Button
+	    android:id="@+id/srt_popup_view_close_btn"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentRight="true"
+	    android:layout_alignParentTop="true"
+	    android:background="#00000000"
+	    android:textSize="15sp"
+	    android:textColor="@android:color/white"
+	    android:text="关闭"/>
+    
+    <LinearLayout 
+        android:id="@+id/srt_select_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/title"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal">
+    </LinearLayout>
+</RelativeLayout>

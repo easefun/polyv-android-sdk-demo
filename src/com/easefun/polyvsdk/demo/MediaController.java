@@ -27,6 +27,7 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.easefun.polyvsdk.BitRateEnum;
 import com.easefun.polyvsdk.PolyvSDKClient;
@@ -65,9 +66,11 @@ public class MediaController extends IjkBaseMediaController {
 	private OnVideoChangeListener onVideoChangeListener;
 	private ImageButton btn_boardChange;
 	private ImageButton btn_videoChange;
+	private Button selectSRT = null;
 	private Button selectBitrate = null;
 	private LinearLayout bitrateLinearLayout = null;
 	private SparseArray<Button> bitRateBtnArray = null;
+	private PolyvPlayerSRTPopupView sRTPopupView = null;
 	private OnPreNextListener onPreNextListener;
 
 	public MediaController(Context context, AttributeSet attrs) {
@@ -140,6 +143,7 @@ public class MediaController extends IjkBaseMediaController {
 		return mRoot;
 	}
 
+	@SuppressLint("ShowToast")
 	@Override
 	protected void initControllerView(View v) {
 		mPauseButton = (ImageButton) v.findViewById(R.id.mediacontroller_play_pause);
@@ -182,6 +186,36 @@ public class MediaController extends IjkBaseMediaController {
 
 		mEndTime = (TextView) v.findViewById(R.id.mediacontroller_time_total);
 		mCurrentTime = (TextView) v.findViewById(R.id.mediacontroller_time_current);
+		
+		sRTPopupView = new PolyvPlayerSRTPopupView(mContext);
+		sRTPopupView.setCallback(new PolyvPlayerSRTPopupView.Callback() {
+			
+			@Override
+			public void onSRTSelected(String key) {
+				boolean value = ijkVideoView.changeSRT(key);
+				if (value == false) {
+					Toast.makeText(mContext, "字幕加载失败", Toast.LENGTH_SHORT);
+				}
+			}
+			
+			@Override
+			public void onPopupViewDismiss() {
+				
+			}
+		});
+		
+		selectSRT = (Button) mRoot.findViewById(R.id.select_srt);
+		selectSRT.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (sRTPopupView.isShowing()) {
+					sRTPopupView.hide();
+				} else {
+					sRTPopupView.show(mAnchor, ijkVideoView.getVideo(), ijkVideoView.getCurrSRTKey());
+				}
+			}
+		});
 		
 		// 码率选择功能涉及的控件
 		selectBitrate = (Button) mRoot.findViewById(R.id.select_bitrate);
@@ -429,6 +463,14 @@ public class MediaController extends IjkBaseMediaController {
 				mHiddenListener.onHidden();
 		}
 	}
+	
+	public void toggleVisiblity() {
+		if (isShowing()) {
+			hide();
+		} else {
+			show();
+		}
+	}
 
 	public interface OnShownListener {
 		public void onShown();
@@ -530,8 +572,7 @@ public class MediaController extends IjkBaseMediaController {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		show(sDefaultTimeout);
-		return true;
+		return ijkVideoView.dispatchTouchEvent(event);
 	}
 
 	@Override

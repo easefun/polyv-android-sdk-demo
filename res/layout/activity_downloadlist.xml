@@ -6,7 +6,7 @@
  <RelativeLayout 
      android:id="@+id/top"
      android:layout_width="match_parent"
-     android:layout_height="40dp"
+     android:layout_height="wrap_content"
      android:background="#eaeaea"
      >
      <Button 
@@ -17,6 +17,21 @@
          android:layout_alignParentRight="true"
          />
  </RelativeLayout>   
+<!--  <ScrollView 
+     android:id="@+id/sv_downlist"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     android:layout_below="@id/top"
+     android:background="#FFFFFF"
+     >
+ <LinearLayout
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:id="@+id/ll_downlist"
+     android:orientation="vertical"
+     android:background="#FFFFFF"
+     />
+ </ScrollView> -->
 <RelativeLayout 
        android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -28,7 +43,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-   
     ></ListView>
 <TextView 
     android:id="@+id/emptyView"
