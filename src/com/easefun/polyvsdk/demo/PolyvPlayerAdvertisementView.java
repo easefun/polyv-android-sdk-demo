@@ -1,5 +1,10 @@
 package com.easefun.polyvsdk.demo;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+
 import com.easefun.polyvsdk.R;
 import com.easefun.polyvsdk.Video.ADMatter;
 import com.easefun.polyvsdk.demo.AnimateFirstDisplayListener;
@@ -18,6 +23,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -30,7 +36,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
- * 广告视图
+ * 广告视图，只针对图片广告做处理，视频广告在IjkVideoView中已经处理
  * @author TanQu 2016-3-3
  */
 public class PolyvPlayerAdvertisementView extends RelativeLayout {
@@ -53,7 +59,8 @@ public class PolyvPlayerAdvertisementView extends RelativeLayout {
 			mCountDown.setText(String.valueOf(countDownNum));
 			if (countDownNum <= 0) {
 				//重要，调用此方法才能继续播放
-				if (ADMatter.LOCATION_FIRST.equals(mADMatter.getLocation())) {
+				if (ADMatter.LOCATION_FIRST.equals(mADMatter.getLocation())
+						|| ADMatter.LOCATION_LAST.equals(mADMatter.getLocation())) {
 					mIjkVideoView.playNext();
 				}
 				
@@ -93,10 +100,19 @@ public class PolyvPlayerAdvertisementView extends RelativeLayout {
 			
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(Intent.ACTION_VIEW);
-				intent.setData(Uri.parse(mADMatter.getAddrUrl()));
-				mContext.startActivity(intent);
-				hide();
+				String path = mADMatter.getAddrUrl();
+				if (TextUtils.isEmpty(path) == false) {
+					try {
+						new URL(path);
+					} catch (MalformedURLException e) {
+						return;
+					}
+					
+					Intent intent = new Intent(Intent.ACTION_VIEW);
+					intent.setData(Uri.parse(path));
+					mContext.startActivity(intent);
+					hide();
+				}
 			}
 		});
     	
@@ -140,6 +156,7 @@ public class PolyvPlayerAdvertisementView extends RelativeLayout {
     	countDownNum = adMatter.getTimeSize();
     	refresh();
     	
+    	//暂停图片广告不需要倒计时，是点击开始按钮继续
     	if (ADMatter.LOCATION_PAUSE.equals(adMatter.getLocation())) {
     		mStartBtn.setVisibility(View.VISIBLE);
     		mCountDown.setVisibility(View.GONE);

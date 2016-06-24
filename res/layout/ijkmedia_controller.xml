@@ -89,15 +89,16 @@
 		</LinearLayout>
 		
         <ImageButton
-            android:id="@+id/landscape"
+            android:id="@+id/videochange"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_toLeftOf="@+id/videochange"
-            android:background="@drawable/change" />
+            android:background="@drawable/change"
+            android:visibility="gone" />
 
         <ImageButton
-            android:id="@+id/videochange"
+            android:id="@+id/landscape"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"

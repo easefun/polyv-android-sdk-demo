@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Locale;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.media.AudioManager;
@@ -33,6 +35,8 @@ import com.easefun.polyvsdk.BitRateEnum;
 import com.easefun.polyvsdk.PolyvSDKClient;
 import com.easefun.polyvsdk.R;
 import com.easefun.polyvsdk.ijk.IjkBaseMediaController;
+import com.easefun.polyvsdk.ijk.IjkUtil;
+import com.easefun.polyvsdk.ijk.IjkValidateM3U8VideoReturnType;
 import com.easefun.polyvsdk.ijk.IjkVideoView;
 
 public class MediaController extends IjkBaseMediaController {
@@ -64,6 +68,8 @@ public class MediaController extends IjkBaseMediaController {
 	private boolean isUsePreNext = false;
 	private OnBoardChangeListener onBoardChangeListener;
 	private OnVideoChangeListener onVideoChangeListener;
+	private OnResetViewListener onResetViewListener;
+	private OnUpdateStartNow onUpdateStartNow;
 	private ImageButton btn_boardChange;
 	private ImageButton btn_videoChange;
 	private Button selectSRT = null;
@@ -243,6 +249,14 @@ public class MediaController extends IjkBaseMediaController {
 	public void setOnVideoChangeListener(OnVideoChangeListener l) {
 		onVideoChangeListener = l;
 	}
+	
+	public void setOnResetViewListener(OnResetViewListener l) {
+		onResetViewListener = l;
+	}
+	
+	public void setOnUpdateStartNow(OnUpdateStartNow l) {
+		onUpdateStartNow = l;
+	}
 
 	public void setOnPreNextListener(OnPreNextListener l) {
 		onPreNextListener = l;
@@ -260,8 +274,15 @@ public class MediaController extends IjkBaseMediaController {
 
 	public interface OnPreNextListener {
 		public void onPreviou();
-
 		public void onNext();
+	}
+	
+	public interface OnResetViewListener {
+		public void onReset();
+	}
+	
+	public interface OnUpdateStartNow {
+		public void onUpdate(boolean startNow);
 	}
 
 	private boolean isScreenPortrait() {
@@ -584,6 +605,8 @@ public class MediaController extends IjkBaseMediaController {
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
 		if (mPlayer == null) return false;
+		if (ijkVideoView == null) return false;
+		if (ijkVideoView.isPlayStageMain() == false) return false;
 		int keyCode = event.getKeyCode();
 		if (event.getRepeatCount() == 0 && (keyCode == KeyEvent.KEYCODE_HEADSETHOOK
 				|| keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE || keyCode == KeyEvent.KEYCODE_SPACE)) {
@@ -758,7 +781,84 @@ public class MediaController extends IjkBaseMediaController {
 				return;
 			}
 			
-			ijkVideoView.setVid(vid, targetBitRate);
+			if (onResetViewListener != null) {
+				onResetViewListener.onReset();
+			}
+			
+			if (onUpdateStartNow != null) {
+				onUpdateStartNow.onUpdate(true);
+			}
+			
+			AlertDialog.Builder builder = null;
+			String bitRateName = BitRateEnum.getBitRate(targetBitRate).getName();
+			int type = IjkUtil.validateM3U8Video(vid, targetBitRate);
+			switch (type) {
+			case IjkValidateM3U8VideoReturnType.M3U8_CORRECT:
+				builder = new AlertDialog.Builder(mContext);
+				builder.setTitle("提示");
+				builder.setMessage(String.format("%s码率视频已经缓存，是否切换到缓存播放", bitRateName));
+				builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						dialog.dismiss();
+						hide();
+						ijkVideoView.switchLevel(targetBitRate);
+					}
+				});
+				
+				builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						dialog.dismiss();
+					}
+				});
+				
+				builder.setCancelable(false);
+				builder.show();
+				break;
+			case IjkValidateM3U8VideoReturnType.M3U8_FILE_NOT_FOUND:
+				int currType = IjkUtil.validateM3U8Video(vid, currBitRate);
+				if (currType == IjkValidateM3U8VideoReturnType.M3U8_CORRECT) {
+					builder = new AlertDialog.Builder(mContext);
+					builder.setTitle("提示");
+					builder.setMessage(String.format("%s码率视频没有缓存，是否切换到网络播放", bitRateName));
+					builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							dialog.dismiss();
+							hide();
+							ijkVideoView.switchLevel(targetBitRate);
+						}
+					});
+					
+					builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							dialog.dismiss();
+						}
+					});
+					
+					builder.setCancelable(false);
+					builder.show();
+				} else {
+					hide();
+					ijkVideoView.switchLevel(targetBitRate);
+				}
+				
+				break;
+			case IjkValidateM3U8VideoReturnType.M3U8_FILE_CONTENT_EMPTY:
+			case IjkValidateM3U8VideoReturnType.M3U8_TS_LIST_EMPTY:
+			case IjkValidateM3U8VideoReturnType.M3U8_TS_FILE_NOT_FOUND:
+			case IjkValidateM3U8VideoReturnType.M3U8_KEY_FILE_NOT_FOUND:
+				builder = new AlertDialog.Builder(mContext);
+				builder.setTitle("提示");
+				builder.setMessage(String.format("%s码率视频本地缓存损坏，请重新缓存后再播放", bitRateName));
+				builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						dialog.dismiss();
+					}
+				});
+				
+				builder.setCancelable(false);
+				builder.show();
+				break;
+			}
 		}
 	}
 	

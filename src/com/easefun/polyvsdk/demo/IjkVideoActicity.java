@@ -35,12 +35,15 @@ public class IjkVideoActicity extends Activity {
 	private PolyvAuditionView auditionView = null;
 	private PolyvPlayerAdvertisementView adView = null;
 	private MediaController mediaController = null;
+	private TextView videoAdCountDown = null;
+	//取消掉变量引用的注释即可打开logo功能
 	private ImageView logo = null;
 	private TextView srtTextView = null;
 	private PolyvPlayerFirstStartView playerFirstStartView = null;
 	int w = 0, h = 0, adjusted_h = 0;
 	private RelativeLayout rl = null;
 	private int stopPosition = 0;
+	private boolean startNow = false;
     
     public static Intent newIntent(Context context, PlayMode playMode, PlayType playType, String value, boolean startNow) {
         Intent intent = new Intent(context, IjkVideoActicity.class);
@@ -67,7 +70,7 @@ public class IjkVideoActicity extends Activity {
         int playTypeCode = getIntent().getIntExtra("playType", 0);
         final PlayType playType = PlayType.getPlayType(playTypeCode);
         final String value = getIntent().getStringExtra("value");
-        final boolean startNow = getIntent().getBooleanExtra("startNow", false);
+        startNow = getIntent().getBooleanExtra("startNow", false);
         if (playMode == null || playType == null || TextUtils.isEmpty(value)) {
         	Log.e(TAG, "Null Data Source");
             finish();
@@ -86,23 +89,22 @@ public class IjkVideoActicity extends Activity {
 		rl.setLayoutParams(new RelativeLayout.LayoutParams(w, adjusted_h));
 		videoView = (IjkVideoView) findViewById(R.id.videoview);
 		ProgressBar progressBar = (ProgressBar) findViewById(R.id.loadingprogress);
-		TextView videoAdCountDown = (TextView) findViewById(R.id.count_down);
+		videoAdCountDown = (TextView) findViewById(R.id.count_down);
 		logo = (ImageView) findViewById(R.id.logo);
 		srtTextView = (TextView) findViewById(R.id.srt);
 		//在缓冲时出现的loading
 		videoView.setMediaBufferingIndicator(progressBar);
-		videoView.setAdCountDown(videoAdCountDown);
-		videoView.setOpenTeaser(false);
-		videoView.setOpenAd(false);
+		videoView.setOpenTeaser(true);
+		videoView.setOpenAd(true);
 		videoView.setOpenQuestion(true);
 		videoView.setOpenSRT(true);
-		videoView.setNeedGestureDetector(false);
+		videoView.setNeedGestureDetector(true);
 		videoView.setVideoLayout(IjkVideoView.VIDEO_LAYOUT_SCALE);
 		videoView.setOnPreparedListener(new OnPreparedListener() {
 			@Override
 			public void onPrepared(IMediaPlayer mp) {
 				videoView.setVideoLayout(IjkVideoView.VIDEO_LAYOUT_SCALE);
-				logo.setVisibility(View.VISIBLE);
+//				logo.setVisibility(View.VISIBLE);
 				if (stopPosition > 0) {
 					Log.d(TAG, "seek to stopPosition:" + stopPosition);
 					videoView.seekTo(stopPosition);
@@ -191,6 +193,20 @@ public class IjkVideoActicity extends Activity {
 			}
 		});
 		
+		videoView.setOnAdvertisementCountDownListener(new IjkVideoView.OnAdvertisementCountDownListener() {
+			
+			@Override
+			public void onEnd() {
+				videoAdCountDown.setVisibility(View.GONE);
+			}
+			
+			@Override
+			public void onCountDown(int num) {
+				videoAdCountDown.setText(String.format("广告也精彩：%d秒", num));
+				videoAdCountDown.setVisibility(View.VISIBLE);
+			}
+		});
+		
 		videoView.setOnPlayPauseListener(new IjkVideoView.OnPlayPauseListener() {
 			
 			@Override
@@ -205,7 +221,7 @@ public class IjkVideoActicity extends Activity {
 			
 			@Override
 			public void onCompletion() {
-				logo.setVisibility(View.GONE);
+//				logo.setVisibility(View.GONE);
 				mediaController.setProgressMax();
 			}
 		});
@@ -219,6 +235,8 @@ public class IjkVideoActicity extends Activity {
 				} else {
 					srtTextView.setText(sRTItemVO.getSubTitle());
 				}
+				
+				srtTextView.setVisibility(View.VISIBLE);
 			}
 		});
 		
@@ -351,6 +369,22 @@ public class IjkVideoActicity extends Activity {
 						}
 					}
 				});
+			}
+		});
+		
+		mediaController.setOnResetViewListener(new MediaController.OnResetViewListener() {
+			
+			@Override
+			public void onReset() {
+				srtTextView.setVisibility(View.GONE);
+			}
+		});
+		
+		mediaController.setOnUpdateStartNow(new MediaController.OnUpdateStartNow() {
+			
+			@Override
+			public void onUpdate(boolean isStartNow) {
+				startNow = isStartNow;
 			}
 		});
 		
