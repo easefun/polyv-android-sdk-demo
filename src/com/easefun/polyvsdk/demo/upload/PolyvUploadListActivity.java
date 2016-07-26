@@ -5,15 +5,14 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import com.easefun.polyvsdk.R;
-import com.easefun.polyvsdk.upload.PolyvMThreadUploadManager;
+import com.easefun.polyvsdk.upload.PolyvUploaderManager;
+import com.easefun.polyvsdk.util.GetPathFromUri;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -55,14 +54,14 @@ public class PolyvUploadListActivity extends Activity implements OnClickListener
 		emptyView = (TextView) findViewById(R.id.emptyView);
 		list.setEmptyView(emptyView);
 		btn_uploadall = (Button) findViewById(R.id.upload_all);
-//		initData();
+		// initData();
 		btn_uploadall.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				if (!isStop) {
 					((Button) v).setText("暂停全部");
-					adapter.uploadAllFile();
+					adapter.uploadAllFile(PolyvUploadListActivity.this);
 					adapter.updateAllButton(true);
 					isStop = !isStop;
 				} else {
@@ -76,6 +75,7 @@ public class PolyvUploadListActivity extends Activity implements OnClickListener
 		initView();
 		initViewListener();
 	}
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -108,8 +108,11 @@ public class PolyvUploadListActivity extends Activity implements OnClickListener
 					Uri.parse("file://" + Environment.getExternalStorageDirectory()));
 			sendBroadcast(intent1);
 			// 打开图册，选择MP4的视频
-			Intent intent = new Intent(Intent.ACTION_PICK, null);
-			intent.setDataAndType(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, "video/mp4");
+			Intent intent = new Intent(Intent.ACTION_GET_CONTENT, null);
+			intent.setType("video/*");
+			// Intent intent=new Intent(Intent.ACTION_PICK,null);
+			// intent.setDataAndType(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+			// "video/mp4");
 			startActivityForResult(intent, 1);
 			break;
 		}
@@ -122,12 +125,14 @@ public class PolyvUploadListActivity extends Activity implements OnClickListener
 		for (int i = 0; i < uris.length; i++) {
 			// 在图册中上传
 			if (uris[i].toString().startsWith("content")) {
-				String[] filePathColumn = { MediaStore.Video.Media.DATA };
-				Cursor cursor = getContentResolver().query(uris[i], filePathColumn, null, null, null);
-				cursor.moveToFirst();
-				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-				filePath = cursor.getString(columnIndex);
-				cursor.close();
+				// String[] filePathColumn = { MediaStore.Video.Media.DATA };
+				// Cursor cursor = getContentResolver().query(uris[i],
+				// filePathColumn, null, null, null);
+				// cursor.moveToFirst();
+				// int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+				// filePath = cursor.getString(columnIndex);
+				// cursor.close();
+				filePath = GetPathFromUri.getPath(this, uris[i]);
 			} else {
 				// 在文件中选择
 				filePath = uris[i].getPath().substring(uris[i].getPath().indexOf("/") + 1);
@@ -140,8 +145,8 @@ public class PolyvUploadListActivity extends Activity implements OnClickListener
 			uploadInfo.setFilesize(file.length());
 			uploadInfo.setFilepath(filePath);
 			if (service != null && !service.isAdd(uploadInfo)) {
-				service.addDownloadFile(uploadInfo);
-				PolyvMThreadUploadManager.getPolyvUploader(filePath, fileName.substring(0, fileName.lastIndexOf(".")),
+				service.addUploadFile(uploadInfo);
+				PolyvUploaderManager.getPolyvUploader(filePath, fileName.substring(0, fileName.lastIndexOf(".")),
 						"测试" + count);
 
 			} else {
@@ -180,7 +185,7 @@ public class PolyvUploadListActivity extends Activity implements OnClickListener
 				// 获取文件路径
 				Uri uri = data.getData();
 				handle(uri);
-//				adapter.notifyDataSetChanged();
+				// adapter.notifyDataSetChanged();
 			} else {
 				Toast.makeText(PolyvUploadListActivity.this, "视频获取失败", 0).show();
 			}

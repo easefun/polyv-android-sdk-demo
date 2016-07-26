@@ -111,18 +111,20 @@ public class PolyvPlayerSRTPopupView extends RelativeLayout implements View.OnCl
 		sRTSelectListLayout.addView(radioButton);
 		optionList.add(radioButton);
 		
-		Map<String, String> sRTMap = video.getVideoSRT();
-		for (Map.Entry<String, String> entry : sRTMap.entrySet()) {
-			index++;
-			radioButton = new SRTRadioButton(mContext, entry.getKey());
-			radioButton.setText(entry.getKey());
-			radioButton.setId(index);
-			radioButton.setOnClickListener(this);
-			if (entry.getKey().equals(currSRTKey)) {
-				radioButton.setChecked(true);
+		if (video != null) {
+			Map<String, String> sRTMap = video.getVideoSRT();
+			for (Map.Entry<String, String> entry : sRTMap.entrySet()) {
+				index++;
+				radioButton = new SRTRadioButton(mContext, entry.getKey());
+				radioButton.setText(entry.getKey());
+				radioButton.setId(index);
+				radioButton.setOnClickListener(this);
+				if (entry.getKey().equals(currSRTKey)) {
+					radioButton.setChecked(true);
+				}
+				sRTSelectListLayout.addView(radioButton);
+				optionList.add(radioButton);
 			}
-			sRTSelectListLayout.addView(radioButton);
-			optionList.add(radioButton);
 		}
 		
 		mPopupWindow.setWidth(anchor.getWidth());

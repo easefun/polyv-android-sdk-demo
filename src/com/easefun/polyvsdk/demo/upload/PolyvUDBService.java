@@ -18,7 +18,7 @@ public class PolyvUDBService {
 	}
 	
 
-	public void addDownloadFile(PolyvUploadInfo info) {
+	public void addUploadFile(PolyvUploadInfo info) {
 		db = udbOpenHepler.getWritableDatabase();
 		String sql = "insert into uploadlist(vid,title,desc,filesize,filepath) values(?,?,?,?,?)";
 		db.execSQL(

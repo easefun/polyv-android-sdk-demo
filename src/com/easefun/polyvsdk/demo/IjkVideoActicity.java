@@ -485,7 +485,7 @@ public class IjkVideoActicity extends Activity {
 	public void onBackPressed() {
 		super.onBackPressed();
 		if (videoView != null) {
-			videoView.release(true);
+			videoView.destroy();
 		}
 		
 		if (questionView != null) {
@@ -509,7 +509,7 @@ public class IjkVideoActicity extends Activity {
 	protected void onDestroy() {
 		super.onDestroy();
 		if (videoView != null) {
-			videoView.release(true);
+			videoView.destroy();
 		}
 		
 		if (questionView != null) {

@@ -4,18 +4,23 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk android:minSdkVersion="10" />
+    <uses-sdk
+        android:minSdkVersion="10"
+        android:targetSdkVersion="23" />
 
-    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- 基础权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+
+    <!-- 属于android6.0运行时权限，android6.0在使用时，需要再次请求以下权限 -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <uses-feature android:name="android.hardware.camera" />
 
@@ -40,37 +45,9 @@
             android:theme="@style/NoActionBar" >
         </activity>
         <activity
-            android:name="com.easefun.polyvsdk.VideoViewActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.NoTitleBar" >
-
-            <!-- android:screenOrientation="landscape" -->
-        </activity>
-        <activity
-            android:name="com.easefun.polyvsdk.demo.SmallVideoDemoActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.NoTitleBar" >
-
-            <!-- android:screenOrientation="landscape" -->
-        </activity>
-        <activity
-            android:name="com.easefun.polyvsdk.demo.FullVideoDemoActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.NoTitleBar" >
-        </activity>
-         <activity
             android:name="com.easefun.polyvsdk.demo.IjkVideoActicity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.NoTitleBar" >
-        </activity>
-        <activity
-            android:name="com.easefun.polyvsdk.demo.IjkFullVideoActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
@@ -79,17 +56,11 @@
             android:label="@string/app_name"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
-         <activity
+        <activity
             android:name="com.easefun.polyvsdk.demo.VideoListActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/app_name"
-             android:theme="@style/AppTheme" >
-        </activity>
-              <activity
-            android:name="com.easefun.polyvsdk.demo.PreviewVideoActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:theme="@style/AppTheme" >
         </activity>
         <activity
             android:name="com.easefun.polyvsdk.demo.upload.PolyvUploadListActivity"
@@ -111,9 +82,8 @@
                 <data android:mimeType="video/*" />
             </intent-filter>
         </activity>
-        <service  
-            android:name="com.easefun.polyvsdk.demo.PolyvDemoService"
-        ></service>
-    </application>
 
+        <service android:name="com.easefun.polyvsdk.demo.PolyvDemoService" >
+        </service>
+    </application>
 </manifest>

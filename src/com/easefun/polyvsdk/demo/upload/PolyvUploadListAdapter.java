@@ -1,11 +1,10 @@
 package com.easefun.polyvsdk.demo.upload;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 import com.easefun.polyvsdk.R;
-import com.easefun.polyvsdk.upload.PolyvMTUploadVideo;
-import com.easefun.polyvsdk.upload.PolyvMThreadUploadManager;
+import com.easefun.polyvsdk.upload.PolyvUploader;
+import com.easefun.polyvsdk.upload.PolyvUploaderManager;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -27,17 +26,14 @@ public class PolyvUploadListAdapter extends BaseAdapter {
 	private static final int REFRESH_PROGRESS = 1;
 	private static final int SUCCESS = 2;
 	private static final int FAILURE = 3;
-	private static final int PAUSE=4;
-	private static final int START=5;
 
 	private LinkedList<PolyvUploadInfo> data;
-	private ArrayList<MyUploadListener> listener;
 	private Context context;
 	private LayoutInflater inflater;
 	private PolyvUDBService service;
 	private ViewHolder holder;
 
-	private PolyvMTUploadVideo uploader;
+	private PolyvUploader uploader;
 
 	private ListView listView;
 
@@ -71,10 +67,6 @@ public class PolyvUploadListAdapter extends BaseAdapter {
 					btn.setText("完成");
 				}
 				break;
-			case PAUSE:
-				break;
-			case START:
-				break;
 
 			case FAILURE:
 				int errorType = msg.getData().getInt("error");
@@ -83,19 +75,19 @@ public class PolyvUploadListAdapter extends BaseAdapter {
 					btn.setText("开始");
 
 					switch (errorType) {
-					case PolyvMTUploadVideo.FFILE:
+					case PolyvUploader.FFILE:
 						Toast.makeText(context, "第" + (position + 1) + "个任务文件不存在，或者大小为0", 0).show();
 						break;
-					case PolyvMTUploadVideo.FVIDEO:
+					case PolyvUploader.FVIDEO:
 						Toast.makeText(context, "第" + (position + 1) + "个任务不是支持上传的视频格式", 0).show();
 						break;
-					case PolyvMTUploadVideo.NETEXCEPTION:
+					case PolyvUploader.NETEXCEPTION:
 						Toast.makeText(context, "第" + (position + 1) + "个任务网络异常，请重试", 0).show();
 						break;
-					case PolyvMTUploadVideo.RECONNECT:
+					case PolyvUploader.RECONNECT:
 						Toast.makeText(context, "第" + (position + 1) + "个任务网络异常，正在等待重新连接", 0).show();
 						break;
-					case PolyvMTUploadVideo.OUTTIME:
+					case PolyvUploader.OUTTIME:
 						Toast.makeText(context, "第" + (position + 1) + "个任务连接超时，请重试", 0).show();
 						break;
 					}
@@ -111,12 +103,11 @@ public class PolyvUploadListAdapter extends BaseAdapter {
 		this.data = data;
 		this.inflater = LayoutInflater.from(context);
 		this.service = new PolyvUDBService(context);
-		listener = new ArrayList<MyUploadListener>();
 		this.listView = listView;
 		initDownloaders();
 	}
 
-	private class MyUploadListener implements PolyvMTUploadVideo.UploadListener {
+	private class MyUploadListener implements PolyvUploader.UploadListener {
 		private int position;
 		private PolyvUploadInfo info;
 
@@ -154,33 +145,11 @@ public class PolyvUploadListAdapter extends BaseAdapter {
 		}
 
 		@Override
-		public void pause(boolean status) {
-			Message msg = handler.obtainMessage();
-			msg.arg1 = position;
-			msg.what = PAUSE;
-			Bundle bundle = new Bundle();
-			bundle.putBoolean("pause", status);
-			msg.setData(bundle);
-			handler.sendMessage(msg);
-		}
-
-		@Override
 		public void success(long total, String vid) {
 			Message msg = handler.obtainMessage();
 			msg.arg1 = position;
 			msg.what = SUCCESS;
 			service.updatePercent(info, total, total);
-			handler.sendMessage(msg);
-		}
-
-		@Override
-		public void start(boolean status) {
-			Message msg = handler.obtainMessage();
-			msg.arg1 = position;
-			msg.what = START;
-			Bundle bundle = new Bundle();
-			bundle.putBoolean("start", status);
-			msg.setData(bundle);
 			handler.sendMessage(msg);
 		}
 	}
@@ -189,9 +158,8 @@ public class PolyvUploadListAdapter extends BaseAdapter {
 		for (int i = 0; i < data.size(); i++) {
 			final PolyvUploadInfo info = data.get(i);
 			final int p = i;
-			uploader = PolyvMThreadUploadManager.getPolyvUploader(info.getFilepath(), info.getTitle(), info.getDesc());
+			uploader = PolyvUploaderManager.getPolyvUploader(info.getFilepath(), info.getTitle(), info.getDesc());
 			MyUploadListener uploadListener = new MyUploadListener(p, info);
-			listener.add(uploadListener);
 			uploader.setUploadListener(uploadListener);
 		}
 	}
@@ -231,8 +199,8 @@ public class PolyvUploadListAdapter extends BaseAdapter {
 		data = service.getUploadFiles();
 		final PolyvUploadInfo info = data.get(position);
 		String desc = info.getDesc();
-		String title=info.getTitle();
-		String filePath=info.getFilepath();
+		String title = info.getTitle();
+		String filePath = info.getFilepath();
 		long filesize = info.getFilesize();
 		long percent = info.getPercent();
 		long total = info.getTotal();
@@ -248,18 +216,21 @@ public class PolyvUploadListAdapter extends BaseAdapter {
 			holder.tv_rate.setText("" + 0);
 		if (total != 0 && total == percent) {
 			holder.btn_upload.setText("完成");
-		} else if (PolyvMThreadUploadManager.getPolyvUploader(filePath, title, desc).isUploading())
+		} else if (PolyvUploaderManager.getPolyvUploader(filePath, title, desc).isUploading())
 			holder.btn_upload.setText("暂停");
 		else
 			holder.btn_upload.setText("开始");
-		holder.btn_upload.setOnClickListener(
-				new DownloadListener(filePath, title, desc, convertView));
+		holder.btn_upload.setOnClickListener(new UploadListener(filePath, title, desc, convertView));
 		holder.btn_delete.setOnClickListener(new DeleteListener(info, position));
 		return convertView;
 	}
 
 	public void uploadAllFile() {
-		PolyvMThreadUploadManager.startAll();
+		PolyvUploaderManager.startAll();
+	}
+
+	public void uploadAllFile(Context context) {
+		PolyvUploaderManager.startAll(context);
 	}
 
 	public void updateAllButton(boolean isStop) {
@@ -280,13 +251,13 @@ public class PolyvUploadListAdapter extends BaseAdapter {
 		Button btn_upload, btn_delete;
 	}
 
-	class DownloadListener implements View.OnClickListener {
+	class UploadListener implements View.OnClickListener {
 		private final String filePath;
 		private final String desc;
 		private final String title;
 		private View view;
 
-		public DownloadListener(String filePath, String title, String desc, View view) {
+		public UploadListener(String filePath, String title, String desc, View view) {
 			this.filePath = filePath;
 			this.title = title;
 			this.desc = desc;
@@ -298,14 +269,12 @@ public class PolyvUploadListAdapter extends BaseAdapter {
 			Button upload = (Button) view.findViewById(R.id.upload);
 			if (upload.getText().equals("开始")) {
 				((Button) v).setText("暂停");
-				PolyvMTUploadVideo uploader = PolyvMThreadUploadManager.getPolyvUploader(filePath, title, filePath);
-				if (uploader != null) {
+				PolyvUploader uploader = PolyvUploaderManager.getPolyvUploader(filePath, title, filePath);
+				if (upload != null)
 					uploader.start();
-				}
-
 			} else if (upload.getText().equals("暂停")) {
 				((Button) v).setText("开始");
-				PolyvMTUploadVideo uploader = PolyvMThreadUploadManager.getPolyvUploader(filePath, title, filePath);
+				PolyvUploader uploader = PolyvUploaderManager.getPolyvUploader(filePath, title, filePath);
 				if (uploader != null) {
 					uploader.pause();
 				}
@@ -325,22 +294,20 @@ public class PolyvUploadListAdapter extends BaseAdapter {
 
 		@Override
 		public void onClick(View v) {
-			PolyvMTUploadVideo uploader = PolyvMThreadUploadManager.getPolyvUploader(info.getFilepath(), info.getTitle(), info.getDesc());
-			PolyvMThreadUploadManager.removePolyvDownload(info.getFilepath());
+			PolyvUploader uploader = PolyvUploaderManager.getPolyvUploader(info.getFilepath(), info.getTitle(),
+					info.getDesc());
+			PolyvUploaderManager.removePolyvUpload(info.getFilepath());
 			if (uploader != null) {
 				uploader.pause();
 			}
 			service.deleteUploadFile(info);
 			data.remove(position);
-			listener.remove(position);
-			for (int i = 0; i < listener.size(); i++) {
-				listener.get(i).setPosition(i);
-			}
+			initDownloaders();
 			notifyDataSetChanged();
 		}
 	}
 
 	public void stopAll() {
-		PolyvMThreadUploadManager.stopAll();
+		PolyvUploaderManager.stopAll();
 	}
 }

@@ -4,50 +4,39 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <!-- <Button
-        android:id="@+id/download"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="下载" />
     <Button
-        android:id="@+id/stopdownload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="停止下载" /> -->
-      <Button
-        android:id="@+id/videolist"
+        android:id="@+id/video_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="在线视频列表" />
-     <Button
+
+    <Button
         android:id="@+id/download_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:enabled="true"
         android:text="下载任务列表" />
-	<!-- <Button
-        android:id="@+id/del"
+
+    <Button
+        android:id="@+id/online_video_portrait"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="删除视频" />
-         -->
- 
-  <Button
-        android:id="@+id/onlinevideo_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="播放(小窗口)" />
-     <Button
-        android:id="@+id/onlinevideo_2"
+        android:text="播放(竖屏)" />
+
+    <Button
+        android:id="@+id/online_video_land_scape"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="播放(横屏)" />
-      <Button
-        android:id="@+id/recordvideo"
+
+    <Button
+        android:id="@+id/record_video"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="录制视频" />
-      <Button
+        android:text="录制视频" 
+        android:visibility="gone"/>
+
+    <Button
         android:id="@+id/upload"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
