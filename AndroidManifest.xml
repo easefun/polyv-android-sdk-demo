@@ -24,11 +24,19 @@
 
     <uses-feature android:name="android.hardware.camera" />
 
+    <instrumentation
+        android:name="android.test.InstrumentationTestRunner"
+        android:targetPackage="com.easefun.polyvsdk" >
+    </instrumentation>
+
     <application
         android:name="com.easefun.polyvsdk.demo.MyApplication"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        <uses-library android:name="android.test.runner" />
+
         <activity
             android:name="com.easefun.polyvsdk.demo.NewTestActivity"
             android:label="@string/app_name" >
@@ -54,7 +62,11 @@
             android:name="com.easefun.polyvsdk.demo.download.PolyvDownloadListActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/app_name"
+            android:parentActivityName="com.easefun.polyvsdk.demo.NewTestActivity"
             android:theme="@android:style/Theme.NoTitleBar" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.easefun.polyvsdk.demo.NewTestActivity" />
         </activity>
         <activity
             android:name="com.easefun.polyvsdk.demo.VideoListActivity"
@@ -66,7 +78,12 @@
             android:name="com.easefun.polyvsdk.demo.upload.PolyvUploadListActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/app_name"
+            android:parentActivityName="com.easefun.polyvsdk.demo.NewTestActivity"
             android:theme="@android:style/Theme.NoTitleBar" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.easefun.polyvsdk.demo.NewTestActivity" />
+
             <intent-filter>
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
 
@@ -81,9 +98,22 @@
 
                 <data android:mimeType="video/*" />
             </intent-filter>
-        </activity>
+            <!--
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="video/*" />
+            </intent-filter>
+            -->
+        </activity>
+        <!-- service -->
         <service android:name="com.easefun.polyvsdk.demo.PolyvDemoService" >
+        </service>
+        <service android:name="com.easefun.polyvsdk.demo.download.PolyvDLNotificationService" >
+        </service>
+        <service android:name="com.easefun.polyvsdk.demo.upload.PolyvULNotificationService" >
         </service>
     </application>
 </manifest>

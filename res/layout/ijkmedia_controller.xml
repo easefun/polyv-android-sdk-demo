@@ -5,12 +5,12 @@
     android:background="@null"
     android:orientation="horizontal" >
 
-	<FrameLayout
-	    android:id="@+id/topbar_bg"
+    <FrameLayout
+        android:id="@+id/topbar_bg"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_alignParentTop="true"
-        android:background="@drawable/bg_mc"/>
+        android:background="@drawable/bg_mc" />
 
     <RelativeLayout
         android:id="@+id/topbar"
@@ -20,93 +20,124 @@
         android:background="#00000000" >
 
         <Button
-		    android:id="@+id/select_srt"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_marginTop="10dp"
-		    android:layout_marginBottom="5dp"
-		    android:layout_marginLeft="10dp"
-		    android:layout_marginRight="10dp"
-		    android:background="#00000000"
-		    android:layout_toLeftOf="@+id/select_bitrate_linear_layout"
-		    android:textSize="15sp"
-		    android:textColor="@android:color/white"
-		    android:text="字幕"/>
-        
-		<LinearLayout
-	        android:id="@+id/select_bitrate_linear_layout"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:background="#00000000"
-	        android:layout_toLeftOf="@+id/landscape"
-	        android:orientation="vertical">
-			<Button
-			    android:id="@+id/select_bitrate"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:layout_marginTop="10dp"
-			    android:layout_marginBottom="5dp"
-			    android:layout_marginLeft="10dp"
-			    android:layout_marginRight="10dp"
-			    android:background="#00000000"
-			    android:textSize="15sp"
-			    android:textColor="@android:color/white"/>
-			
-			<LinearLayout
-		        android:id="@+id/bitrate_linear_layout"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:visibility="invisible"
-		        android:orientation="vertical">
-		        <Button
-				    android:id="@+id/liuchang"
-				    android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-				    android:layout_margin="10dp"
-				    android:visibility="invisible"
-				    android:background="#00000000"
-				    android:textSize="15sp"
-				    android:textColor="#003399"/>
-		        <Button
-				    android:id="@+id/gaoqing"
-				    android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-				    android:layout_margin="10dp"
-				    android:visibility="invisible"
-				    android:background="#00000000"
-				    android:textSize="15sp"
-				    android:textColor="#003399"/>
-		        <Button
-				    android:id="@+id/chaoqing"
-				    android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-				    android:layout_margin="10dp"
-				    android:visibility="invisible"
-				    android:background="#00000000"
-				    android:textSize="15sp"
-				    android:textColor="#003399"/>
-		    </LinearLayout>
-		</LinearLayout>
-		
-        <ImageButton
-            android:id="@+id/videochange"
+            android:id="@+id/select_srt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_toLeftOf="@+id/videochange"
-            android:background="@drawable/change"
-            android:visibility="gone" />
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_toLeftOf="@+id/select_bitrate_linear_layout"
+            android:background="#00000000"
+            android:text="字幕"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/screenshot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_toLeftOf="@id/select_srt"
+            android:background="#00000000"
+            android:text="截图"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/speed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_toLeftOf="@id/screenshot"
+            android:background="#00000000"
+            android:text="1.0x"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:visibility="invisible" />
+
+        <LinearLayout
+            android:id="@+id/select_bitrate_linear_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/landscape"
+            android:background="#00000000"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/select_bitrate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:background="#00000000"
+                android:textColor="@android:color/white"
+                android:textSize="15sp" />
+
+            <LinearLayout
+                android:id="@+id/bitrate_linear_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="invisible" >
+
+                <Button
+                    android:id="@+id/liuchang"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="#00000000"
+                    android:textColor="#003399"
+                    android:textSize="15sp"
+                    android:visibility="invisible" />
+
+                <Button
+                    android:id="@+id/gaoqing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="#00000000"
+                    android:textColor="#003399"
+                    android:textSize="15sp"
+                    android:visibility="invisible" />
+
+                <Button
+                    android:id="@+id/chaoqing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="#00000000"
+                    android:textColor="#003399"
+                    android:textSize="15sp"
+                    android:visibility="invisible" />
+            </LinearLayout>
+        </LinearLayout>
 
         <ImageButton
             android:id="@+id/landscape"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
+            android:layout_toLeftOf="@+id/videochange"
+            android:background="@drawable/change" />
+
+        <ImageButton
+            android:id="@+id/videochange"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_margin="5dp"
             android:background="@drawable/ic_media_fullscreen" />
-        
     </RelativeLayout>
-    
+
     <RelativeLayout
         android:id="@+id/bot"
         android:layout_width="match_parent"
@@ -203,5 +234,23 @@
                 android:background="@drawable/ic_media_next"
                 android:visibility="gone" />
         </LinearLayout>
+
+        <Button
+            android:id="@+id/showDanmaku"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/btn_ll"
+            android:layout_alignRight="@id/btn_ll"
+            android:background="@drawable/show_or_hide_danmaku" />
+
+        <Button
+            android:id="@+id/showDanmakuDialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/showDanmaku"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@id/showDanmaku"
+            android:background="@drawable/senddanmaku" />
     </RelativeLayout>
+
 </RelativeLayout>

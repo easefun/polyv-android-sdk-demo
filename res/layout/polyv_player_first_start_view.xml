@@ -3,16 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000" >
-    <ImageView 
+
+    <ImageView
         android:id="@+id/first_start_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"/>
-    
-    <ImageButton 
+        android:layout_centerInParent="true" />
+
+    <ImageButton
         android:id="@+id/first_start_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:background="@drawable/start_bg"/>
+        android:background="@drawable/start_bg" />
+
 </RelativeLayout>

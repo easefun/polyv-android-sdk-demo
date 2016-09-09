@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">polyv-demo</string>
-    <string name="hello_world">Hello world!</string> 
+
+    <string name="app_name">polyvSDK</string>
+    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_record">RecordActivity</string>
     <string name="tip">提示</string>
@@ -10,4 +11,25 @@
     <string name="vitamio_name">Vitamio</string>
     <string name="vitamio_init_decoders">Initializing decoders…</string>
     <string name="mediacontroller_play_pause">Play/Pause</string>
+
+    <string-array name="sp_selcol">
+        <item>白色</item>
+        <item>红色</item>
+        <item>绿色</item>
+        <item>蓝色</item>
+        <item>黄色</item>
+        <item>紫色</item>
+        <item>黑色</item>
+    </string-array>
+    <string-array name="sp_fontsize">
+        <item>24</item>
+        <item>18</item>
+        <item>16</item>
+    </string-array>
+    <string-array name="sp_fontmode">
+        <item>滚动</item>
+        <item>顶部</item>
+        <item>底部</item>
+    </string-array>
+
 </resources>

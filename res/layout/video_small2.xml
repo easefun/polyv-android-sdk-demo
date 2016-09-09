@@ -7,13 +7,14 @@
     android:baselineAligned="false"
     android:orientation="vertical" >
 
-    <RelativeLayout
+    <com.easefun.polyvsdk.demo.VideoViewContainer
         android:id="@+id/rl"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#000000" >
 
         <!-- 视频view -->
+
         <com.easefun.polyvsdk.ijk.IjkVideoView
             android:id="@+id/videoview"
             android:layout_width="match_parent"
@@ -22,26 +23,36 @@
         </com.easefun.polyvsdk.ijk.IjkVideoView>
 
         <!-- logo -->
-        <ImageView 
+
+        <ImageView
             android:id="@+id/logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
             android:background="@drawable/polyv_logo"
-            android:visibility="gone"/>
+            android:visibility="gone" />
         
-        <!-- 当广告是视频广告时，倒计时view-->
-        <TextView 
-	        android:id="@+id/count_down"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentTop="true"
-	        android:layout_alignParentRight="true"
-	        android:visibility="gone"
-	        android:text="广告也精彩：%d秒"/>
-        
+       <!-- 弹幕的view -->
+
+        <master.flame.danmaku.ui.widget.DanmakuView
+            android:id="@+id/sv_danmaku"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!-- 当广告是视频广告时，倒计时view -->
+
+        <TextView
+            android:id="@+id/count_down"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:text="广告也精彩：%d秒"
+            android:visibility="gone" />
+
         <!-- 视频在加载过程中显示的进度条 -->
+
         <ProgressBar
             android:id="@+id/loadingprogress"
             android:layout_width="wrap_content"
@@ -49,13 +60,15 @@
             android:layout_centerHorizontal="true"
             android:layout_centerInParent="true"
             android:visibility="visible" />
-        
+
         <!-- 字幕 -->
-        <TextView 
-        	android:id="@+id/srt"
-        	android:layout_width="match_parent"
-        	android:layout_height="100dp"
-        	android:layout_alignParentBottom="true"
-        	android:gravity="bottom|center_horizontal" />
-    </RelativeLayout>
+
+        <TextView
+            android:id="@+id/srt"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_alignParentBottom="true"
+            android:gravity="bottom|center_horizontal" />
+    </com.easefun.polyvsdk.demo.VideoViewContainer>
+
 </RelativeLayout>

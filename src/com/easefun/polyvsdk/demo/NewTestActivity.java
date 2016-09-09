@@ -10,6 +10,7 @@ import com.easefun.polyvsdk.demo.IjkVideoActicity;
 import com.easefun.polyvsdk.server.AndroidService;
 
 import android.Manifest.permission;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -19,9 +20,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.Button;
@@ -42,6 +45,7 @@ public class NewTestActivity extends Activity implements View.OnClickListener {
     private final static int ONLINE_VIDEO_LAND_SCAPE_RESULT = 103;
     private final static int RECORD_VIDEO_RESULT = 104;
     private final static int UPLOAD_RESULT = 105;
+    private final static int SETTING_RESULT = 106;
 	
 	private MyBroadcastReceiver myBroadcastReceiver = null;
 	private SharedPreferences sharedPreferences = null;
@@ -174,10 +178,51 @@ public class NewTestActivity extends Activity implements View.OnClickListener {
 				builder.setCancelable(true);
 				builder.show();
             } else {
-            	onClickExecuteOptions(v.getId());
+            	requestPermissionWriteSettings(v.getId());
             }
         }
     }
+	
+	private int id = 0;
+	
+	/**
+	 * 请求写入设置的权限
+	 * @param id
+	 */
+	@SuppressLint("InlinedApi")
+	private void requestPermissionWriteSettings(int id) {
+		if (Settings.System.canWrite(this)) {
+			onClickExecuteOptions(id);
+		} else {
+			this.id = id;
+			Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, Uri.parse("package:" + getPackageName()));
+			startActivityForResult(intent, SETTING_RESULT);
+		}
+	}
+	
+	@Override
+	@SuppressLint("InlinedApi")
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    if (requestCode == SETTING_RESULT) {
+	    	if (Settings.System.canWrite(this)) {
+	    		if (id == 0) {
+	    			new AlertDialog.Builder(this)
+		                .setTitle("message")
+		                .setMessage("id is 0")
+		                .setPositiveButton(android.R.string.ok, null)
+		                .show();
+	    		} else {
+	    			onClickExecuteOptions(id);
+	    		}
+	    	} else {
+	    		new AlertDialog.Builder(this)
+	                .setTitle("showPermissionInternet")
+	                .setMessage(Settings.ACTION_MANAGE_WRITE_SETTINGS + " not granted")
+	                .setPositiveButton(android.R.string.ok, null)
+	                .show();
+	    	}
+	    }
+	}
 	
 	private void onClickExecuteOptions(int id) {
 		switch(id){
@@ -221,7 +266,7 @@ public class NewTestActivity extends Activity implements View.OnClickListener {
     	case VIDEO_LIST_RESULT:
     		if (hasPermission(permission.READ_PHONE_STATE)
     				&& hasPermission(permission.WRITE_EXTERNAL_STORAGE)) {
-    			onClickExecuteOptions(R.id.video_list);
+    			requestPermissionWriteSettings(R.id.video_list);
     		} else {
     			makePostRequestSnack();
     		}
@@ -229,7 +274,7 @@ public class NewTestActivity extends Activity implements View.OnClickListener {
     	case DOWNLOAD_LIST_RESULT:
     		if (hasPermission(permission.READ_PHONE_STATE)
     				&& hasPermission(permission.WRITE_EXTERNAL_STORAGE)) {
-    			onClickExecuteOptions(R.id.download_list);
+    			requestPermissionWriteSettings(R.id.download_list);
     		} else {
     			makePostRequestSnack();
     		}
@@ -237,7 +282,7 @@ public class NewTestActivity extends Activity implements View.OnClickListener {
     	case ONLINE_VIDEO_PORTRAIT_RESULT:
     		if (hasPermission(permission.READ_PHONE_STATE)
     				&& hasPermission(permission.WRITE_EXTERNAL_STORAGE)) {
-    			onClickExecuteOptions(R.id.online_video_portrait);
+    			requestPermissionWriteSettings(R.id.online_video_portrait);
     		} else {
     			makePostRequestSnack();
     		}
@@ -245,7 +290,7 @@ public class NewTestActivity extends Activity implements View.OnClickListener {
     	case ONLINE_VIDEO_LAND_SCAPE_RESULT:
     		if (hasPermission(permission.READ_PHONE_STATE)
     				&& hasPermission(permission.WRITE_EXTERNAL_STORAGE)) {
-    			onClickExecuteOptions(R.id.online_video_land_scape);
+    			requestPermissionWriteSettings(R.id.online_video_land_scape);
     		} else {
     			makePostRequestSnack();
     		}
@@ -254,7 +299,7 @@ public class NewTestActivity extends Activity implements View.OnClickListener {
     		if (hasPermission(permission.CAMERA)
     				&& hasPermission(permission.RECORD_AUDIO)
     				&& hasPermission(permission.WRITE_EXTERNAL_STORAGE)) {
-    			onClickExecuteOptions(R.id.record_video);
+    			requestPermissionWriteSettings(R.id.record_video);
     		} else {
     			makePostRequestSnack();
     		}
@@ -262,7 +307,7 @@ public class NewTestActivity extends Activity implements View.OnClickListener {
     	case UPLOAD_RESULT:
     		if (hasPermission(permission.READ_PHONE_STATE)
     				&& hasPermission(permission.WRITE_EXTERNAL_STORAGE)) {
-    			onClickExecuteOptions(R.id.upload);
+    			requestPermissionWriteSettings(R.id.upload);
     		} else {
     			makePostRequestSnack();
     		}

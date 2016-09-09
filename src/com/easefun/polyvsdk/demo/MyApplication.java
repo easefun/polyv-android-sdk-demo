@@ -23,18 +23,15 @@ import android.util.Log;
 public class MyApplication extends Application {
 
 	private static final String TAG = MyApplication.class.getSimpleName();
-	//aeskey,iv 值修改请参考https://github.com/easefun/polyv-android-sdk-demo/wiki/10.%E5%85%B3%E4%BA%8E-SDK%E5%8A%A0%E5%AF%86%E4%B8%B2-%E4%B8%8E-%E7%94%A8%E6%88%B7%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF%E5%8A%A0%E5%AF%86%E4%BC%A0%E8%BE%93
+	//加密秘钥和加密向量，在后台->设置->API接口中获取，用于解密SDK加密串
+	//值修改请参考https://github.com/easefun/polyv-android-sdk-demo/wiki/10.%E5%85%B3%E4%BA%8E-SDK%E5%8A%A0%E5%AF%86%E4%B8%B2-%E4%B8%8E-%E7%94%A8%E6%88%B7%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF%E5%8A%A0%E5%AF%86%E4%BC%A0%E8%BE%93
+	/** 加密秘钥 */
 	private String aeskey = "VXtlHmwfS2oYm0CZ";
+	/** 加密向量 */
 	private String iv = "2u9gDPKdX6GyQJKU";
+	
 	public MyApplication() {
 		
-	}
-	
-	@Override
-	public void onTerminate(){
-		super.onTerminate();
-		PolyvSDKClient client = PolyvSDKClient.getInstance();
-		client.stopService(getApplicationContext(), PolyvDemoService.class);
 	}
 	
 	@Override
@@ -90,15 +87,9 @@ public class MyApplication extends Application {
 			@Override
 			public void callback() {
 				if (PolyvDevMountInfo.getInstance().isSDCardAvaiable() == false) {
-					// TODO 没有可用的SD卡
-					Log.e(TAG, "没有sd卡");
+					// TODO 没有可用的存储设备
+					Log.e(TAG, "没有可用的存储设备");
 					return;
-				}
-				
-				long remainedSpareInMB = 100; 
-				if (PolyvDevMountInfo.getInstance().getSDCardAvailSpace() * 1024 < remainedSpareInMB) {
-					// TODO 可用剩余磁盘大小
-					Log.e(TAG, String.format("磁盘空间不足%d MB", remainedSpareInMB));
 				}
 				
 				StringBuilder dirPath = new StringBuilder();
@@ -118,13 +109,6 @@ public class MyApplication extends Application {
 					saveDir.mkdirs();
 				}
 				
-				if (saveDir.exists() == false) {
-					// TODO 没有任何可写的SD卡
-					Log.e(TAG, "没有SD卡可供保存文件，不能使用下载功能");
-					return;
-				}
-				
-				//设置下载文件保存目录
 				PolyvSDKClient.getInstance().setDownloadDir(saveDir);
 			}
 		});

@@ -18,6 +18,7 @@ public class VideoListActivity extends Activity {
 	
     private static final String TAG = "VideoList";
 	private ListView list;
+	private VideoAdapter adapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +45,17 @@ public class VideoListActivity extends Activity {
 		protected void onPostExecute(List<RestVO> result) {
 			super.onPostExecute(result);
 			if (result == null) return;
-			VideoAdapter adapter = new VideoAdapter(VideoListActivity.this, result);
+			adapter = new VideoAdapter(VideoListActivity.this, result);
 			list.setAdapter(adapter);
 			String a = result.toString();
 			Log.i(TAG, a);
 		}
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if(adapter!=null)
+			unbindService(adapter.getSerConn());
 	}
 }

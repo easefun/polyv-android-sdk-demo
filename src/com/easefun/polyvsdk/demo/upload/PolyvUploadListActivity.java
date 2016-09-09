@@ -1,18 +1,27 @@
 package com.easefun.polyvsdk.demo.upload;
 
 import java.io.File;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import org.apache.http.client.utils.URIUtils;
+import org.apache.http.protocol.UriPatternMatcher;
+
 import com.easefun.polyvsdk.R;
+import com.easefun.polyvsdk.upload.PolyvUploader;
 import com.easefun.polyvsdk.upload.PolyvUploaderManager;
 import com.easefun.polyvsdk.util.GetPathFromUri;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.UriMatcher;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -61,7 +70,7 @@ public class PolyvUploadListActivity extends Activity implements OnClickListener
 			public void onClick(View v) {
 				if (!isStop) {
 					((Button) v).setText("暂停全部");
-					adapter.uploadAllFile(PolyvUploadListActivity.this);
+					adapter.uploadAllFile();
 					adapter.updateAllButton(true);
 					isStop = !isStop;
 				} else {
@@ -93,6 +102,9 @@ public class PolyvUploadListActivity extends Activity implements OnClickListener
 	}
 
 	private void initData() {
+		//取消之前绑定的服务
+		if(adapter!=null)
+			unbindService(adapter.getSerConn());
 		service = new PolyvUDBService(this);
 		infos = service.getUploadFiles();
 		adapter = new PolyvUploadListAdapter(this, infos, list);
@@ -191,6 +203,13 @@ public class PolyvUploadListActivity extends Activity implements OnClickListener
 			}
 			break;
 		}
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		//解除服务的绑定
+		unbindService(adapter.getSerConn());
 	}
 	// private boolean isStop = false;
 	// private boolean finTag = false;

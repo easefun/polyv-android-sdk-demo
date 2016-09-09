@@ -55,4 +55,10 @@ public class PolyvDownloadListActivity extends Activity {
 		adapter = new PolyvDownloadListAdapter(this, infos,list);
 		list.setAdapter(adapter);
 	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		unbindService(adapter.getSerConn());
+	}
 }

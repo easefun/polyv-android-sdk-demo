@@ -2,6 +2,7 @@ package com.easefun.polyvsdk.demo.download;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import com.easefun.polyvsdk.PolyvDownloadProgressListener;
 import com.easefun.polyvsdk.PolyvDownloader;
@@ -10,11 +11,17 @@ import com.easefun.polyvsdk.PolyvDownloaderErrorReason.ErrorType;
 import com.easefun.polyvsdk.PolyvDownloaderManager;
 import com.easefun.polyvsdk.R;
 import com.easefun.polyvsdk.demo.IjkVideoActicity;
+import com.easefun.polyvsdk.demo.download.PolyvDLNotificationService.BindListener;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.ContextCompat;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,8 +50,20 @@ public class PolyvDownloadListAdapter extends BaseAdapter {
 
 	private ListView listView;
 
+	private static final int NO_WRITE_PERMISSION = 12;
+	private PolyvDLNotificationService notificationService;
+	private ServiceConnection serconn;
+	// 每个id的progress
+	private SparseIntArray id_progress = new SparseIntArray();
+	// 完成任务的key集合(key=vid+"_"+bit)
+	private List<String> finishKeys;
+
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
+			if (msg.arg2 == NO_WRITE_PERMISSION) {
+				Toast.makeText(context, "权限被拒绝，无法开始下载", 0).show();
+				return;
+			}
 			Button btn = null;
 			int position = (int) msg.arg1;
 			int offset = position - listView.getFirstVisiblePosition();
@@ -55,79 +74,91 @@ public class PolyvDownloadListAdapter extends BaseAdapter {
 			switch (msg.what) {
 			case REFRESH_PROGRESS:
 				btn = (Button) view.findViewById(R.id.download);
-				if (!btn.getText().equals("播放")) {
-					long downloaded = msg.getData().getLong("count");
-					long total = msg.getData().getLong("total");
-					ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-					progressBar.setMax((int) total);
-					progressBar.setProgress((int) downloaded);
-					TextView tv = (TextView) view.findViewById(R.id.rate);
-					tv.setText("" + downloaded * 100 / total);
-				}
+				long downloaded = msg.getData().getLong("count");
+				long total = msg.getData().getLong("total");
+				ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+				progressBar.setMax((int) total);
+				progressBar.setProgress((int) downloaded);
+				TextView tv = (TextView) view.findViewById(R.id.rate);
+				tv.setText("" + downloaded * 100 / total);
 				break;
 
 			case SUCCESS:
 				btn = (Button) view.findViewById(R.id.download);
-				if (!btn.getText().equals("播放")) {
-					Toast.makeText(context, (position + 1) + "下载成功", Toast.LENGTH_SHORT).show();
-					btn.setText("播放");
-				}
+				Toast.makeText(context, (position + 1) + "下载成功", Toast.LENGTH_SHORT).show();
+				btn.setText("播放");
 				break;
 
 			case FAILURE:
 				ErrorType errorType = (ErrorType) msg.obj;
 				btn = (Button) view.findViewById(R.id.download);
-				if (!btn.getText().equals("播放")) {
-					btn.setText("开始");
+				btn.setText("开始");
 
-					switch (errorType) {
-					case VID_IS_NULL:
-						Toast.makeText(context, "第" + (position + 1) + "个任务vid错误，请重试", 0).show();
-						break;
-					case NOT_PERMISSION:
-						Toast.makeText(context, "第" + (position + 1) + "个任务没有权限访问视频,请重试", 0).show();
-						break;
-					case RUNTIME_EXCEPTION:
-						Toast.makeText(context, "第" + (position + 1) + "个任务运行时异常，请重试", 0).show();
-						break;
-					case VIDEO_STATUS_ERROR:
-						Toast.makeText(context, "第" + (position + 1) + "个任务视频状态错误，请重试", 0).show();
-						break;
-					case M3U8_NOT_DATA:
-						Toast.makeText(context, "第" + (position + 1) + "个任务m3u8没有数据，请重试", 0).show();
-						break;
-					case QUESTION_NOT_DATA:
-						Toast.makeText(context, "第" + (position + 1) + "个任务问答没有数据，请重试", 0).show();
-						break;
-					case MULTIMEDIA_LIST_EMPTY:
-						Toast.makeText(context, "第" + (position + 1) + "个任务ts下载列表为空，请重试", 0).show();
-						break;
-					case CAN_NOT_MKDIR:
-						Toast.makeText(context, "第" + (position + 1) + "个任务不能创建文件夹，请重试", 0).show();
-						break;
-					case DOWNLOAD_TS_ERROR:
-						Toast.makeText(context, "第" + (position + 1) + "个任务下载ts错误，请重试", 0).show();
-						break;
-					case MULTIMEDIA_EMPTY:
-						Toast.makeText(context, "第" + (position + 1) + "个任务mp4下载地址为空，请重试", 0).show();
-						break;
-					case NOT_CREATE_DIR:
-						Toast.makeText(context, "第" + (position + 1) + "个任务不能创建目录，请重试", 0).show();
-						break;
-					}
-
+				switch (errorType) {
+				case VID_IS_NULL:
+					Toast.makeText(context, "第" + (position + 1) + "个任务vid错误，请重试", 0).show();
+					break;
+				case NOT_PERMISSION:
+					Toast.makeText(context, "第" + (position + 1) + "个任务没有权限访问视频,请重试", 0).show();
+					break;
+				case RUNTIME_EXCEPTION:
+					Toast.makeText(context, "第" + (position + 1) + "个任务运行时异常，请重试", 0).show();
+					break;
+				case VIDEO_STATUS_ERROR:
+					Toast.makeText(context, "第" + (position + 1) + "个任务视频状态错误，请重试", 0).show();
+					break;
+				case M3U8_NOT_DATA:
+					Toast.makeText(context, "第" + (position + 1) + "个任务m3u8没有数据，请重试", 0).show();
+					break;
+				case QUESTION_NOT_DATA:
+					Toast.makeText(context, "第" + (position + 1) + "个任务问答没有数据，请重试", 0).show();
+					break;
+				case MULTIMEDIA_LIST_EMPTY:
+					Toast.makeText(context, "第" + (position + 1) + "个任务ts下载列表为空，请重试", 0).show();
+					break;
+				case CAN_NOT_MKDIR:
+					Toast.makeText(context, "第" + (position + 1) + "个任务不能创建文件夹，请重试", 0).show();
+					break;
+				case DOWNLOAD_TS_ERROR:
+					Toast.makeText(context, "第" + (position + 1) + "个任务下载ts错误，请重试", 0).show();
+					break;
+				case MULTIMEDIA_EMPTY:
+					Toast.makeText(context, "第" + (position + 1) + "个任务mp4下载地址为空，请重试", 0).show();
+					break;
+				case NOT_CREATE_DIR:
+					Toast.makeText(context, "第" + (position + 1) + "个任务不能创建目录，请重试", 0).show();
+					break;
+				case VIDEO_LOAD_FAILURE:
+					Toast.makeText(context, "第" + (position + 1) + "个任务Video加载失败，请重试", 0).show();
+					break;
+				case VIDEO_NULL:
+					Toast.makeText(context, "第" + (position + 1) + "个任务video取得为null，请重试", 0).show();
+					break;
 				}
+
 				break;
 			}
 		};
 	};
 
+	public ServiceConnection getSerConn() {
+		return serconn;
+	}
+
 	public PolyvDownloadListAdapter(Context context, LinkedList<PolyvDownloadInfo> data, ListView listView) {
+		serconn = PolyvDLNotificationService.bindDownloadService(context, new BindListener() {
+
+			@Override
+			public void bindSuccess(PolyvDLNotificationService downloadService) {
+				notificationService = downloadService;
+			}
+		});
 		this.context = context;
 		this.data = data;
 		this.inflater = LayoutInflater.from(context);
 		this.service = new PolyvDBservice(context);
 		listener = new ArrayList<MyDownloadListener>();
+		finishKeys = new ArrayList<String>();
 		this.listView = listView;
 		initDownloaders();
 	}
@@ -136,10 +167,12 @@ public class PolyvDownloadListAdapter extends BaseAdapter {
 		private int position;
 		private PolyvDownloadInfo info;
 		private long total;
+		private int id;
 
 		public MyDownloadListener(int position, PolyvDownloadInfo info) {
 			this.position = position;
 			this.info = info;
+			this.id = PolyvDLNotificationService.getId(info.getVid(), info.getBitrate());
 		}
 
 		public void setPosition(int position) {
@@ -148,6 +181,9 @@ public class PolyvDownloadListAdapter extends BaseAdapter {
 
 		@Override
 		public void onDownloadSuccess() {
+			addFinishKeyToList(info.getVid(), info.getBitrate());
+			if (notificationService != null)
+				notificationService.updateFinishNF(id);
 			Message msg = handler.obtainMessage();
 			msg.arg1 = position;
 			msg.what = SUCCESS;
@@ -157,6 +193,8 @@ public class PolyvDownloadListAdapter extends BaseAdapter {
 
 		@Override
 		public void onDownloadFail(PolyvDownloaderErrorReason errorReason) {
+			if (notificationService != null)
+				notificationService.updateErrorNF(id, false);
 			Message msg = handler.obtainMessage();
 			msg.arg1 = position;
 			msg.what = FAILURE;
@@ -166,6 +204,10 @@ public class PolyvDownloadListAdapter extends BaseAdapter {
 
 		@Override
 		public void onDownload(long count, long total) {
+			int progress = (int) (count * 100 / total);
+			id_progress.put(id, progress);
+			if (notificationService != null)
+				notificationService.updateDownloadingNF(id, progress, false);
 			this.total = total;
 			Message msg = handler.obtainMessage();
 			msg.arg1 = position;
@@ -235,23 +277,49 @@ public class PolyvDownloadListAdapter extends BaseAdapter {
 		holder.progressBar.setTag("" + position);
 		holder.progressBar.setMax((int) total);
 		holder.progressBar.setProgress((int) percent);
+		// 初始化progress
+		int id = PolyvDLNotificationService.getId(info.getVid(), info.getBitrate());
+		int progress = 0;
+		if (total != 0)
+			progress = (int) (percent * 100 / total);
+		if (id_progress.get(id, -1) == -1)
+			id_progress.put(id, progress);
 		if (total != 0)
 			holder.tv_rate.setText("" + percent * 100 / total);
 		else
 			holder.tv_rate.setText("" + 0);
 		if (total != 0 && total == percent) {
+			// 已经完成的任务，把其key放到集合中，当下载全部的时候可以不让其开始
+			addFinishKeyToList(info.getVid(), info.getBitrate());
 			holder.btn_download.setText("播放");
 		} else if (PolyvDownloaderManager.getPolyvDownloader(info.getVid(), info.getBitrate()).isDownloading())
 			holder.btn_download.setText("暂停");
 		else
 			holder.btn_download.setText("开始");
-		holder.btn_download.setOnClickListener(new DownloadListener(info.getVid(), info.getBitrate(), convertView));
+		holder.btn_download.setOnClickListener(
+				new DownloadListener(info.getVid(), info.getBitrate(), convertView, info.getTitle()));
 		holder.btn_delete.setOnClickListener(new DeleteListener(info, position));
 		return convertView;
 	}
 
+	// 把完成的任务加入到key集合中
+	private void addFinishKeyToList(String vid, int bit) {
+		String key = vid + "_" + bit;
+		if (!finishKeys.contains(key))
+			finishKeys.add(key);
+	}
+
+	// 从集合中移除完成的任务key
+	private void removeFinishKeyToList(String vid, int bit) {
+		String key = vid + "_" + bit;
+		if (finishKeys.contains(key))
+			finishKeys.remove(key);
+	}
+
 	public void downloadAllFile() {
-		PolyvDownloaderManager.startAll();
+		if (notificationService != null)
+			notificationService.updateUnfinishedNF(data, finishKeys);
+		PolyvDownloaderManager.startUnfinished(finishKeys);
 	}
 
 	public void updateAllButton(boolean isStop) {
@@ -276,26 +344,45 @@ public class PolyvDownloadListAdapter extends BaseAdapter {
 		private final String vid;
 		private final int bitRate;
 		private View view;
+		// 视频的标题
+		private String title;
 
-		public DownloadListener(String vid, int bitRate, View view) {
+		public DownloadListener(String vid, int bitRate, View view, String title) {
 			this.vid = vid;
 			this.bitRate = bitRate;
 			this.view = view;
+			this.title = title;
 		}
 
 		@Override
 		public void onClick(View v) {
+			if (ContextCompat.checkSelfPermission(context,
+					Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+				// 没有权限，无法开始下载
+				Message msg = handler.obtainMessage();
+				msg.arg2 = NO_WRITE_PERMISSION;
+				handler.sendMessage(msg);
+				return;
+			}
 			Button download = (Button) view.findViewById(R.id.download);
+			int id = PolyvDLNotificationService.getId(vid, bitRate);
 			if (download.getText().equals("开始")) {
 				((Button) v).setText("暂停");
 				PolyvDownloader downloader = PolyvDownloaderManager.getPolyvDownloader(vid, bitRate);
+				// 先执行
+				if (notificationService != null) {
+					notificationService.updateStartNF(id, vid, bitRate, title, id_progress.get(id));
+				}
 				if (downloader != null) {
 					downloader.start();
 				}
-
 			} else if (download.getText().equals("暂停")) {
 				((Button) v).setText("开始");
 				PolyvDownloader downloader = PolyvDownloaderManager.getPolyvDownloader(vid, bitRate);
+				// 先执行
+				if (notificationService != null) {
+					notificationService.updatePauseNF(id);
+				}
 				if (downloader != null) {
 					downloader.stop();
 				}
@@ -318,10 +405,15 @@ public class PolyvDownloadListAdapter extends BaseAdapter {
 
 		@Override
 		public void onClick(View v) {
+			removeFinishKeyToList(info.getVid(), info.getBitrate());
 			PolyvDownloader downloader = PolyvDownloaderManager.getPolyvDownloader(info.getVid(), info.getBitrate());
 			PolyvDownloaderManager.clearPolyvDownload(info.getVid(), info.getBitrate());
 			if (downloader != null) {
 				downloader.deleteVideo(info.getVid(), info.getBitrate());
+			}
+			int id = PolyvDLNotificationService.getId(info.getVid(), info.getBitrate());
+			if (notificationService != null) {
+				notificationService.updateDeleteNF(id);
 			}
 			service.deleteDownloadFile(info);
 			data.remove(position);
@@ -334,6 +426,8 @@ public class PolyvDownloadListAdapter extends BaseAdapter {
 	}
 
 	public void stopAll() {
+		if (notificationService != null)
+			notificationService.updateAllPauseNF(data);
 		PolyvDownloaderManager.stopAll();
 	}
 }

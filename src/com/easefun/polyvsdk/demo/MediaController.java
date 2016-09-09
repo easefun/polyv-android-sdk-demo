@@ -3,16 +3,32 @@ package com.easefun.polyvsdk.demo;
 import java.util.List;
 import java.util.Locale;
 
+import com.easefun.polyvsdk.BitRateEnum;
+import com.easefun.polyvsdk.PolyvSDKClient;
+import com.easefun.polyvsdk.R;
+import com.easefun.polyvsdk.ijk.IjkBaseMediaController;
+import com.easefun.polyvsdk.ijk.IjkUtil;
+import com.easefun.polyvsdk.ijk.IjkValidateM3U8VideoReturnType;
+import com.easefun.polyvsdk.ijk.IjkVideoView;
+import com.easefun.polyvsdk.screenshot.ActivityTool;
+import com.easefun.polyvsdk.screenshot.PolyvScreenshot;
+import com.easefun.polyvsdk.screenshot.PolyvScreenshot.ScreenshotListener;
+import com.easefun.polyvsdk.util.TimeTool;
+
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.media.AudioManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.SparseArray;
@@ -30,14 +46,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.easefun.polyvsdk.BitRateEnum;
-import com.easefun.polyvsdk.PolyvSDKClient;
-import com.easefun.polyvsdk.R;
-import com.easefun.polyvsdk.ijk.IjkBaseMediaController;
-import com.easefun.polyvsdk.ijk.IjkUtil;
-import com.easefun.polyvsdk.ijk.IjkValidateM3U8VideoReturnType;
-import com.easefun.polyvsdk.ijk.IjkVideoView;
+import master.flame.danmaku.controller.IDanmakuView;
 
 public class MediaController extends IjkBaseMediaController {
 	private static final String TAG = "MediaController";
@@ -78,6 +87,22 @@ public class MediaController extends IjkBaseMediaController {
 	private SparseArray<Button> bitRateBtnArray = null;
 	private PolyvPlayerSRTPopupView sRTPopupView = null;
 	private OnPreNextListener onPreNextListener;
+	// 弹幕
+	private boolean isShowDanmaku = true;
+	private IDanmakuView mDanmakuView;
+	private Button showDanmaku, showDanmakuDialog;
+	// 用于记录每次播放器更新的时间，与下一次更新的时间进行比较，以获取准确的时间
+	private int newtime = -1;
+	// 用于记录播放器更新的时间，且其大于当前缓冲更新的时间
+	private int gttime = -1;
+
+	public void setNewtime(int newtime) {
+		this.newtime = newtime;
+	}
+
+	public void setIDanmakuView(IDanmakuView mDanmakuView) {
+		this.mDanmakuView = mDanmakuView;
+	}
 
 	public MediaController(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -192,10 +217,10 @@ public class MediaController extends IjkBaseMediaController {
 
 		mEndTime = (TextView) v.findViewById(R.id.mediacontroller_time_total);
 		mCurrentTime = (TextView) v.findViewById(R.id.mediacontroller_time_current);
-		
+
 		sRTPopupView = new PolyvPlayerSRTPopupView(mContext);
 		sRTPopupView.setCallback(new PolyvPlayerSRTPopupView.Callback() {
-			
+
 			@Override
 			public void onSRTSelected(String key) {
 				boolean value = ijkVideoView.changeSRT(key);
@@ -203,16 +228,16 @@ public class MediaController extends IjkBaseMediaController {
 					Toast.makeText(mContext, "字幕加载失败", Toast.LENGTH_SHORT);
 				}
 			}
-			
+
 			@Override
 			public void onPopupViewDismiss() {
-				
+
 			}
 		});
-		
+
 		selectSRT = (Button) mRoot.findViewById(R.id.select_srt);
 		selectSRT.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				if (sRTPopupView.isShowing()) {
@@ -222,24 +247,133 @@ public class MediaController extends IjkBaseMediaController {
 				}
 			}
 		});
-		
+
 		// 码率选择功能涉及的控件
 		selectBitrate = (Button) mRoot.findViewById(R.id.select_bitrate);
 		selectBitrate.setOnClickListener(mSelectBitRate);
 		bitrateLinearLayout = (LinearLayout) mRoot.findViewById(R.id.bitrate_linear_layout);
-		
+
 		bitRateBtnArray = new SparseArray<Button>();
 		Button liuchangBtn = (Button) mRoot.findViewById(R.id.liuchang);
 		liuchangBtn.setText(BitRateEnum.liuChang.getName());
 		bitRateBtnArray.append(BitRateEnum.liuChang.getNum(), liuchangBtn);
-		
-        Button gaoqingBtn = (Button) mRoot.findViewById(R.id.gaoqing);
-        gaoqingBtn.setText(BitRateEnum.gaoQing.getName());
-        bitRateBtnArray.append(BitRateEnum.gaoQing.getNum(), gaoqingBtn);
-        
-        Button chaoqingBtn = (Button) mRoot.findViewById(R.id.chaoqing);
-        chaoqingBtn.setText(BitRateEnum.chaoQing.getName());
-        bitRateBtnArray.append(BitRateEnum.chaoQing.getNum(), chaoqingBtn);
+
+		Button gaoqingBtn = (Button) mRoot.findViewById(R.id.gaoqing);
+		gaoqingBtn.setText(BitRateEnum.gaoQing.getName());
+		bitRateBtnArray.append(BitRateEnum.gaoQing.getNum(), gaoqingBtn);
+
+		Button chaoqingBtn = (Button) mRoot.findViewById(R.id.chaoqing);
+		chaoqingBtn.setText(BitRateEnum.chaoQing.getName());
+		bitRateBtnArray.append(BitRateEnum.chaoQing.getNum(), chaoqingBtn);
+
+		// 倍速
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			final String speed_default = "1.0x", speed_primary = "1.5x", speed_middle = "2.0x";
+			final Button speed = (Button) findViewById(R.id.speed);
+			speed.setVisibility(View.VISIBLE);
+			speed.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					if (speed.getText().equals(speed_default)) {
+						ijkVideoView.setSpeed(1.5f);
+						speed.setText(speed_primary);
+						Toast.makeText(mContext, "当前为1.5倍速", 0).show();
+					} else if (speed.getText().equals(speed_primary)) {
+						ijkVideoView.setSpeed(2.0f);
+						speed.setText(speed_middle);
+						Toast.makeText(mContext, "当前为2倍速", 0).show();
+					} else {
+						ijkVideoView.setSpeed(1.0f);
+						speed.setText(speed_default);
+						Toast.makeText(mContext, "恢复为正常速度", 0).show();
+					}
+				}
+			});
+		}
+
+		// 截图
+		Button screenShot = (Button) findViewById(R.id.screenshot);
+		final PolyvScreenshot polyvScreenshot = new PolyvScreenshot();
+		polyvScreenshot.setScreenshotListener(new ScreenshotListener() {
+
+			@Override
+			public void success(String filepath) {
+				ActivityTool.toastMsg(mContext, "截图成功：" + filepath);
+			}
+
+			@Override
+			public void fail(int category) {
+				switch (category) {
+				case PolyvScreenshot.CREATE_FILE_FAIL:
+					ActivityTool.toastMsg(mContext, "截图失败：文件创建失败");
+					break;
+				case PolyvScreenshot.NETWORK_EXCEPTION:
+					ActivityTool.toastMsg(mContext, "截图失败：网络异常");
+					break;
+				case PolyvScreenshot.RESPONSE_FAIL:
+					ActivityTool.toastMsg(mContext, "截图失败：当前时间无法截图");
+					break;
+				case PolyvScreenshot.STORAGE_NOT_ENOUGH:
+					ActivityTool.toastMsg(mContext, "截图失败：内存不足");
+					break;
+				case PolyvScreenshot.GETVIDEO_FAIL:
+					ActivityTool.toastMsg(mContext, "截图失败：无法获取video对象");
+					break;
+				}
+			}
+		});
+		screenShot.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// 判断有没有写入sd卡的权限
+				if (ContextCompat.checkSelfPermission(mContext,
+						Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+					ActivityTool.toastMsg(mContext, "没有写入sd卡文件的权限");
+					return;
+				}
+				// 设置保存路径，没有设置时将使用默认的保存路径
+				// polyvScreenshot.setSavePath(Environment.getExternalStorageDirectory().getAbsolutePath()+"/test");
+				polyvScreenshot.screenshot(ijkVideoView, mContext, true);
+			}
+		});
+
+		// 弹幕
+		showDanmaku = (Button) findViewById(R.id.showDanmaku);
+		if(isShowDanmaku)
+			showDanmaku.setSelected(false);
+		else
+			showDanmaku.setSelected(true);
+		showDanmaku.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (mDanmakuView != null) {
+					if (isShowDanmaku) {
+						mDanmakuView.hide();
+						showDanmaku.setSelected(true);
+						isShowDanmaku = !isShowDanmaku;
+					} else {
+						mDanmakuView.show();
+						showDanmaku.setSelected(false);
+						isShowDanmaku = !isShowDanmaku;
+					}
+				}
+			}
+		});
+		showDanmakuDialog = (Button) findViewById(R.id.showDanmakuDialog);
+		showDanmakuDialog.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				mPlayer.pause();
+				if (mDanmakuView != null)
+					mDanmakuView.pause();
+				// 显示发送弹幕的对话框
+				SendDanmakuDialog.getInstance(mContext).show();
+			}
+		});
 	}
 
 	public void setOnBoardChangeListener(OnBoardChangeListener l) {
@@ -249,11 +383,11 @@ public class MediaController extends IjkBaseMediaController {
 	public void setOnVideoChangeListener(OnVideoChangeListener l) {
 		onVideoChangeListener = l;
 	}
-	
+
 	public void setOnResetViewListener(OnResetViewListener l) {
 		onResetViewListener = l;
 	}
-	
+
 	public void setOnUpdateStartNow(OnUpdateStartNow l) {
 		onUpdateStartNow = l;
 	}
@@ -274,13 +408,14 @@ public class MediaController extends IjkBaseMediaController {
 
 	public interface OnPreNextListener {
 		public void onPreviou();
+
 		public void onNext();
 	}
-	
+
 	public interface OnResetViewListener {
 		public void onReset();
 	}
-	
+
 	public interface OnUpdateStartNow {
 		public void onUpdate(boolean startNow);
 	}
@@ -369,9 +504,9 @@ public class MediaController extends IjkBaseMediaController {
 			show(sDefaultTimeout);
 		}
 	};
-	
+
 	private View.OnClickListener mSelectBitRate = new View.OnClickListener() {
-		
+
 		@Override
 		public void onClick(View v) {
 			if (bitrateLinearLayout.getVisibility() == View.INVISIBLE) {
@@ -429,7 +564,8 @@ public class MediaController extends IjkBaseMediaController {
 	 */
 	@Override
 	public void show(int timeout) {
-		if (mIsCanShow == false) return;
+		if (mIsCanShow == false)
+			return;
 		if (!mShowing && mAnchor != null && mAnchor.getWindowToken() != null) {
 			if (mPauseButton != null)
 				mPauseButton.requestFocus();
@@ -484,7 +620,7 @@ public class MediaController extends IjkBaseMediaController {
 				mHiddenListener.onHidden();
 		}
 	}
-	
+
 	public void toggleVisiblity() {
 		if (isShowing()) {
 			hide();
@@ -554,24 +690,26 @@ public class MediaController extends IjkBaseMediaController {
 			mEndTime.setText(generateTime(mDuration));
 		if (mCurrentTime != null)
 			mCurrentTime.setText(generateTime(position));
+		// 获取播放器稳定的时间后再seekTo
+		if (mDanmakuView != null)
+			correctSeekTo(position);
 
 		return position;
 	}
-	
+
 	/**
-	 * 设置进度为最大，因为播放器的当前时间点不准确，在最后总是差一两秒，
-	 * 因此在视频播放完后调用此方法来设置进度。
+	 * 设置进度为最大，因为播放器的当前时间点不准确，在最后总是差一两秒， 因此在视频播放完后调用此方法来设置进度。
 	 */
 	public void setProgressMax() {
 		if (mProgress != null) {
 			mProgress.setProgress(mProgress.getMax());
 		}
-		
+
 		mDuration = mPlayer.getDuration();
 		if (mEndTime != null) {
 			mEndTime.setText(generateTime(mDuration));
 		}
-			
+
 		if (mCurrentTime != null) {
 			mCurrentTime.setText(generateTime(mDuration));
 		}
@@ -604,9 +742,12 @@ public class MediaController extends IjkBaseMediaController {
 
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
-		if (mPlayer == null) return false;
-		if (ijkVideoView == null) return false;
-		if (ijkVideoView.isPlayStageMain() == false) return false;
+		if (mPlayer == null)
+			return false;
+		if (ijkVideoView == null)
+			return false;
+		if (ijkVideoView.isPlayStageMain() == false)
+			return false;
 		int keyCode = event.getKeyCode();
 		if (event.getRepeatCount() == 0 && (keyCode == KeyEvent.KEYCODE_HEADSETHOOK
 				|| keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE || keyCode == KeyEvent.KEYCODE_SPACE)) {
@@ -618,6 +759,8 @@ public class MediaController extends IjkBaseMediaController {
 		} else if (keyCode == KeyEvent.KEYCODE_MEDIA_STOP) {
 			if (mPlayer.isPlaying()) {
 				mPlayer.pause();
+				if (mDanmakuView != null)
+					mDanmakuView.pause();
 				updatePausePlay();
 			}
 			return true;
@@ -626,13 +769,13 @@ public class MediaController extends IjkBaseMediaController {
 				hide();
 				return true;
 			}
-			
+
 			if (isScreenPortrait() == false) {
 				if (onBoardChangeListener != null)
 					onBoardChangeListener.onLandscape();
 				return true;
 			}
-			
+
 			return false;
 		} else if (keyCode == KeyEvent.KEYCODE_MENU) {
 			show(sDefaultTimeout);
@@ -655,15 +798,22 @@ public class MediaController extends IjkBaseMediaController {
 		if (mPlayer.isPlaying()) {
 			mPauseButton.setImageResource(R.drawable.media_pause);
 		} else {
+			if (mDanmakuView != null)
+				mDanmakuView.pause();
 			mPauseButton.setImageResource(R.drawable.media_play);
 		}
 	}
 
 	private void doPauseResume() {
-		if (mPlayer.isPlaying())
+		if (mPlayer.isPlaying()) {
 			mPlayer.pause();
-		else
+			if (mDanmakuView != null)
+				mDanmakuView.pause();
+		} else {
 			mPlayer.start();
+			if (mDanmakuView != null)
+				mDanmakuView.resume();
+		}
 		updatePausePlay();
 	}
 
@@ -701,6 +851,23 @@ public class MediaController extends IjkBaseMediaController {
 		}
 	};
 
+	// 把弹幕seekto到播放器的正确进度
+	private void correctSeekTo(int position) {
+		if (newtime != -1 && position < newtime)
+			commomSeekTo(position);
+		else if (newtime != -1 && gttime != -1)
+			commomSeekTo(position);
+		else if (position >= newtime)
+			gttime = position;
+	}
+
+	private void commomSeekTo(int position) {
+		if (mDanmakuView != null)
+			mDanmakuView.seekTo((long) position);
+		newtime = -1;
+		gttime = -1;
+	}
+
 	@Override
 	public void setEnabled(boolean enabled) {
 		if (mPauseButton != null)
@@ -710,34 +877,37 @@ public class MediaController extends IjkBaseMediaController {
 		disableUnsupportedButtons();
 		super.setEnabled(enabled);
 	}
-	
+
 	/**
 	 * 设置IjkVideoView 对象，如果没有设置则在码率按钮切换码率的操作中会报错
+	 * 
 	 * @param ijkVideoView
 	 */
 	public void setIjkVideoView(IjkVideoView ijkVideoView) {
 		this.ijkVideoView = ijkVideoView;
 	}
-	
+
 	@Override
 	public void setViewBitRate(String vid, int bitRate) {
 		new GetDFNumWork().execute(vid, String.valueOf(bitRate));
 	}
-	
+
 	/**
 	 * 取得dfNum 任务
+	 * 
 	 * @author TanQu 2015-10-8
 	 */
 	private class GetDFNumWork extends AsyncTask<String, String, Integer> {
 
 		private String vid = "";
 		private int currBitRate = 0;
-		
+
 		@Override
 		protected Integer doInBackground(String... params) {
 			vid = params[0];
 			currBitRate = Integer.parseInt(params[1]);
-			if (currBitRate < 0) currBitRate = 0;
+			if (currBitRate < 0)
+				currBitRate = 0;
 			int dfNum = PolyvSDKClient.getInstance().getVideoDBService().getDFNum(vid);
 			return dfNum;
 		}
@@ -745,50 +915,53 @@ public class MediaController extends IjkBaseMediaController {
 		@Override
 		protected void onPostExecute(Integer result) {
 			super.onPostExecute(result);
-			if (result == 0) return;
-			
+			if (result == 0)
+				return;
+
 			selectBitrate.setText(BitRateEnum.getBitRateName(currBitRate));
 			List<BitRateEnum> list = BitRateEnum.getBitRateList(result);
 			Button bitRateBtn = null;
 			for (BitRateEnum bitRateEnum : list) {
-				if (bitRateEnum == BitRateEnum.ziDong) continue;
+				if (bitRateEnum == BitRateEnum.ziDong)
+					continue;
 				bitRateBtn = bitRateBtnArray.get(bitRateEnum.getNum());
 				bitRateBtn.setVisibility(View.VISIBLE);
 				bitRateBtn.setOnClickListener(new bitRateClientListener(vid, currBitRate, bitRateEnum.getNum()));
 			}
 		}
 	}
-	
+
 	/**
 	 * 码率按钮单击事件监听方法
+	 * 
 	 * @author TanQu 2015-10-8
 	 */
 	private class bitRateClientListener implements View.OnClickListener {
 		private final String vid;
 		private final int currBitRate;
 		private final int targetBitRate;
-		
+
 		public bitRateClientListener(String vid, int currBitRate, int targetBitRate) {
 			this.vid = vid;
 			this.currBitRate = currBitRate;
 			this.targetBitRate = targetBitRate;
 		}
-		
+
 		@Override
 		public void onClick(View v) {
 			if (currBitRate == targetBitRate) {
 				bitrateLinearLayout.setVisibility(View.INVISIBLE);
 				return;
 			}
-			
+
 			if (onResetViewListener != null) {
 				onResetViewListener.onReset();
 			}
-			
+
 			if (onUpdateStartNow != null) {
 				onUpdateStartNow.onUpdate(true);
 			}
-			
+
 			AlertDialog.Builder builder = null;
 			String bitRateName = BitRateEnum.getBitRate(targetBitRate).getName();
 			int type = IjkUtil.validateM3U8Video(vid, targetBitRate);
@@ -804,13 +977,13 @@ public class MediaController extends IjkBaseMediaController {
 						ijkVideoView.switchLevel(targetBitRate);
 					}
 				});
-				
+
 				builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						dialog.dismiss();
 					}
 				});
-				
+
 				builder.setCancelable(false);
 				builder.show();
 				break;
@@ -827,20 +1000,20 @@ public class MediaController extends IjkBaseMediaController {
 							ijkVideoView.switchLevel(targetBitRate);
 						}
 					});
-					
+
 					builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
 							dialog.dismiss();
 						}
 					});
-					
+
 					builder.setCancelable(false);
 					builder.show();
 				} else {
 					hide();
 					ijkVideoView.switchLevel(targetBitRate);
 				}
-				
+
 				break;
 			case IjkValidateM3U8VideoReturnType.M3U8_FILE_CONTENT_EMPTY:
 			case IjkValidateM3U8VideoReturnType.M3U8_TS_LIST_EMPTY:
@@ -854,16 +1027,17 @@ public class MediaController extends IjkBaseMediaController {
 						dialog.dismiss();
 					}
 				});
-				
+
 				builder.setCancelable(false);
 				builder.show();
 				break;
 			}
 		}
 	}
-	
+
 	/** 是否能显示，有些在显示的时候，本控制条界面是不能弹出的 */
 	private static boolean mIsCanShow = true;
+
 	public static void setCanShow(boolean isCanShow) {
 		mIsCanShow = isCanShow;
 	}

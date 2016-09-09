@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal" >
+
+    <EditText
+        android:id="@+id/et_senddanmaku"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/edittext_style"
+        android:gravity="center"
+        android:hint="请输入要发送的弹幕..."
+        android:textColorHint="#ffffff"
+        android:textCursorDrawable="@null" />
+
+    <Button
+        android:id="@+id/sendDanmaku"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="45dp"
+        android:layout_toRightOf="@id/et_senddanmaku"
+        android:text="发送" />
+
+    <RelativeLayout
+        android:id="@+id/rl_c"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_senddanmaku"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/edittext_style" >
+
+        <TextView
+            android:id="@+id/tv_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="选择颜色:"
+            android:textColor="#000000"
+            android:textSize="18dp" />
+
+        <Spinner
+            android:id="@+id/sp_selcol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_color"
+            android:layout_toRightOf="@id/tv_color"
+            android:background="@drawable/edittext_style"
+            android:entries="@array/sp_selcol"
+            android:gravity="center" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_m"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_c"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/edittext_style" >
+
+        <TextView
+            android:id="@+id/tv_fontmode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="弹幕类型:"
+            android:textColor="#000000"
+            android:textSize="18dp" />
+
+        <Spinner
+            android:id="@+id/sp_fontmode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_fontmode"
+            android:layout_toRightOf="@id/tv_fontmode"
+            android:background="@drawable/edittext_style"
+            android:entries="@array/sp_fontmode"
+            android:gravity="center" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_f"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_m"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/edittext_style" >
+
+        <TextView
+            android:id="@+id/tv_fontsize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="字体大小:"
+            android:textColor="#000000"
+            android:textSize="18dp" />
+
+        <Spinner
+            android:id="@+id/sp_fontsize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_fontsize"
+            android:layout_toRightOf="@id/tv_fontsize"
+            android:background="@drawable/edittext_style"
+            android:entries="@array/sp_fontsize"
+            android:gravity="center" />
+    </RelativeLayout>
+
+</RelativeLayout>

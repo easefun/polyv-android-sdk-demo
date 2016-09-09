@@ -11,6 +11,8 @@ import com.easefun.polyvsdk.R;
 import com.easefun.polyvsdk.RestVO;
 import com.easefun.polyvsdk.Video;
 import com.easefun.polyvsdk.demo.download.PolyvDBservice;
+import com.easefun.polyvsdk.demo.download.PolyvDLNotificationService;
+import com.easefun.polyvsdk.demo.download.PolyvDLNotificationService.BindListener;
 import com.easefun.polyvsdk.demo.download.PolyvDownloadInfo;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -22,6 +24,7 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,8 +43,21 @@ public class VideoAdapter extends BaseAdapter {
 	private ViewHolder holder;
 	private DisplayImageOptions options;
 	private PolyvDBservice service;
+	private PolyvDLNotificationService downloadService;
+	private ServiceConnection serconn;
+
+	public ServiceConnection getSerConn() {
+		return serconn;
+	}
 
 	public VideoAdapter(Context context, List<RestVO> videos) {
+		serconn = PolyvDLNotificationService.bindDownloadService(context, new BindListener() {
+
+			@Override
+			public void bindSuccess(PolyvDLNotificationService downloadService) {
+				VideoAdapter.this.downloadService = downloadService;
+			}
+		});
 		this.context = context;
 		this.videos = videos;
 		this.inflater = LayoutInflater.from(context);
@@ -115,7 +131,8 @@ public class VideoAdapter extends BaseAdapter {
 
 		@Override
 		public void onClick(View arg0) {
-			IjkVideoActicity.intentTo(context, IjkVideoActicity.PlayMode.portrait, IjkVideoActicity.PlayType.vid, vid, false);
+			IjkVideoActicity.intentTo(context, IjkVideoActicity.PlayMode.portrait, IjkVideoActicity.PlayType.vid, vid,
+					false);
 		}
 	}
 
@@ -142,47 +159,61 @@ public class VideoAdapter extends BaseAdapter {
 					// 数字2代表的是数组的下标
 					final Builder selectDialog = new AlertDialog.Builder(context).setTitle("选择下载码率")
 							.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							int bitrate = which + 1;
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									int bitrate = which + 1;
 
-							final PolyvDownloadInfo downloadInfo = new PolyvDownloadInfo(vid, v.getDuration(), v.getFilesize(bitrate), bitrate);
-							downloadInfo.setTitle(title);
-							Log.i("videoAdapter", downloadInfo.toString());
-							if (service != null && !service.isAdd(downloadInfo)) {
-								service.addDownloadFile(downloadInfo);
-								PolyvDownloader polyvDownloader = PolyvDownloaderManager.getPolyvDownloader(vid, bitrate);
-								polyvDownloader.setPolyvDownloadProressListener(new PolyvDownloadProgressListener() {
-									private long total;
-									@Override
-									public void onDownloadSuccess() {
-										service.updatePercent(downloadInfo, total, total);
-									}
-									
-									@Override
-									public void onDownloadFail(PolyvDownloaderErrorReason errorReason) {
-										
-									}
-									
-									@Override
-									public void onDownload(long current, long total) {
-										this.total=total;
-									}
-								});
-								polyvDownloader.start();
-							} else {
-								((Activity) context).runOnUiThread(new Runnable() {
+									final PolyvDownloadInfo downloadInfo = new PolyvDownloadInfo(vid, v.getDuration(),
+											v.getFilesize(bitrate), bitrate);
+									downloadInfo.setTitle(title);
+									Log.i("videoAdapter", downloadInfo.toString());
+									if (service != null && !service.isAdd(downloadInfo)) {
+										service.addDownloadFile(downloadInfo);
+										final int id = PolyvDLNotificationService.getId(v.getVid(), bitrate);
+										PolyvDownloader polyvDownloader = PolyvDownloaderManager.getPolyvDownloader(vid,
+												bitrate);
+										polyvDownloader
+												.setPolyvDownloadProressListener(new PolyvDownloadProgressListener() {
+													private long total;
 
-									@Override
-									public void run() {
-										Toast.makeText(context, "下载任务已经增加到队列", Toast.LENGTH_SHORT).show();
-									}
-								});
-							}
+													@Override
+													public void onDownloadSuccess() {
+														service.updatePercent(downloadInfo, total, total);
+														if (downloadService != null)
+															downloadService.updateFinishNF(id);
+													}
 
-							dialog.dismiss();
-						}
-					});
+													@Override
+													public void onDownloadFail(PolyvDownloaderErrorReason errorReason) {
+														if (downloadService != null)
+															downloadService.updateErrorNF(id, false);
+													}
+
+													@Override
+													public void onDownload(long current, long total) {
+														this.total = total;
+														if (downloadService != null)
+															downloadService.updateDownloadingNF(id,
+																	(int) (current * 100 / total), false);
+													}
+												});
+										// 先执行
+										if (downloadService != null)
+											downloadService.updateStartNF(id, vid, bitrate, title, 0);
+										polyvDownloader.start();
+									} else {
+										((Activity) context).runOnUiThread(new Runnable() {
+
+											@Override
+											public void run() {
+												Toast.makeText(context, "下载任务已经增加到队列", Toast.LENGTH_SHORT).show();
+											}
+										});
+									}
+
+									dialog.dismiss();
+								}
+							});
 
 					selectDialog.show().setCanceledOnTouchOutside(true);
 				}

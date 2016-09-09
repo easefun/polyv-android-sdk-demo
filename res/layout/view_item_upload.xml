@@ -3,72 +3,72 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
- <RelativeLayout 
-     android:id="@+id/rl"
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-     android:layout_margin="5dp"
-     >
 
-     <TextView
-         android:id="@+id/tv_title"
-         android:layout_width="350px"
-         android:layout_height="wrap_content" 
-         android:text="sasdasdasdasdasdasd_s.mp4" />
-
-     <TextView 
-         android:id="@+id/desc"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_alignLeft="@+id/tv_title"
-         android:layout_below="@+id/tv_title"
-         android:text="描述:"
-         />
-     <TextView 
-         android:id="@+id/tv_desc"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_toRightOf="@+id/desc"
-         android:layout_below="@+id/tv_title"
-         android:text="测试"
-         />
-        <TextView 
-         android:id="@+id/filesize"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_marginLeft="15dp"
-         android:layout_toRightOf="@+id/tv_desc"
-         android:layout_below="@+id/tv_title"
-         android:text="大小:"
-         />
-         <TextView 
-         android:id="@+id/tv_filesize"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_toRightOf="@+id/filesize"
-         android:layout_below="@+id/tv_title"
-         android:text="100MB"
-         />
- </RelativeLayout>
-<RelativeLayout 
-    android:layout_below="@+id/rl"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    >
-    <ProgressBar
-     android:id="@+id/progressBar"
-     style="?android:attr/progressBarStyleHorizontal"
-     android:layout_margin="5dp"
-     android:layout_width="match_parent"
-     android:layout_height="wrap_content" />
-    <TextView 
-        android:id="@+id/rate"
+    <RelativeLayout
+        android:id="@+id/rl"
         android:layout_width="wrap_content"
-        android:layout_height="20dip"
-        android:layout_below="@+id/progressBar"
-        android:layout_toLeftOf="@+id/precent"
-        android:text="0"
-        />
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp" >
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="350px"
+            android:layout_height="wrap_content"
+            android:text="sasdasdasdasdasdasd_s.mp4" />
+
+        <TextView
+            android:id="@+id/desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/tv_title"
+            android:layout_below="@+id/tv_title"
+            android:text="描述:" />
+
+        <TextView
+            android:id="@+id/tv_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_title"
+            android:layout_toRightOf="@+id/desc"
+            android:text="测试" />
+
+        <TextView
+            android:id="@+id/filesize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_title"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@+id/tv_desc"
+            android:text="大小:" />
+
+        <TextView
+            android:id="@+id/tv_filesize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_title"
+            android:layout_toRightOf="@+id/filesize"
+            android:text="100MB" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl" >
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp" />
+
+        <TextView
+            android:id="@+id/rate"
+            android:layout_width="wrap_content"
+            android:layout_height="20dip"
+            android:layout_below="@+id/progressBar"
+            android:layout_toLeftOf="@+id/precent"
+            android:text="0" />
 
         <TextView
             android:id="@+id/precent"
@@ -77,24 +77,23 @@
             android:layout_alignRight="@+id/progressBar"
             android:layout_below="@+id/progressBar"
             android:text="%" />
+    </RelativeLayout>
 
-</RelativeLayout>
+    <Button
+        android:id="@+id/upload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/rl"
+        android:text="开始" />
 
-<Button
-    android:id="@+id/upload"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentRight="true"
-    android:layout_alignTop="@+id/rl"
-    android:text="开始" />
-
-<Button
-    android:id="@+id/delete"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignBaseline="@+id/upload"
-    android:layout_alignBottom="@+id/upload"
-    android:layout_toLeftOf="@+id/upload"
-    android:text="删除" />
+    <Button
+        android:id="@+id/delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/upload"
+        android:layout_alignBottom="@+id/upload"
+        android:layout_toLeftOf="@+id/upload"
+        android:text="删除" />
 
 </RelativeLayout>

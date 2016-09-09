@@ -3,21 +3,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
- <RelativeLayout 
-     android:id="@+id/top"
-     android:layout_width="match_parent"
-     android:layout_height="wrap_content"
-     android:background="#eaeaea"
-     >
-     <Button 
-         android:id="@+id/download_all"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:text="下载全部"
-         android:layout_alignParentRight="true"
-         />
- </RelativeLayout>   
-<!--  <ScrollView 
+
+    <RelativeLayout
+        android:id="@+id/top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#eaeaea" >
+
+        <Button
+            android:id="@+id/download_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="下载全部" />
+    </RelativeLayout>
+    <!--
+ <ScrollView 
      android:id="@+id/sv_downlist"
      android:layout_width="match_parent"
      android:layout_height="match_parent"
@@ -31,25 +32,28 @@
      android:orientation="vertical"
      android:background="#FFFFFF"
      />
- </ScrollView> -->
-<RelativeLayout 
-       android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_below="@+id/top"
-    android:background="#FFFFFF"
-    >
-<ListView 
-    android:id="@+id/list"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#FFFFFF"
-    ></ListView>
-<TextView 
-    android:id="@+id/emptyView"
-      android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="暂时无下载任务"
-    android:layout_centerInParent="true"
-    />
-</RelativeLayout>
+ </ScrollView>
+    -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/top"
+        android:background="#FFFFFF" >
+
+        <ListView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FFFFFF" >
+        </ListView>
+
+        <TextView
+            android:id="@+id/emptyView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="暂时无下载任务" />
+    </RelativeLayout>
+
 </RelativeLayout>

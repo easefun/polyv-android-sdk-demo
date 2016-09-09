@@ -4,18 +4,17 @@
     android:layout_height="match_parent"
     tools:context="com.easefun.polyvsdk.RecordActivity$PlaceholderFragment" >
 
-	<FrameLayout
-	    android:id="@+id/videoview"
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent" >
+    <FrameLayout
+        android:id="@+id/videoview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+    </FrameLayout>
 
-	</FrameLayout>
-
-	<TextView
-	    android:id="@+id/timeCountTextView"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:text="00:00" />
+    <TextView
+        android:id="@+id/timeCountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:00" />
 
     <Button
         android:id="@+id/startButton"
