@@ -4,7 +4,6 @@ import java.io.File;
 
 import com.easefun.polyvsdk.PolyvSDKClient;
 import com.easefun.polyvsdk.R;
-import com.easefun.polyvsdk.SDKUtil;
 import com.easefun.polyvsdk.Video;
 import com.easefun.polyvsdk.demo.AnimateFirstDisplayListener;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -17,8 +16,8 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -122,9 +121,7 @@ public class PolyvPlayerFirstStartView extends RelativeLayout {
 				String fileName = v.getFirstImage().substring(v.getFirstImage().lastIndexOf("/"));
 				File file = new File(dir, fileName);
 				if (file.exists()) {
-					//TODO 在本地已经有图片的情况下，应该设置使用本地路径的图片
-//					ImageLoader.getInstance().displayImage(file.getAbsolutePath(), mFirstStartImage, mOptions, new AnimateFirstDisplayListener());
-					Log.d(TAG, "有本地图片，请完善本地图片显示逻辑");
+					mFirstStartImage.setImageURI(Uri.parse(file.getAbsolutePath()));
 				} else {
 					ImageLoader.getInstance().displayImage(v.getFirstImage(), mFirstStartImage, mOptions, new AnimateFirstDisplayListener());
 				}

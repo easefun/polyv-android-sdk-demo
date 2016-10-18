@@ -3,6 +3,7 @@ package com.easefun.polyvsdk.demo.download;
 import java.util.List;
 
 import com.easefun.polyvsdk.R;
+import com.easefun.polyvsdk.Video;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -65,8 +66,13 @@ public class PolyvDLNotificationService extends Service {
 	}
 
 	// 获取id
-	public static int getId(String vid, int bit) {
-		return Integer.parseInt(vid.substring(vid.length() - 8, vid.lastIndexOf("_")) + bit, 16);
+	public static int getId(String vid, int bit, String speed) {
+		String adapter = null;
+		if (speed.equals(Video.HlsSpeedType.SPEED_1X.getName()))
+			adapter = "10";
+		else
+			adapter = "15";
+		return Integer.parseInt(vid.substring(vid.length() - 6, vid.lastIndexOf("_")) + bit + adapter, 16);
 	}
 
 	public interface NotificationInteraction {
@@ -97,7 +103,7 @@ public class PolyvDLNotificationService extends Service {
 	private static final boolean status_pause = false;
 
 	// 初始化并设置前台Notification
-	public void updateStartNF(int id, String vid, int bit, String title, int progress) {
+	public void updateStartNF(int id, String vid, int bit, String speed, String title, int progress) {
 		if (id_title.get(id) == null)
 			id_title.put(id, title);
 		id_progress.put(id, progress);
@@ -106,12 +112,12 @@ public class PolyvDLNotificationService extends Service {
 		// 初始化remoteview和notification.builder
 		initRVAndNB(id, title);
 		// 设置前台Notification
-		setForeNotification(id, vid, bit, progress);
+		setForeNotification(id, vid, bit, speed, progress);
 	}
 
 	// 更新前台Notification
-	private void setForeNotification(int id, String vid, int bit, int progress) {
-		PolyvIdDownloaderManager.addIdDownloader(vid, bit);
+	private void setForeNotification(int id, String vid, int bit, String speed, int progress) {
+		PolyvIdDownloaderManager.addIdDownloader(vid, bit, speed);
 		// 初始化开始的notification
 		updateDownloadingNF(id, progress, true);
 		if (foreid == 0) {
@@ -298,7 +304,7 @@ public class PolyvDLNotificationService extends Service {
 	// 更新所有暂停任务的Notification
 	public void updateAllPauseNF(List<PolyvDownloadInfo> infos) {
 		for (PolyvDownloadInfo info : infos) {
-			int id = getId(info.getVid(), info.getBitrate());
+			int id = getId(info.getVid(), info.getBitrate(), info.getSpeed());
 			updatePauseNF(id);
 		}
 	}
@@ -306,11 +312,11 @@ public class PolyvDLNotificationService extends Service {
 	// 更新所有开始任务的Notification
 	public void updateAllStartNF(List<PolyvDownloadInfo> infos) {
 		for (PolyvDownloadInfo info : infos) {
-			int id = getId(info.getVid(), info.getBitrate());
+			int id = getId(info.getVid(), info.getBitrate(), info.getSpeed());
 			int progress = 0;
 			if (info.getTotal() != 0)
 				progress = (int) (info.getPercent() * 100 / info.getTotal());
-			updateStartNF(id, info.getVid(), info.getBitrate(), info.getTitle(), progress);
+			updateStartNF(id, info.getVid(), info.getBitrate(), info.getSpeed(), info.getTitle(), progress);
 		}
 	}
 
@@ -319,18 +325,18 @@ public class PolyvDLNotificationService extends Service {
 		for (PolyvDownloadInfo info : infos) {
 			boolean flag = false;
 			for (String key : finishKey) {
-				if (key.equals(info.getVid() + "_" + info.getBitrate())) {
+				if (key.equals(info.getVid() + "_" + info.getBitrate() + "_" + info.getSpeed())) {
 					flag = true;
 					break;
 				}
 			}
 			if (flag)
 				continue;
-			int id = getId(info.getVid(), info.getBitrate());
+			int id = getId(info.getVid(), info.getBitrate(), info.getSpeed());
 			int progress = 0;
 			if (info.getTotal() != 0)
 				progress = (int) (info.getPercent() * 100 / info.getTotal());
-			updateStartNF(id, info.getVid(), info.getBitrate(), info.getTitle(), progress);
+			updateStartNF(id, info.getVid(), info.getBitrate(), info.getSpeed(), info.getTitle(), progress);
 		}
 	}
 

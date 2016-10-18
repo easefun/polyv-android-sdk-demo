@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.easefun.polyvsdk.QuestionVO;
 import com.easefun.polyvsdk.R;
+import com.easefun.polyvsdk.Video;
 import com.easefun.polyvsdk.Video.ADMatter;
 import com.easefun.polyvsdk.danmaku.DanmakuInfo;
 import com.easefun.polyvsdk.danmaku.DanmakuManager;
@@ -59,7 +60,6 @@ public class IjkVideoActicity extends Activity {
 	private TextView srtTextView = null;
 	private PolyvPlayerFirstStartView playerFirstStartView = null;
 	int w = 0, h = 0, adjusted_h = 0;
-	private int stopPosition = 0;
 	private boolean startNow = false;
 	// videoview的容器
 	private VideoViewContainer rl = null;
@@ -70,6 +70,7 @@ public class IjkVideoActicity extends Activity {
 	private DanmakuManager danmakuManager;
 	private String vid;
 	private int fastForwardPos = 0;
+	private boolean isPlay = false;
 	private Handler handler = new Handler() {
 
 		@Override
@@ -98,8 +99,25 @@ public class IjkVideoActicity extends Activity {
 		return intent;
 	}
 
+	public static Intent newIntent(Context context, PlayMode playMode, PlayType playType, String value,
+			boolean isMustFromLocal, Video.HlsSpeedType hlsSpeedType, boolean startNow) {
+		Intent intent = new Intent(context, IjkVideoActicity.class);
+		intent.putExtra("playMode", playMode.getCode());
+		intent.putExtra("playType", playType.getCode());
+		intent.putExtra("value", value);
+		intent.putExtra("isMustFromLocal", isMustFromLocal);
+		intent.putExtra("hlsSpeedType", hlsSpeedType.getName());
+		intent.putExtra("startNow", startNow);
+		return intent;
+	}
+
 	public static void intentTo(Context context, PlayMode playMode, PlayType playType, String value, boolean startNow) {
 		context.startActivity(newIntent(context, playMode, playType, value, startNow));
+	}
+
+	public static void intentTo(Context context, PlayMode playMode, PlayType playType, String value,
+			boolean isMustFromLocal, Video.HlsSpeedType hlsSpeedType, boolean startNow) {
+		context.startActivity(newIntent(context, playMode, playType, value, isMustFromLocal, hlsSpeedType, startNow));
 	}
 
 	@SuppressLint("ShowToast")
@@ -115,6 +133,11 @@ public class IjkVideoActicity extends Activity {
 		int playTypeCode = getIntent().getIntExtra("playType", 0);
 		final PlayType playType = PlayType.getPlayType(playTypeCode);
 		final String value = getIntent().getStringExtra("value");
+		final boolean isMustFromLocal = getIntent().getBooleanExtra("isMustFromLocal", false);
+		Video.HlsSpeedType hlsSpeedType = Video.HlsSpeedType
+				.getHlsSpeedType(getIntent().getStringExtra("hlsSpeedType"));
+		if (hlsSpeedType == null)
+			hlsSpeedType = Video.HlsSpeedType.SPEED_1X;
 		startNow = getIntent().getBooleanExtra("startNow", false);
 		if (playMode == null || playType == null || TextUtils.isEmpty(value)) {
 			Log.e(TAG, "Null Data Source");
@@ -150,10 +173,6 @@ public class IjkVideoActicity extends Activity {
 			public void onPrepared(IMediaPlayer mp) {
 				videoView.setVideoLayout(IjkVideoView.VIDEO_LAYOUT_SCALE);
 				// logo.setVisibility(View.VISIBLE);
-				if (stopPosition > 0) {
-					Log.d(TAG, "seek to stopPosition:" + stopPosition);
-					videoView.seekTo(stopPosition);
-				}
 
 				if (startNow == false) {
 					videoView.pause(true);
@@ -187,7 +206,7 @@ public class IjkVideoActicity extends Activity {
 				// 播放错误，暂停弹幕
 				if (mDanmakuView != null && mDanmakuView.isPrepared())
 					mDanmakuView.pause();
-				
+
 				switch (errorReason.getType()) {
 				case BITRATE_ERROR:
 					sendMessage("设置的码率错误");
@@ -232,7 +251,7 @@ public class IjkVideoActicity extends Activity {
 					sendMessage("无法连接网络");
 					break;
 				case NOT_LOCAL_VIDEO:
-					sendMessage("没有缓存视频");
+					sendMessage("找不到本地下载的视频文件，请连网后重新下载或播放");
 					break;
 				case NOT_PERMISSION:
 					sendMessage("没有权限，不能播放该视频");
@@ -269,20 +288,20 @@ public class IjkVideoActicity extends Activity {
 					break;
 				default:
 					break;
-				
+
 				}
-				
+
 				// 返回 false，sdk中会弹出一个默认的错误提示框
 				// 返回 true，sdk中不会弹出一个错误提示框
 				return true;
 			}
 		});
-		
+
 		videoView.setOnErrorListener(new IMediaPlayer.OnErrorListener() {
-			
+
 			@Override
 			public boolean onError(IMediaPlayer arg0, int arg1, int arg2) {
-				//TODO 可以在这里重新请求setVid方法重试播放
+				// TODO 可以在这里重新请求setVid方法重试播放
 				sendMessage("播放异常，请稍后再试");
 				// 返回 false，sdk中会弹出一个默认的错误提示框
 				// 返回 true，sdk中不会弹出一个错误提示框
@@ -334,7 +353,6 @@ public class IjkVideoActicity extends Activity {
 
 			@Override
 			public void onOut(ADMatter adMatter) {
-				stopPosition = videoView.getCurrentPosition();
 				if (adView == null) {
 					adView = new PolyvPlayerAdvertisementView(IjkVideoActicity.this);
 					adView.setIjkVideoView(videoView);
@@ -468,13 +486,14 @@ public class IjkVideoActicity extends Activity {
 				if (fastForwardPos == 0) {
 					fastForwardPos = videoView.getCurrentPosition();
 				}
-				
+
 				if (end) {
-					if (fastForwardPos < 0) fastForwardPos = 0;
+					if (fastForwardPos < 0)
+						fastForwardPos = 0;
 					videoView.seekTo(fastForwardPos);
 					fastForwardPos = 0;
 				} else {
-					fastForwardPos-=1000;
+					fastForwardPos -= 10000;
 				}
 			}
 		});
@@ -488,13 +507,14 @@ public class IjkVideoActicity extends Activity {
 				if (fastForwardPos == 0) {
 					fastForwardPos = videoView.getCurrentPosition();
 				}
-				
+
 				if (end) {
-					if (fastForwardPos < videoView.getDuration() * 1000) fastForwardPos = videoView.getDuration() * 1000;
+					if (fastForwardPos > videoView.getDuration())
+						fastForwardPos = videoView.getDuration();
 					videoView.seekTo(fastForwardPos);
 					fastForwardPos = 0;
 				} else {
-					fastForwardPos+=1000;
+					fastForwardPos += 10000;
 				}
 			}
 		});
@@ -527,6 +547,7 @@ public class IjkVideoActicity extends Activity {
 		mediaController = new MediaController(this, false);
 		mediaController.setIjkVideoView(videoView);
 		mediaController.setAnchorView(videoView);
+		mediaController.setInstantSeeking(false);
 		videoView.setMediaController(mediaController);
 
 		// 设置切屏事件
@@ -540,35 +561,6 @@ public class IjkVideoActicity extends Activity {
 			@Override
 			public void onLandscape() {
 				changeToPortrait();
-			}
-		});
-
-		// 设置视频尺寸 ，在横屏下效果较明显
-		mediaController.setOnVideoChangeListener(new MediaController.OnVideoChangeListener() {
-
-			@Override
-			public void onVideoChange(final int layout) {
-				runOnUiThread(new Runnable() {
-
-					@Override
-					public void run() {
-						videoView.setVideoLayout(layout);
-						switch (layout) {
-						case IjkVideoView.VIDEO_LAYOUT_ORIGIN:
-							Toast.makeText(IjkVideoActicity.this, "VIDEO_LAYOUT_ORIGIN", Toast.LENGTH_SHORT).show();
-							break;
-						case IjkVideoView.VIDEO_LAYOUT_SCALE:
-							Toast.makeText(IjkVideoActicity.this, "VIDEO_LAYOUT_SCALE", Toast.LENGTH_SHORT).show();
-							break;
-						case IjkVideoView.VIDEO_LAYOUT_STRETCH:
-							Toast.makeText(IjkVideoActicity.this, "VIDEO_LAYOUT_STRETCH", Toast.LENGTH_SHORT).show();
-							break;
-						case IjkVideoView.VIDEO_LAYOUT_ZOOM:
-							Toast.makeText(IjkVideoActicity.this, "VIDEO_LAYOUT_ZOOM", Toast.LENGTH_SHORT).show();
-							break;
-						}
-					}
-				});
 			}
 		});
 
@@ -600,7 +592,7 @@ public class IjkVideoActicity extends Activity {
 
 		switch (playType) {
 		case vid:
-			videoView.setVid(value);
+			videoView.setVid(value, isMustFromLocal, hlsSpeedType);
 			break;
 		case url:
 			progressBar.setVisibility(View.GONE);
@@ -628,9 +620,9 @@ public class IjkVideoActicity extends Activity {
 		overlappingEnablePair.put(BaseDanmaku.TYPE_FIX_TOP, true);
 		overlappingEnablePair.put(BaseDanmaku.TYPE_FIX_BOTTOM, true);
 		// 设置弹幕样式
-		mContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_SHADOW, IDisplayer.DANMAKU_STYLE_SHADOW).setMaximumLines(maxLinesPair)
-				.preventOverlapping(overlappingEnablePair).setDuplicateMergingEnabled(false).setScrollSpeedFactor(1.5f)
-				.setScaleTextSize(1.0f);
+		mContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_SHADOW, IDisplayer.DANMAKU_STYLE_SHADOW)
+				.setMaximumLines(maxLinesPair).preventOverlapping(overlappingEnablePair)
+				.setDuplicateMergingEnabled(false).setScrollSpeedFactor(1.5f).setScaleTextSize(1.0f);
 		// 设置监听器
 		danmakuManager.setGetDanmakuListener(new GetDanmakuListener() {
 
@@ -723,6 +715,14 @@ public class IjkVideoActicity extends Activity {
 		if (mDanmakuView != null && mDanmakuView.isPrepared() && mDanmakuView.isPaused() && videoView != null
 				&& videoView.isPlaying())
 			mDanmakuView.resume();
+		
+		if (videoView != null && videoView.isPausState() && isPlay) {
+			if (adView != null) {
+				adView.hide();
+			}
+			
+			videoView.start();
+		}
 	}
 
 	/**
@@ -734,7 +734,6 @@ public class IjkVideoActicity extends Activity {
 		int[] wh = ScreenTool.getNormalWH(this);
 		RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(wh[0], wh[1]);
 		rl.setLayoutParams(p);
-		stopPosition = videoView.getCurrentPosition();
 	}
 
 	/**
@@ -744,7 +743,6 @@ public class IjkVideoActicity extends Activity {
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(w, adjusted_h);
 		rl.setLayoutParams(p);
-		stopPosition = videoView.getCurrentPosition();
 	}
 
 	@Override
@@ -828,6 +826,17 @@ public class IjkVideoActicity extends Activity {
 		}
 		danmakuManager.release();
 		SendDanmakuDialog.realse();
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		if (videoView != null && videoView.isPlayState()) {
+			isPlay = true;
+			videoView.pause();
+		} else {
+			isPlay = false;
+		}
 	}
 
 	@Override
@@ -938,7 +947,7 @@ public class IjkVideoActicity extends Activity {
 			return null;
 		}
 	}
-	
+
 	private void sendMessage(String info) {
 		Message msg = new Message();
 		Bundle data = new Bundle();
@@ -946,4 +955,12 @@ public class IjkVideoActicity extends Activity {
 		msg.setData(data);
 		handler.sendMessage(msg);
 	}
+	
+//	public void btn1(View view) {
+//		videoView.setVid("2273463aee027300ec391928e431fe8b_2");
+//	}
+//	
+//	public void btn2(View view) {
+//		videoView.setVid("2273463aee8bb8027f8fb60d1ee090fb_2");
+//	}
 }

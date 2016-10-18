@@ -26,13 +26,20 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +52,7 @@ public class VideoAdapter extends BaseAdapter {
 	private PolyvDBservice service;
 	private PolyvDLNotificationService downloadService;
 	private ServiceConnection serconn;
+	private Video.HlsSpeedType hlsSpeedType = Video.HlsSpeedType.SPEED_1X;
 
 	public ServiceConnection getSerConn() {
 		return serconn;
@@ -155,23 +163,58 @@ public class VideoAdapter extends BaseAdapter {
 
 					// 码率数
 					String[] items = BitRateEnum.getBitRateNameArray(v.getDfNum());
+					String[] speeds = null;
+					speeds = new String[] { "1倍速", "1.5倍速" };
+					// 选择倍速的view
+					RelativeLayout rl = new RelativeLayout(context);
+					TextView textView = new TextView(context);
+					textView.setText("请选择下载码率");
+					textView.setTextSize(20);
+					textView.setTextColor(Color.WHITE);
+					RelativeLayout.LayoutParams lp1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+							LayoutParams.WRAP_CONTENT);
+					lp1.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+					lp1.addRule(RelativeLayout.CENTER_IN_PARENT);
+					textView.setLayoutParams(lp1);
+					rl.addView(textView);
+					Spinner spinner = new Spinner(context);
+					spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
+						@Override
+						public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+							hlsSpeedType = Video.HlsSpeedType.values()[position];
+						}
+
+						@Override
+						public void onNothingSelected(AdapterView<?> parent) {
+						}
+					});
+					ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context,
+							android.R.layout.simple_spinner_item, speeds);
+					spinner.setAdapter(arrayAdapter);
+					RelativeLayout.LayoutParams lp2 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+							LayoutParams.WRAP_CONTENT);
+					lp2.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+					spinner.setLayoutParams(lp2);
+					rl.addView(spinner);
 					// 数字2代表的是数组的下标
-					final Builder selectDialog = new AlertDialog.Builder(context).setTitle("选择下载码率")
-							.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+					final Builder selectDialog = new AlertDialog.Builder(context).setSingleChoiceItems(items, 0,
+							new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
 									int bitrate = which + 1;
 
 									final PolyvDownloadInfo downloadInfo = new PolyvDownloadInfo(vid, v.getDuration(),
-											v.getFilesize(bitrate), bitrate);
+											v.getFileSizeMatchVideoType(bitrate), bitrate);
 									downloadInfo.setTitle(title);
+									downloadInfo.setSpeed(hlsSpeedType.getName());
 									Log.i("videoAdapter", downloadInfo.toString());
 									if (service != null && !service.isAdd(downloadInfo)) {
 										service.addDownloadFile(downloadInfo);
-										final int id = PolyvDLNotificationService.getId(v.getVid(), bitrate);
+										final int id = PolyvDLNotificationService.getId(v.getVid(), bitrate,
+												hlsSpeedType.getName());
 										PolyvDownloader polyvDownloader = PolyvDownloaderManager.getPolyvDownloader(vid,
-												bitrate);
+												bitrate, hlsSpeedType);
 										polyvDownloader
 												.setPolyvDownloadProressListener(new PolyvDownloadProgressListener() {
 													private long total;
@@ -199,7 +242,8 @@ public class VideoAdapter extends BaseAdapter {
 												});
 										// 先执行
 										if (downloadService != null)
-											downloadService.updateStartNF(id, vid, bitrate, title, 0);
+											downloadService.updateStartNF(id, vid, bitrate, hlsSpeedType.getName(),
+													title, 0);
 										polyvDownloader.start();
 									} else {
 										((Activity) context).runOnUiThread(new Runnable() {
@@ -214,6 +258,10 @@ public class VideoAdapter extends BaseAdapter {
 									dialog.dismiss();
 								}
 							});
+					if (v.getHls15X().size() > 0)
+						selectDialog.setCustomTitle(rl);
+					else
+						selectDialog.setTitle("请选择下载码率");
 
 					selectDialog.show().setCanceledOnTouchOutside(true);
 				}

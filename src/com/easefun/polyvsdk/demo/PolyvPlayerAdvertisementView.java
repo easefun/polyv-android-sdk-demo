@@ -1,8 +1,6 @@
 package com.easefun.polyvsdk.demo;
 
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 import com.easefun.polyvsdk.R;
@@ -111,7 +109,6 @@ public class PolyvPlayerAdvertisementView extends RelativeLayout {
 					Intent intent = new Intent(Intent.ACTION_VIEW);
 					intent.setData(Uri.parse(path));
 					mContext.startActivity(intent);
-					hide();
 				}
 			}
 		});
@@ -207,6 +204,10 @@ public class PolyvPlayerAdvertisementView extends RelativeLayout {
     	mAdvertisementImage.setImageBitmap(null);
     	popupWindow.dismiss();
     	System.gc();
+    	
+    	if (handler != null) {
+    		handler.removeMessages(COUNT_DOWN);
+    	}
     }
     
     @Override

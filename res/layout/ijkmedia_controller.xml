@@ -47,7 +47,7 @@
             android:textColor="@android:color/white"
             android:textSize="15sp" />
 
-        <Button
+        <com.easefun.polyvsdk.demo.view.SpeedButton
             android:id="@+id/speed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
             android:layout_marginTop="10dp"
             android:layout_toLeftOf="@id/screenshot"
             android:background="#00000000"
-            android:text="1.0x"
+            android:text=" 1x "
             android:textColor="@android:color/white"
             android:textSize="15sp"
             android:visibility="invisible" />
@@ -89,6 +89,16 @@
                 android:orientation="vertical"
                 android:visibility="invisible" >
 
+                <Button
+                    android:id="@+id/zidong"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="#00000000"
+                    android:textColor="#003399"
+                    android:textSize="15sp"
+                    android:visibility="invisible" />
+                
                 <Button
                     android:id="@+id/liuchang"
                     android:layout_width="wrap_content"
@@ -126,15 +136,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:layout_toLeftOf="@+id/videochange"
-            android:background="@drawable/change" />
-
-        <ImageButton
-            android:id="@+id/videochange"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_margin="5dp"
+            android:layout_alignParentEnd="true"
             android:background="@drawable/ic_media_fullscreen" />
     </RelativeLayout>
 

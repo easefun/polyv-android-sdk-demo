@@ -1,11 +1,11 @@
 package com.easefun.polyvsdk.demo;
 
-import java.util.List;
 import java.util.Locale;
 
 import com.easefun.polyvsdk.BitRateEnum;
 import com.easefun.polyvsdk.PolyvSDKClient;
 import com.easefun.polyvsdk.R;
+import com.easefun.polyvsdk.demo.view.SpeedButton;
 import com.easefun.polyvsdk.ijk.IjkBaseMediaController;
 import com.easefun.polyvsdk.ijk.IjkUtil;
 import com.easefun.polyvsdk.ijk.IjkValidateM3U8VideoReturnType;
@@ -13,7 +13,6 @@ import com.easefun.polyvsdk.ijk.IjkVideoView;
 import com.easefun.polyvsdk.screenshot.ActivityTool;
 import com.easefun.polyvsdk.screenshot.PolyvScreenshot;
 import com.easefun.polyvsdk.screenshot.PolyvScreenshot.ScreenshotListener;
-import com.easefun.polyvsdk.util.TimeTool;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -25,7 +24,6 @@ import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.media.AudioManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
@@ -76,11 +74,9 @@ public class MediaController extends IjkBaseMediaController {
 	private AudioManager mAM;
 	private boolean isUsePreNext = false;
 	private OnBoardChangeListener onBoardChangeListener;
-	private OnVideoChangeListener onVideoChangeListener;
 	private OnResetViewListener onResetViewListener;
 	private OnUpdateStartNow onUpdateStartNow;
 	private ImageButton btn_boardChange;
-	private ImageButton btn_videoChange;
 	private Button selectSRT = null;
 	private Button selectBitrate = null;
 	private LinearLayout bitrateLinearLayout = null;
@@ -190,9 +186,6 @@ public class MediaController extends IjkBaseMediaController {
 		mRewButton.setOnClickListener(mRewListener);
 		btn_boardChange = (ImageButton) v.findViewById(R.id.landscape);
 		btn_boardChange.setOnClickListener(mBoardListener);
-		btn_videoChange = (ImageButton) v.findViewById(R.id.videochange);
-		btn_videoChange.setTag("0");
-		btn_videoChange.setOnClickListener(mVideoListener);
 
 		mPreButton = (ImageButton) v.findViewById(R.id.prev);
 		mNextButton = (ImageButton) v.findViewById(R.id.next);
@@ -254,6 +247,10 @@ public class MediaController extends IjkBaseMediaController {
 		bitrateLinearLayout = (LinearLayout) mRoot.findViewById(R.id.bitrate_linear_layout);
 
 		bitRateBtnArray = new SparseArray<Button>();
+		Button zidongBtn = (Button) mRoot.findViewById(R.id.zidong);
+		zidongBtn.setText(BitRateEnum.ziDong.getName());
+		bitRateBtnArray.append(BitRateEnum.ziDong.getNum(), zidongBtn);
+
 		Button liuchangBtn = (Button) mRoot.findViewById(R.id.liuchang);
 		liuchangBtn.setText(BitRateEnum.liuChang.getName());
 		bitRateBtnArray.append(BitRateEnum.liuChang.getNum(), liuchangBtn);
@@ -267,31 +264,8 @@ public class MediaController extends IjkBaseMediaController {
 		bitRateBtnArray.append(BitRateEnum.chaoQing.getNum(), chaoqingBtn);
 
 		// 倍速
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-			final String speed_default = "1.0x", speed_primary = "1.5x", speed_middle = "2.0x";
-			final Button speed = (Button) findViewById(R.id.speed);
-			speed.setVisibility(View.VISIBLE);
-			speed.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					if (speed.getText().equals(speed_default)) {
-						ijkVideoView.setSpeed(1.5f);
-						speed.setText(speed_primary);
-						Toast.makeText(mContext, "当前为1.5倍速", 0).show();
-					} else if (speed.getText().equals(speed_primary)) {
-						ijkVideoView.setSpeed(2.0f);
-						speed.setText(speed_middle);
-						Toast.makeText(mContext, "当前为2倍速", 0).show();
-					} else {
-						ijkVideoView.setSpeed(1.0f);
-						speed.setText(speed_default);
-						Toast.makeText(mContext, "恢复为正常速度", 0).show();
-					}
-				}
-			});
-		}
-
+		SpeedButton speedButton = (SpeedButton) findViewById(R.id.speed);
+		speedButton.init(ijkVideoView, onUpdateStartNow);
 		// 截图
 		Button screenShot = (Button) findViewById(R.id.screenshot);
 		final PolyvScreenshot polyvScreenshot = new PolyvScreenshot();
@@ -341,7 +315,7 @@ public class MediaController extends IjkBaseMediaController {
 
 		// 弹幕
 		showDanmaku = (Button) findViewById(R.id.showDanmaku);
-		if(isShowDanmaku)
+		if (isShowDanmaku)
 			showDanmaku.setSelected(false);
 		else
 			showDanmaku.setSelected(true);
@@ -380,10 +354,6 @@ public class MediaController extends IjkBaseMediaController {
 		onBoardChangeListener = l;
 	}
 
-	public void setOnVideoChangeListener(OnVideoChangeListener l) {
-		onVideoChangeListener = l;
-	}
-
 	public void setOnResetViewListener(OnResetViewListener l) {
 		onResetViewListener = l;
 	}
@@ -400,10 +370,6 @@ public class MediaController extends IjkBaseMediaController {
 		public void onLandscape();
 
 		public void onPortrait();
-	}
-
-	public interface OnVideoChangeListener {
-		public void onVideoChange(int layout);
 	}
 
 	public interface OnPreNextListener {
@@ -439,29 +405,6 @@ public class MediaController extends IjkBaseMediaController {
 		public void onClick(View arg0) {
 			if (onPreNextListener != null)
 				onPreNextListener.onNext();
-		}
-	};
-	private View.OnClickListener mVideoListener = new View.OnClickListener() {
-
-		@Override
-		public void onClick(View v) {
-			if (v.getTag().equals("0")) {
-				v.setTag("1");
-				if (onVideoChangeListener != null)
-					onVideoChangeListener.onVideoChange(0);
-			} else if (v.getTag().equals("1")) {
-				v.setTag("2");
-				if (onVideoChangeListener != null)
-					onVideoChangeListener.onVideoChange(1);
-			} else if (v.getTag().equals("2")) {
-				v.setTag("3");
-				if (onVideoChangeListener != null)
-					onVideoChangeListener.onVideoChange(2);
-			} else if (v.getTag().equals("3")) {
-				v.setTag("0");
-				if (onVideoChangeListener != null)
-					onVideoChangeListener.onVideoChange(3);
-			}
 		}
 	};
 	private View.OnClickListener mBoardListener = new View.OnClickListener() {
@@ -919,14 +862,13 @@ public class MediaController extends IjkBaseMediaController {
 				return;
 
 			selectBitrate.setText(BitRateEnum.getBitRateName(currBitRate));
-			List<BitRateEnum> list = BitRateEnum.getBitRateList(result);
 			Button bitRateBtn = null;
-			for (BitRateEnum bitRateEnum : list) {
-				if (bitRateEnum == BitRateEnum.ziDong)
-					continue;
-				bitRateBtn = bitRateBtnArray.get(bitRateEnum.getNum());
+			int minBitRate = BitRateEnum.getMinBitRateFromAll().getNum();
+			int maxBitRate = BitRateEnum.getMaxBitRate().getNum();
+			for (int i = maxBitRate; i >= minBitRate; i--) {
+				bitRateBtn = bitRateBtnArray.get(i);
 				bitRateBtn.setVisibility(View.VISIBLE);
-				bitRateBtn.setOnClickListener(new bitRateClientListener(vid, currBitRate, bitRateEnum.getNum()));
+				bitRateBtn.setOnClickListener(new bitRateClientListener(vid, currBitRate, i));
 			}
 		}
 	}
@@ -964,7 +906,7 @@ public class MediaController extends IjkBaseMediaController {
 
 			AlertDialog.Builder builder = null;
 			String bitRateName = BitRateEnum.getBitRate(targetBitRate).getName();
-			int type = IjkUtil.validateM3U8Video(vid, targetBitRate);
+			int type = IjkUtil.validateM3U8Video(vid, targetBitRate, ijkVideoView.getHlsSpeedType());
 			switch (type) {
 			case IjkValidateM3U8VideoReturnType.M3U8_CORRECT:
 				builder = new AlertDialog.Builder(mContext);
@@ -988,7 +930,7 @@ public class MediaController extends IjkBaseMediaController {
 				builder.show();
 				break;
 			case IjkValidateM3U8VideoReturnType.M3U8_FILE_NOT_FOUND:
-				int currType = IjkUtil.validateM3U8Video(vid, currBitRate);
+				int currType = IjkUtil.validateM3U8Video(vid, currBitRate, ijkVideoView.getHlsSpeedType());
 				if (currType == IjkValidateM3U8VideoReturnType.M3U8_CORRECT) {
 					builder = new AlertDialog.Builder(mContext);
 					builder.setTitle("提示");

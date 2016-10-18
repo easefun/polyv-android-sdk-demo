@@ -70,5 +70,20 @@
             android:layout_alignParentBottom="true"
             android:gravity="bottom|center_horizontal" />
     </com.easefun.polyvsdk.demo.VideoViewContainer>
-
+    <!-- 
+	<Button 
+	    android:id="@+id/video_btn1"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@+id/rl"
+	    android:text="视频1"
+	    android:onClick="btn1"/>
+	<Button 
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@+id/rl"
+	    android:layout_toRightOf="@+id/video_btn1"
+	    android:text="视频2"
+	    android:onClick="btn2"/>
+	 -->
 </RelativeLayout>

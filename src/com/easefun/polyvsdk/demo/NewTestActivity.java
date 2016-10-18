@@ -31,6 +31,7 @@ import android.widget.Button;
 
 /**
  * 主界面
+ * android.permission.READ_PHONE_STATE是PolyvSDKClient.initCrashReport使用到的权限，如果没有调用此方法，可以去掉该权限
  * @author TanQu 2016-7-7
  */
 public class NewTestActivity extends Activity implements View.OnClickListener {

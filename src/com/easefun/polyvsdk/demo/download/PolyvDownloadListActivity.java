@@ -1,4 +1,4 @@
- package com.easefun.polyvsdk.demo.download;
+package com.easefun.polyvsdk.demo.download;
 
 import java.util.LinkedList;
 
@@ -36,8 +36,9 @@ public class PolyvDownloadListActivity extends Activity {
 			public void onClick(View v) {
 				if (!isStop) {
 					((Button) v).setText("暂停全部");
-					adapter.downloadAllFile();
-					adapter.updateAllButton(true);
+					boolean issuccess = adapter.downloadAllFile();
+					if (issuccess)
+						adapter.updateAllButton(true);
 					isStop = !isStop;
 				} else {
 					((Button) v).setText("下载全部");
@@ -52,10 +53,10 @@ public class PolyvDownloadListActivity extends Activity {
 	private void initData() {
 		service = new PolyvDBservice(this);
 		infos = service.getDownloadFiles();
-		adapter = new PolyvDownloadListAdapter(this, infos,list);
+		adapter = new PolyvDownloadListAdapter(this, infos, list);
 		list.setAdapter(adapter);
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();

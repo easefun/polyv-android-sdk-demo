@@ -5,6 +5,7 @@ import java.io.File;
 import com.easefun.polyvsdk.PolyvDevMountInfo;
 import com.easefun.polyvsdk.PolyvSDKClient;
 import com.easefun.polyvsdk.SDKUtil;
+import com.easefun.polyvsdk.server.AndroidService;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -16,7 +17,12 @@ import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import android.app.Application;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -29,6 +35,8 @@ public class MyApplication extends Application {
 	private String aeskey = "VXtlHmwfS2oYm0CZ";
 	/** 加密向量 */
 	private String iv = "2u9gDPKdX6GyQJKU";
+	
+	private ServiceStartErrorBroadcastReceiver serviceStartErrorBroadcastReceiver = null;
 	
 	public MyApplication() {
 		
@@ -67,6 +75,14 @@ public class MyApplication extends Application {
 	}
 	
 	public void initPolyvCilent() {
+		//OPPO手机自动熄屏一段时间后，会启用系统自带的电量优化管理，禁止一切自启动的APP（用户设置的自启动白名单除外）。
+		//如果startService异常，就会发送消息上来提醒异常了
+		//如不需要额外处理，也可不接收此信息
+		IntentFilter statusIntentFilter = new IntentFilter(AndroidService.SERVICE_START_ERROR_BROADCAST_ACTION);
+		statusIntentFilter.addCategory(Intent.CATEGORY_DEFAULT);
+		serviceStartErrorBroadcastReceiver = new ServiceStartErrorBroadcastReceiver();
+		LocalBroadcastManager.getInstance(this).registerReceiver(serviceStartErrorBroadcastReceiver, statusIntentFilter);
+		
 		//网络方式取得SDK加密串，（推荐）
 //		new LoadConfigTask().execute();
 		PolyvSDKClient client = PolyvSDKClient.getInstance();
@@ -137,4 +153,12 @@ public class MyApplication extends Application {
 		}
 	}
 
+	private class ServiceStartErrorBroadcastReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String msg = intent.getStringExtra("msg");
+			Log.e(TAG, msg);
+		}
+	}
 }
