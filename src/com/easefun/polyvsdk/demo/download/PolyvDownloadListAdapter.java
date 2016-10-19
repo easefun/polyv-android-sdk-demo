@@ -11,6 +11,7 @@ import com.easefun.polyvsdk.PolyvDownloaderErrorReason.ErrorType;
 import com.easefun.polyvsdk.PolyvDownloaderManager;
 import com.easefun.polyvsdk.R;
 import com.easefun.polyvsdk.Video;
+import com.easefun.polyvsdk.Video.HlsSpeedType;
 import com.easefun.polyvsdk.demo.IjkVideoActicity;
 import com.easefun.polyvsdk.demo.download.PolyvDLNotificationService.BindListener;
 
@@ -142,10 +143,13 @@ public class PolyvDownloadListAdapter extends BaseAdapter {
 					Toast.makeText(context, "第" + (position + 1) + "个任务下载文件夹未设置", Toast.LENGTH_SHORT).show();
 					break;
 				case HLS_15X_URL_ERROR:
-					Toast.makeText(context, "第" + (position + 1) + "个任务1.5倍速播放地址错误", Toast.LENGTH_SHORT).show();
+					Toast.makeText(context, "第" + (position + 1) + "个任务1.5倍速下载地址错误", Toast.LENGTH_SHORT).show();
 					break;
 				case HLS_SPEED_TYPE_IS_NULL:
 					Toast.makeText(context, "第" + (position + 1) + "个任务未设置视频播放速度，请设置", Toast.LENGTH_SHORT).show();
+					break;
+				case HLS_15X_ERROR:
+					Toast.makeText(context, "第" + (position + 1) + "个任务不支持1.5倍速下载", Toast.LENGTH_SHORT).show();
 					break;
 				default:
 					break;
