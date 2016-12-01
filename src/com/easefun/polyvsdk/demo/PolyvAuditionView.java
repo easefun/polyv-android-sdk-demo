@@ -42,22 +42,21 @@ public class PolyvAuditionView extends RelativeLayout {
 	private QuestionVO questionVO = null;
 	
 	private static final int UPDATE_PROGRESS = 1;
+	private static final int CLOSE_QUESTION = 2;
 	private Handler handler = new Handler(){
 
 		@Override
 		public void handleMessage(Message msg) {
-			long currentTime = mediaPlayer.getCurrentPosition();
-			if (questionVO.getWrongTime() * 1000 <= currentTime) {
-				ijkVideoView.answerQuestion(new ArrayList<Integer>(0));
-				hide();
-				return;
-			}
-			
 			switch (msg.what) {
 				case UPDATE_PROGRESS:
 					setProgress();
 					handler.removeMessages(UPDATE_PROGRESS);
 					handler.sendEmptyMessageDelayed(UPDATE_PROGRESS, 1000);
+					break;
+					
+				case CLOSE_QUESTION:
+					ijkVideoView.answerQuestion(new ArrayList<Integer>(0));
+					hide();
 					break;
 			}
 		}
@@ -177,6 +176,18 @@ public class PolyvAuditionView extends RelativeLayout {
 			e.printStackTrace();
 		}
 		
+		mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+			
+			@Override
+			public void onCompletion(MediaPlayer mp) {
+				setProgress();
+				if (questionVO.getWrongTime() <= 0) {
+					handler.sendEmptyMessage(CLOSE_QUESTION);
+				} else {
+					handler.sendEmptyMessageDelayed(CLOSE_QUESTION, questionVO.getWrongTime() * 1000);
+				}
+			}
+		});
 		mediaPlayer.start();
 		handler.removeMessages(UPDATE_PROGRESS);
 		handler.sendEmptyMessageDelayed(UPDATE_PROGRESS, 1000);

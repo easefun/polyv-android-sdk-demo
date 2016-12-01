@@ -151,6 +151,9 @@ public class PolyvDownloadListAdapter extends BaseAdapter {
 				case HLS_15X_ERROR:
 					Toast.makeText(context, "第" + (position + 1) + "个任务不支持1.5倍速下载", Toast.LENGTH_SHORT).show();
 					break;
+				case GET_VIDEO_INFO_ERROR:
+					Toast.makeText(context, "第" + (position + 1) + "个任务获取视频信息错误", Toast.LENGTH_SHORT).show();
+					break;
 				default:
 					break;
 				}
