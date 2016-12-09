@@ -314,14 +314,16 @@ public class PolyvQuestionView extends RelativeLayout implements OnCheckedChange
     	for (LinearLayout answerRadioLayout : answerRadioLayoutList) {
     		answerRadioLayout.setVisibility(View.GONE);
     		for (int i = 1, length = answerRadioLayout.getChildCount() ; i < length ; i++) {
-    			answerRadioLayout.removeViewAt(i);
+    			if (answerRadioLayout != null) {
+    				answerRadioLayout.removeViewAt(1);
+    			}
     		}
     	}
     	
     	for (LinearLayout answerCheckLayout : answerCheckLayoutList) {
     		answerCheckLayout.setVisibility(View.GONE);
     		for (int i = 1, length = answerCheckLayout.getChildCount() ; i < length ; i++) {
-    			answerCheckLayout.removeViewAt(i);
+    			answerCheckLayout.removeViewAt(1);
     		}
     	}
     	
