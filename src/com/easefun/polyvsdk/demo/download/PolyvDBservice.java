@@ -39,11 +39,17 @@ public class PolyvDBservice {
 		db = dbOpenHepler.getWritableDatabase();
 		String sql = "select vid ,duration,filesize,bitrate from downloadlist where vid=? and speed=? and bitrate="
 				+ info.getBitrate();
-		Cursor cursor = db.rawQuery(sql, new String[] { info.getVid(), info.getSpeed() });
-		if (cursor.getCount() == 1) {
-			return true;
-		} else {
-			return false;
+		Cursor cursor = null;
+		try {
+			cursor = db.rawQuery(sql, new String[] { info.getVid(), info.getSpeed() });
+			if (cursor.getCount() == 1) {
+				return true;
+			} else {
+				return false;
+			}
+		} finally {
+			if (cursor != null)
+				cursor.close();
 		}
 	}
 
@@ -51,22 +57,28 @@ public class PolyvDBservice {
 		LinkedList<PolyvDownloadInfo> infos = new LinkedList<PolyvDownloadInfo>();
 		db = dbOpenHepler.getWritableDatabase();
 		String sql = "select vid,speed,title,duration,filesize,bitrate,percent,total from downloadlist";
-		Cursor cursor = db.rawQuery(sql, null);
-		while (cursor.moveToNext()) {
-			String vid = cursor.getString(cursor.getColumnIndex("vid"));
-			String speed = cursor.getString(cursor.getColumnIndex("speed"));
-			String title = cursor.getString(cursor.getColumnIndex("title"));
-			String duration = cursor.getString(cursor.getColumnIndex("duration"));
-			long filesize = cursor.getInt(cursor.getColumnIndex("filesize"));
-			int bitrate = cursor.getInt(cursor.getColumnIndex("bitrate"));
-			long percent = cursor.getInt(cursor.getColumnIndex("percent"));
-			long total = cursor.getInt(cursor.getColumnIndex("total"));
-			PolyvDownloadInfo info = new PolyvDownloadInfo(vid, duration, filesize, bitrate);
-			info.setSpeed(speed);
-			info.setPercent(percent);
-			info.setTitle(title);
-			info.setTotal(total);
-			infos.addLast(info);
+		Cursor cursor = null;
+		try {
+			cursor = db.rawQuery(sql, null);
+			while (cursor.moveToNext()) {
+				String vid = cursor.getString(cursor.getColumnIndex("vid"));
+				String speed = cursor.getString(cursor.getColumnIndex("speed"));
+				String title = cursor.getString(cursor.getColumnIndex("title"));
+				String duration = cursor.getString(cursor.getColumnIndex("duration"));
+				long filesize = cursor.getInt(cursor.getColumnIndex("filesize"));
+				int bitrate = cursor.getInt(cursor.getColumnIndex("bitrate"));
+				long percent = cursor.getInt(cursor.getColumnIndex("percent"));
+				long total = cursor.getInt(cursor.getColumnIndex("total"));
+				PolyvDownloadInfo info = new PolyvDownloadInfo(vid, duration, filesize, bitrate);
+				info.setSpeed(speed);
+				info.setPercent(percent);
+				info.setTitle(title);
+				info.setTotal(total);
+				infos.addLast(info);
+			}
+		} finally {
+			if (cursor != null)
+				cursor.close();
 		}
 		return infos;
 	}
