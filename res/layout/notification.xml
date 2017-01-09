@@ -47,9 +47,9 @@
 
         <ProgressBar
             android:id="@+id/pb_pro"
-            style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
+            style="?android:progressBarStyleHorizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="10dp"
             android:layout_centerVertical="true" />
 
         <TextView

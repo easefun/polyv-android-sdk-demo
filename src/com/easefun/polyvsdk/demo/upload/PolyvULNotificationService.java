@@ -9,13 +9,14 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.app.TaskStackBuilder;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Binder;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import android.util.SparseIntArray;
@@ -86,7 +87,7 @@ public class PolyvULNotificationService extends Service {
 	// 记录下载器的vid和bit，在用id获取不到下载器的时候，将用vid和bit获取下载器(并记录id下载器)开始下载
 	private SparseIntArray id_progress = new SparseIntArray();
 	// 每个id的builder,只会初始化一次，因为删除的时候notification也会删除
-	private SparseArray<Notification.Builder> id_builder = new SparseArray<Notification.Builder>();
+	private SparseArray<NotificationCompat.Builder> id_builder = new SparseArray<NotificationCompat.Builder>();
 	private SparseArray<RemoteViews> id_remote = new SparseArray<RemoteViews>();
 	private SparseArray<Notification> id_notifi = new SparseArray<Notification>();
 	// 每个id的notification按钮的状态
@@ -136,7 +137,7 @@ public class PolyvULNotificationService extends Service {
 			remoteViews.setTextViewText(R.id.tv_title, title);
 			remoteViews.setProgressBar(R.id.pb_pro, 100, 0, false);
 			remoteViews.setTextViewText(R.id.tv_rate, 0 + "%");
-			Notification.Builder builder = new Notification.Builder(this);
+			NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 
 			// pendingIntent
 			Intent resultIntent = new Intent(this, PolyvUploadListActivity.class);
