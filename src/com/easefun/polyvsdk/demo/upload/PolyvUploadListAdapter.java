@@ -90,12 +90,6 @@ public class PolyvUploadListAdapter extends BaseAdapter {
 				case PolyvUploader.NETEXCEPTION:
 					Toast.makeText(context, "第" + (position + 1) + "个任务网络异常，请重试", 0).show();
 					break;
-				case PolyvUploader.RECONNECT:
-					Toast.makeText(context, "第" + (position + 1) + "个任务网络异常，正在等待重新连接", 0).show();
-					break;
-				case PolyvUploader.OUTTIME:
-					Toast.makeText(context, "第" + (position + 1) + "个任务连接超时，请重试", 0).show();
-					break;
 				}
 
 				break;
@@ -142,10 +136,7 @@ public class PolyvUploadListAdapter extends BaseAdapter {
 		@Override
 		public void fail(int category) {
 			if (notificationService != null) {
-				if (category == PolyvUploader.RECONNECT)
-					notificationService.updateErrorNF(id, true);
-				else
-					notificationService.updateErrorNF(id, false);
+				notificationService.updateErrorNF(id, false);
 			}
 			Message msg = handler.obtainMessage();
 			msg.arg1 = position;

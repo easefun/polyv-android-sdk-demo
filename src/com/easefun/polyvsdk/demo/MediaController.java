@@ -864,7 +864,7 @@ public class MediaController extends IjkBaseMediaController {
 			selectBitrate.setText(BitRateEnum.getBitRateName(currBitRate));
 			Button bitRateBtn = null;
 			int minBitRate = BitRateEnum.getMinBitRateFromAll().getNum();
-			int maxBitRate = BitRateEnum.getMaxBitRate().getNum();
+			int maxBitRate = BitRateEnum.getMaxBitRate(result).getNum();
 			for (int i = maxBitRate; i >= minBitRate; i--) {
 				bitRateBtn = bitRateBtnArray.get(i);
 				bitRateBtn.setVisibility(View.VISIBLE);
