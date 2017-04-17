@@ -70,7 +70,10 @@ public class IjkVideoActicity extends Activity {
 	private DanmakuManager danmakuManager;
 	private String vid;
 	private int fastForwardPos = 0;
+	/** 是否在播放中，用于锁频后返回继续播放 */
 	private boolean isPlay = false;
+	/** 是否暂停中，用于home键切出去回来后暂停播放 */
+	private boolean isPause = false;
 	private Handler handler = new Handler() {
 
 		@Override
@@ -177,13 +180,17 @@ public class IjkVideoActicity extends Activity {
 				if (startNow == false) {
 					videoView.pause(true);
 					if (playType == PlayType.vid) {
-						playerFirstStartView.show(rl, value);
+						playerFirstStartView.show(rl, videoView.getVideo().getVid());
 					}
+				}
+				
+				if (isPause) {
+					videoView.pause(true);
 				}
 
 				String msg = String.format("是否在线播放 %b", videoView.isLocalPlay() == false);
 				Log.d(TAG, msg);
-				Toast.makeText(IjkVideoActicity.this, msg, Toast.LENGTH_SHORT);
+				Toast.makeText(IjkVideoActicity.this, msg, Toast.LENGTH_SHORT).show();
 			}
 		});
 
@@ -380,12 +387,12 @@ public class IjkVideoActicity extends Activity {
 
 			@Override
 			public void onPlay() {
-
+				isPause = false;
 			}
 
 			@Override
 			public void onPause() {
-
+				isPause = true;
 			}
 
 			@Override
@@ -716,6 +723,7 @@ public class IjkVideoActicity extends Activity {
 				&& videoView.isPlaying())
 			mDanmakuView.resume();
 		
+		//锁频回来继续播放
 		if (videoView != null && videoView.isPausState() && isPlay) {
 			if (adView != null) {
 				adView.hide();
@@ -831,6 +839,7 @@ public class IjkVideoActicity extends Activity {
 	@Override
 	protected void onStop() {
 		super.onStop();
+		//锁频的时候出去暂停播放
 		if (videoView != null && videoView.isPlayState()) {
 			isPlay = true;
 			videoView.pause();

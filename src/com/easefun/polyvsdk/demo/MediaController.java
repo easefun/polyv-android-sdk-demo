@@ -294,6 +294,9 @@ public class MediaController extends IjkBaseMediaController {
 				case PolyvScreenshot.GETVIDEO_FAIL:
 					ActivityTool.toastMsg(mContext, "截图失败：无法获取video对象");
 					break;
+				case PolyvScreenshot.DATA_EXCEPTION:
+					ActivityTool.toastMsg(mContext, "截图失败：数据异常");
+					break;
 				}
 			}
 		});

@@ -31,6 +31,11 @@
 -keep public class tv.danmaku.ijk.media.player.IjkMediaPlayer {*;} # 保持这个类的类变量不被混淆
 -keep @interface tv.danmaku.ijk.media.**{*;}			# 保持哪些类不被混淆
 -keep class com.nostra13.universalimageloader.**{*;}	# 保持哪些类不被混淆
+-keep class android.net.**{*;}						# 保持哪些类不被混淆
+-keep class com.android.internal.http.multipart.**{*;}						# 保持哪些类不被混淆
 -keep class org.apache.http.**{*;}						# 保持哪些类不被混淆
 -keep class org.apache.commons.**{*;}					# 保持哪些类不被混淆
+-keep class master.flame.danmaku.**{*;}					# 保持哪些类不被混淆
+-keep class tv.cjump.jni.**{*;}					# 保持哪些类不被混淆
+-keep class com.getkeepsafe.relinker.**{*;}					# 保持哪些类不被混淆
 -keep public class com.tencent.bugly.**{*;}				# 保持哪些类不被混淆

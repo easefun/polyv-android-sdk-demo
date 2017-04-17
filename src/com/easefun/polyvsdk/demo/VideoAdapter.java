@@ -244,7 +244,7 @@ public class VideoAdapter extends BaseAdapter {
 										if (downloadService != null)
 											downloadService.updateStartNF(id, vid, bitrate, hlsSpeedType.getName(),
 													title, 0);
-										polyvDownloader.start();
+										polyvDownloader.start(context);
 									} else {
 										((Activity) context).runOnUiThread(new Runnable() {
 

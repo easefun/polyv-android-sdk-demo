@@ -88,7 +88,7 @@ public class MyApplication extends Application {
 		PolyvSDKClient client = PolyvSDKClient.getInstance();
 		//设置SDK加密串
 //		client.setConfig("你的SDK加密串", aeskey, iv);
-		client.setConfig("iPGXfu3KLEOeCW4KXzkWGl1UYgrJP7hRxUfsJGldI6DEWJpYfhaXvMA+32YIYqAOocWd051v5XUAU17LoVlgZCSEVNkx11g7CxYadcFPYPozslnQhFjkxzzjOt7lUPsW", aeskey, iv, getApplicationContext());
+		client.setConfig("iPGXfu3KLEOeCW4KXzkWGl1UYgrJP7hRxUfsJGldI6DEWJpYfhaXvMA+32YIYqAOocWd051v5XUAU17LoVlgZCSEVNkx11g7CxYadcFPYPozslnQhFjkxzzjOt7lUPsWF/CO2xt5xZemQCBkkSKLGA==", aeskey, iv, getApplicationContext());
 		//初始化数据库服务
 		client.initDatabaseService(this);
 		//启动服务

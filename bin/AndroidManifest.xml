@@ -4,22 +4,40 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk android:minSdkVersion="10" />
+    <uses-sdk
+        android:minSdkVersion="10"
+        android:targetSdkVersion="23" />
 
-    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- 基础权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+
+    <!-- 属于android6.0运行时权限，android6.0在使用时，需要再次请求以下权限 -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- android.permission.READ_PHONE_STATE是PolyvSDKClient.initCrashReport使用到的权限，如果没有调用此方法，可以去掉该权限 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <uses-feature android:name="android.hardware.camera" />
+
+    <instrumentation
+        android:name="android.test.InstrumentationTestRunner"
+        android:targetPackage="com.easefun.polyvsdk" >
+    </instrumentation>
 
     <application
         android:name="com.easefun.polyvsdk.demo.MyApplication"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        <uses-library android:name="android.test.runner" />
+
         <activity
             android:name="com.easefun.polyvsdk.demo.NewTestActivity"
             android:label="@string/app_name" >
@@ -36,60 +54,68 @@
             android:theme="@style/NoActionBar" >
         </activity>
         <activity
-            android:name="com.easefun.polyvsdk.VideoViewActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.NoTitleBar" >
-
-            <!-- android:screenOrientation="landscape" -->
-        </activity>
-        <activity
-            android:name="com.easefun.polyvsdk.demo.SmallVideoDemoActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.NoTitleBar" >
-
-            <!-- android:screenOrientation="landscape" -->
-        </activity>
-        <activity
-            android:name="com.easefun.polyvsdk.demo.FullVideoDemoActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.NoTitleBar" >
-        </activity>
-         <activity
             android:name="com.easefun.polyvsdk.demo.IjkVideoActicity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.easefun.polyvsdk.demo.IjkFullVideoActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.NoTitleBar" >
-        </activity>
-        <activity
-            android:name="com.easefun.polyvsdk.demo.DownloadListActivity"
+            android:name="com.easefun.polyvsdk.demo.download.PolyvDownloadListActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/app_name"
+            android:parentActivityName="com.easefun.polyvsdk.demo.NewTestActivity"
             android:theme="@android:style/Theme.NoTitleBar" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.easefun.polyvsdk.demo.NewTestActivity" />
         </activity>
-         <activity
+        <activity
             android:name="com.easefun.polyvsdk.demo.VideoListActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/app_name"
-             android:theme="@style/AppTheme" >
+            android:theme="@style/AppTheme" >
         </activity>
-              <activity
-            android:name="com.easefun.polyvsdk.demo.PreviewVideoActivity"
+        <activity
+            android:name="com.easefun.polyvsdk.demo.upload.PolyvUploadListActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/app_name"
+            android:parentActivityName="com.easefun.polyvsdk.demo.NewTestActivity"
             android:theme="@android:style/Theme.NoTitleBar" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.easefun.polyvsdk.demo.NewTestActivity" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="video/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="video/*" />
+            </intent-filter>
+            <!--
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="video/*" />
+            </intent-filter>
+            -->
         </activity>
-        <service  
-            android:name="com.easefun.polyvsdk.demo.PolyvDemoService"
-        ></service>
+        <!-- service -->
+        <service android:name="com.easefun.polyvsdk.demo.PolyvDemoService" >
+        </service>
+        <service android:name="com.easefun.polyvsdk.demo.download.PolyvDLNotificationService" >
+        </service>
+        <service android:name="com.easefun.polyvsdk.demo.upload.PolyvULNotificationService" >
+        </service>
     </application>
 
 </manifest>

@@ -154,6 +154,9 @@ public class PolyvDownloadListAdapter extends BaseAdapter {
 				case GET_VIDEO_INFO_ERROR:
 					Toast.makeText(context, "第" + (position + 1) + "个任务获取视频信息错误", Toast.LENGTH_SHORT).show();
 					break;
+				case WRITE_EXTERNAL_STORAGE_DENIED:
+					Toast.makeText(context, "拒绝写入外部SD卡，请授予权限再下载", Toast.LENGTH_SHORT).show();
+					break;
 				default:
 					break;
 				}
@@ -345,7 +348,7 @@ public class PolyvDownloadListAdapter extends BaseAdapter {
 			return false;
 		if (notificationService != null)
 			notificationService.updateUnfinishedNF(data, finishKeys);
-		PolyvDownloaderManager.startUnfinished(finishKeys);
+		PolyvDownloaderManager.startUnfinished(finishKeys, context);
 		return true;
 	}
 
@@ -411,7 +414,7 @@ public class PolyvDownloadListAdapter extends BaseAdapter {
 					notificationService.updateStartNF(id, vid, bitRate, speed, title, id_progress.get(id));
 				}
 				if (downloader != null) {
-					downloader.start();
+					downloader.start(context);
 				}
 			} else if (download.getText().equals("暂停")) {
 				((Button) v).setText("开始");
@@ -448,8 +451,7 @@ public class PolyvDownloadListAdapter extends BaseAdapter {
 					Video.HlsSpeedType.getHlsSpeedType(info.getSpeed()));
 			PolyvDownloaderManager.clearPolyvDownload(info.getVid(), info.getBitrate());
 			if (downloader != null) {
-				downloader.deleteVideo(info.getVid(), info.getBitrate(),
-						Video.HlsSpeedType.getHlsSpeedType(info.getSpeed()));
+				downloader.deleteVideo();
 			}
 			int id = PolyvDLNotificationService.getId(info.getVid(), info.getBitrate(), info.getSpeed());
 			if (notificationService != null) {
