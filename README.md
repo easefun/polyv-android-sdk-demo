@@ -2,6 +2,11 @@
 polyv-android-sdk-demo
 ======================
 
+### 请使用最新的[polyv-android-sdk-2.0-demo](https://github.com/easefun/polyv-android-sdk-2.0-demo)版本。
+
+此版本不再更新功能。
+***
+
 详细内容请看[Wiki](https://github.com/easefun/polyv-android-sdk-demo/wiki)
 
 1.0.27版API文档请看[v1.0.27 API](http://demo.polyv.net/polyv/android/sdk/1.0.27/api/index.html)
